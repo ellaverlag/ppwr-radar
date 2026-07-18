@@ -1,8 +1,13 @@
+/**
+ * Outlined Chips gemäß Dashboard-Entwurf (keine gefüllten Badges,
+ * label-Typografie, Radius 4).
+ */
 const VARIANTS = {
-  neutral: "bg-neutral-100 text-neutral-700",
-  accent: "bg-accent-light text-accent",
-  green: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
+  neutral: "border-line-strong text-ink-muted",
+  green: "border-primary text-primary bg-primary/5",
+  blue: "border-legal text-legal",
+  gold: "border-gold text-gold-ink bg-gold/10",
+  red: "border-danger text-danger",
 } as const;
 
 export function Badge({
@@ -17,7 +22,7 @@ export function Badge({
   return (
     <span
       title={title}
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${VARIANTS[variant]}`}
+      className={`inline-flex items-center rounded border px-2 py-1 text-label ${VARIANTS[variant]}`}
     >
       {children}
     </span>

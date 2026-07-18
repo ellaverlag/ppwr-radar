@@ -1,15 +1,71 @@
 @import "tailwindcss";
 
+/*
+ * Design-Tokens – abgeleitet aus dem verbindlichen Dashboard-Entwurf.
+ * Dokumentation: design-reference/TOKENS.md
+ */
 @theme {
-  /* Eine Akzentfarbe für die gesamte App */
-  --color-accent: #1d4ed8;
-  --color-accent-dark: #1e40af;
-  --color-accent-light: #eff6ff;
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  /* Farben */
+  --color-canvas: #ffffff;
+  --color-surface: #f9f9f9;
+  --color-footer: #f3f3f3;
+  --color-hover: #eeeeee;
+  --color-line: #e5e5e5;
+  --color-line-strong: #e2e2e2;
+  --color-dim: #dadada;
+  --color-ink: #1b1b1b;
+  --color-ink-muted: #3d4944;
+  --color-primary: #006950;
+  --color-legal: #004494;
+  --color-gold: #ffcc00;
+  --color-gold-ink: #745b00;
+  --color-danger: #ba1a1a;
+  --color-chip-hover: #d8e2ff;
+  --color-logo: #24a27f;
+
+  /* Schriften */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Typo-Skala */
+  --text-display: 3rem;
+  --text-display--line-height: 3.5rem;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 700;
+  --text-display-sm: 2.25rem;
+  --text-display-sm--line-height: 2.75rem;
+  --text-display-sm--letter-spacing: -0.02em;
+  --text-display-sm--font-weight: 700;
+  --text-headline: 1.5rem;
+  --text-headline--line-height: 2rem;
+  --text-headline--font-weight: 600;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.875rem;
+  --text-body: 1rem;
+  --text-body--line-height: 1.625rem;
+  --text-body-sm: 0.875rem;
+  --text-body-sm--line-height: 1.375rem;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1rem;
+  --text-label--letter-spacing: 0.05em;
+  --text-label--font-weight: 600;
+  --text-mono-sm: 0.8125rem;
+  --text-mono-sm--line-height: 1.25rem;
+
+  /* Radius: 4px Standard, keine Schatten (Tiefe über 1px-Rahmen) */
+  --radius: 0.25rem;
 }
 
 body {
-  background: #ffffff;
-  color: #171717;
+  background: var(--color-canvas);
+  color: var(--color-ink);
   font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.625rem;
+}
+
+/* Sichtbare Fokus-Zustände (Zielgruppe 50+, WCAG AA) */
+:focus-visible {
+  outline: 2px solid var(--color-legal);
+  outline-offset: 2px;
 }

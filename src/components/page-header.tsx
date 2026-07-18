@@ -6,23 +6,13 @@ export function PageHeader({
   description?: string;
 }) {
   return (
-    <header className="mb-10">
-      <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-        {title}
-      </h1>
+    <header className="mb-12">
+      <h1 className="text-display-sm text-ink lg:text-display">{title}</h1>
       {description && (
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-neutral-500">
+        <p className="mt-4 max-w-2xl text-body-lg text-ink-muted">
           {description}
         </p>
       )}
     </header>
-  );
-}
-
-export function Placeholder({ text }: { text: string }) {
-  return (
-    <div className="flex min-h-64 items-center justify-center rounded-2xl border border-dashed border-neutral-200 bg-neutral-50">
-      <p className="text-sm text-neutral-400">{text}</p>
-    </div>
   );
 }
