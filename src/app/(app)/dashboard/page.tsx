@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Badge } from "@/components/badge";
 import { ChatIcon, PlusIcon } from "@/components/icons";
 import {
@@ -8,28 +9,24 @@ import {
   SecondaryButtonLink,
   TrafficDot,
 } from "@/components/ui";
+import type { RollenSet } from "@/lib/rollen-engine";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Dashboard – PPWR Radar",
 };
 
-const NAECHSTE_SCHRITTE = [
-  {
-    nr: "01",
-    titel: "Betroffenheits-Check durchführen",
-    text: "Beantworten Sie fünf Fragen zu Ihrem Unternehmen – daraus leiten wir Ihre Rollen nach PPWR ab.",
-  },
-  {
-    nr: "02",
-    titel: "Verpackungsprofil anlegen",
-    text: "Erfassen Sie Ihre Produktlinien und Verpackungen, damit Anforderungen zugeordnet werden können.",
-  },
-  {
-    nr: "03",
-    titel: "Status-Analyse starten",
-    text: "Die Gap-Analyse zeigt, welche Pflichten erfüllt sind und wo Handlungsbedarf besteht.",
-  },
-];
+export const dynamic = "force-dynamic";
+
+const ROLLEN_LABELS: Record<string, string> = {
+  erzeuger: "Erzeuger",
+  hersteller: "Hersteller",
+  importeur: "Importeur",
+  vertreiber: "Vertreiber",
+  endvertreiber: "Endvertreiber",
+  fulfillment_dienstleister: "Fulfillment-Dienstleister",
+  lieferant: "Lieferant",
+};
 
 const RADAR_BEISPIELE = [
   {
@@ -55,7 +52,58 @@ const RADAR_BEISPIELE = [
   },
 ];
 
-export default function DashboardPage() {
+interface ErgebnisZeile {
+  id: string;
+  produktlinie: string;
+  rollen_set: RollenSet;
+}
+
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data: profil } = user
+    ? await supabase
+        .from("profile")
+        .select("id, onboarding_abgeschlossen")
+        .eq("user_id", user.id)
+        .maybeSingle()
+    : { data: null };
+
+  let ergebnisse: ErgebnisZeile[] = [];
+  if (profil?.onboarding_abgeschlossen) {
+    const { data } = await supabase
+      .from("rollen_ergebnisse")
+      .select("id, produktlinie, rollen_set")
+      .eq("profil_id", profil.id)
+      .order("erstellt_am", { ascending: true });
+    ergebnisse = (data ?? []) as ErgebnisZeile[];
+  }
+  const onboardingFertig = Boolean(profil?.onboarding_abgeschlossen);
+
+  const schritte = [
+    {
+      nr: "01",
+      titel: "Betroffenheits-Check durchführen",
+      text: "Beantworten Sie die Fragen zu Ihrem Unternehmen – daraus leiten wir Ihre Rollen nach PPWR ab.",
+      erledigt: onboardingFertig,
+    },
+    {
+      nr: "02",
+      titel: "Verpackungsprofil anlegen",
+      text: "Erfassen Sie Ihre Produktlinien und Verpackungen, damit Anforderungen zugeordnet werden können.",
+      erledigt: onboardingFertig,
+    },
+    {
+      nr: "03",
+      titel: "Status-Analyse starten",
+      text: "Die Gap-Analyse zeigt, welche Pflichten erfüllt sind und wo Handlungsbedarf besteht.",
+      erledigt: false,
+    },
+  ];
+
   return (
     <>
       <header className="mb-12">
@@ -63,14 +111,28 @@ export default function DashboardPage() {
           Dashboard
         </h1>
         <div className="flex flex-wrap gap-4">
-          <PrimaryButtonLink href="/dokumente">
-            <PlusIcon className="h-4 w-4" />
-            <span>Neues Dokument erstellen</span>
-          </PrimaryButtonLink>
-          <SecondaryButtonLink href="/assistant">
-            <ChatIcon className="h-4 w-4" />
-            <span>Assistant fragen</span>
-          </SecondaryButtonLink>
+          {!onboardingFertig ? (
+            <>
+              <PrimaryButtonLink href="/onboarding">
+                <span>Onboarding starten</span>
+              </PrimaryButtonLink>
+              <SecondaryButtonLink href="/assistant">
+                <ChatIcon className="h-4 w-4" />
+                <span>Assistant fragen</span>
+              </SecondaryButtonLink>
+            </>
+          ) : (
+            <>
+              <PrimaryButtonLink href="/dokumente">
+                <PlusIcon className="h-4 w-4" />
+                <span>Neues Dokument erstellen</span>
+              </PrimaryButtonLink>
+              <SecondaryButtonLink href="/assistant">
+                <ChatIcon className="h-4 w-4" />
+                <span>Assistant fragen</span>
+              </SecondaryButtonLink>
+            </>
+          )}
         </div>
       </header>
 
@@ -104,8 +166,11 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="mt-6 text-body-sm text-ink-muted">
-              Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen
-              erstellt.
+              {onboardingFertig
+                ? `${ergebnisse.length} ${
+                    ergebnisse.length === 1 ? "Produktlinie" : "Produktlinien"
+                  } erfasst – die Status-Analyse folgt im nächsten Paket.`
+                : "Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen erstellt."}
             </p>
           </div>
           <LegalCardFooter>Verordnung (EU) 2025/40 · PPWR</LegalCardFooter>
@@ -114,14 +179,53 @@ export default function DashboardPage() {
         <LegalCard>
           <div className="flex-1 p-6">
             <h2 className="mb-8 text-headline text-ink">Ihre Rollen</h2>
-            <p className="text-body text-ink-muted">
-              Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie –
-              etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus dem
-              Betroffenheits-Check.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              <Badge variant="neutral">Onboarding folgt</Badge>
-            </div>
+            {!onboardingFertig ? (
+              <>
+                <p className="text-body text-ink-muted">
+                  Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie –
+                  etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus
+                  dem Betroffenheits-Check im Onboarding.
+                </p>
+                <Link
+                  href="/onboarding"
+                  className="mt-6 inline-flex items-center rounded bg-primary px-5 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+                >
+                  Onboarding starten →
+                </Link>
+              </>
+            ) : (
+              <div className="space-y-6">
+                {ergebnisse.map((zeile, i) => (
+                  <div
+                    key={zeile.id}
+                    className={
+                      i > 0 ? "border-t border-line-strong pt-4" : undefined
+                    }
+                  >
+                    <h3 className="mb-2 text-body font-bold text-ink-muted">
+                      {zeile.produktlinie}
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {zeile.rollen_set.unklar ? (
+                        <Badge variant="gold">Einordnung offen</Badge>
+                      ) : (
+                        zeile.rollen_set.rollen.map((rolle) => (
+                          <Badge key={rolle} variant="blue">
+                            {ROLLEN_LABELS[rolle] ?? rolle}
+                          </Badge>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                ))}
+                <Link
+                  href="/onboarding/ergebnis"
+                  className="inline-block text-body-sm font-medium text-legal hover:underline"
+                >
+                  Herleitung ansehen →
+                </Link>
+              </div>
+            )}
           </div>
           <LegalCardFooter>Art. 3 PPWR · Begriffsbestimmungen</LegalCardFooter>
         </LegalCard>
@@ -164,14 +268,15 @@ export default function DashboardPage() {
         <div className="flex-1 p-6">
           <h2 className="mb-8 text-headline text-ink">Meine nächsten Schritte</h2>
           <ol className="space-y-6 border-l border-line-strong pl-6">
-            {NAECHSTE_SCHRITTE.map((schritt) => (
+            {schritte.map((schritt) => (
               <li key={schritt.nr} className="flex gap-4">
                 <span className="font-mono text-mono-sm text-ink-muted">
                   {schritt.nr}
                 </span>
                 <div>
-                  <h3 className="text-label uppercase text-ink">
-                    {schritt.titel}
+                  <h3 className="flex flex-wrap items-center gap-2 text-label uppercase text-ink">
+                    <span>{schritt.titel}</span>
+                    {schritt.erledigt && <Badge variant="green">Erledigt</Badge>}
                   </h3>
                   <p className="mt-1 text-body-sm text-ink-muted">
                     {schritt.text}
@@ -182,7 +287,7 @@ export default function DashboardPage() {
           </ol>
         </div>
         <LegalCardFooter>
-          Onboarding und Status-Analyse folgen im nächsten Paket
+          Status-Analyse und Dokumente folgen im nächsten Paket
         </LegalCardFooter>
       </LegalCard>
 
