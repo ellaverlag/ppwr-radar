@@ -1,0 +1,187 @@
+import "server-only";
+
+import { createClient as createBareClient, type SupabaseClient } from "@supabase/supabase-js";
+import type { Antwort, WizardState } from "@/lib/onboarding";
+import {
+  ENGINE_VERSION,
+  evaluiereAlle,
+  type LinienErgebnis,
+  type LinienKontext,
+  type RegelRow,
+  type UnternehmenKontext,
+} from "@/lib/rollen-engine";
+import { createClient as createSessionClient } from "@/lib/supabase/server";
+
+/**
+ * IO-Schicht der Rollen-Engine.
+ *
+ * Die RLS-Policies erlauben eingeloggten Nutzern nur das Lesen
+ * freigegebener Regeln und kein Schreiben in rollen_ergebnisse. Die Engine
+ * muss aber laut Fachkonzept auch ungeprüfte Regeln auswerten (Flag-'!'-
+ * Markierung statt Ausschluss). Deshalb nutzt dieses Modul den
+ * Service-Role-Client, sobald der Schlüssel vorhanden ist (Preview UND
+ * Produktion), und fällt sonst auf den Session-Client zurück.
+ */
+function privilegierterClient(): SupabaseClient | null {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!key) return null;
+  return createBareClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
+async function leseClient(): Promise<SupabaseClient> {
+  return privilegierterClient() ?? (await createSessionClient());
+}
+
+export async function ladeRegeln(): Promise<RegelRow[]> {
+  const client = await leseClient();
+  const { data, error } = await client
+    .from("rollen_regeln")
+    .select("*")
+    .eq("aktiv", true)
+    .order("prioritaet", { ascending: true });
+  if (error) {
+    throw new Error(`Rollen-Regeln konnten nicht geladen werden: ${error.message}`);
+  }
+  return (data ?? []) as RegelRow[];
+}
+
+/** Begriffe (auch ungeprüfte) für Labels und die Verwechslungsfalle-Karte. */
+export async function ladeRollenBegriffe(): Promise<
+  Record<string, { begriff_de: string; fundstelle_ppwr: string; verwechslungsfaelle: string | null }>
+> {
+  const client = await leseClient();
+  const { data } = await client
+    .from("rollen_definitionen")
+    .select("rolle_id, begriff_de, fundstelle_ppwr, verwechslungsfaelle")
+    .eq("aktiv", true);
+  const map: Record<
+    string,
+    { begriff_de: string; fundstelle_ppwr: string; verwechslungsfaelle: string | null }
+  > = {};
+  for (const row of data ?? []) {
+    map[row.rolle_id as string] = {
+      begriff_de: row.begriff_de as string,
+      fundstelle_ppwr: row.fundstelle_ppwr as string,
+      verwechslungsfaelle: row.verwechslungsfaelle as string | null,
+    };
+  }
+  return map;
+}
+
+export async function ladeAppConfig(key: string): Promise<string | null> {
+  const client = await leseClient();
+  const { data } = await client
+    .from("app_config")
+    .select("value")
+    .eq("key", key)
+    .maybeSingle();
+  return (data?.value as string | undefined) ?? null;
+}
+
+// ---------------------------------------------------------------------------
+// WizardState → Engine-Kontexte
+// ---------------------------------------------------------------------------
+
+const einzel = (a: Antwort | undefined): string | null =>
+  typeof a === "string" && a !== "" ? a : null;
+
+const mehrfach = (a: Antwort | undefined): string[] =>
+  Array.isArray(a) ? a : [];
+
+export function unternehmenAusState(state: WizardState): UnternehmenKontext {
+  const sitz = (einzel(state.unternehmen.sitz) ?? "DE") as UnternehmenKontext["sitz"];
+  return {
+    sitz,
+    niederlassungDE:
+      sitz === "DE" || einzel(state.unternehmen.niederlassung_DE) === "ja",
+    kleinstunternehmen:
+      einzel(state.unternehmen.unternehmensgroesse) === "kleinstunternehmen",
+  };
+}
+
+export function linienAusState(state: WizardState): LinienKontext[] {
+  return state.produktlinien.map((name, index) => {
+    const a = state.linien[String(index)] ?? {};
+    return {
+      name,
+      verpackungsart: mehrfach(a.verpackungsart),
+      taetigkeit: mehrfach(a.taetigkeit),
+      marke: einzel(a.marke_auf_verpackung) as LinienKontext["marke"],
+      lieferantSitz: einzel(
+        a.verpackungslieferant_sitz
+      ) as LinienKontext["lieferantSitz"],
+      ersteBereitstellung: einzel(
+        a.erste_bereitstellung_aus_DE_in_DE
+      ) as LinienKontext["ersteBereitstellung"],
+      vertriebsweg: mehrfach(a.vertriebsweg),
+      istEndabnehmer: einzel(a.ist_endabnehmer) as LinienKontext["istEndabnehmer"],
+      dienstleistungen: mehrfach(a.dienstleistungen),
+      lebensmittelkontakt:
+        einzel(a.lebensmittelkontakt) === null
+          ? null
+          : einzel(a.lebensmittelkontakt) === "ja",
+    };
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Auswerten + Persistieren
+// ---------------------------------------------------------------------------
+
+export async function werteAusUndSpeichere(
+  profilId: string,
+  state: WizardState
+): Promise<LinienErgebnis[]> {
+  const regeln = await ladeRegeln();
+  if (regeln.length === 0) {
+    throw new Error(
+      "Keine Rollen-Regeln verfügbar (Service-Role-Key fehlt oder Regeln nicht freigegeben)."
+    );
+  }
+
+  const ergebnisse = evaluiereAlle(
+    regeln,
+    unternehmenAusState(state),
+    linienAusState(state)
+  );
+
+  const rechtsstand =
+    regeln
+      .map((r) => r.rechtsstand)
+      .filter(Boolean)
+      .sort()
+      .at(-1) ?? new Date().toISOString().slice(0, 10);
+
+  const schreibClient = privilegierterClient();
+  if (!schreibClient) {
+    throw new Error(
+      "Rollen-Ergebnisse können ohne SUPABASE_SERVICE_ROLE_KEY nicht gespeichert werden."
+    );
+  }
+
+  const { error: delError } = await schreibClient
+    .from("rollen_ergebnisse")
+    .delete()
+    .eq("profil_id", profilId);
+  if (delError) {
+    throw new Error(`Alte Rollen-Ergebnisse nicht löschbar: ${delError.message}`);
+  }
+
+  const { error: insError } = await schreibClient.from("rollen_ergebnisse").insert(
+    ergebnisse.map((e) => ({
+      profil_id: profilId,
+      produktlinie: e.produktlinie,
+      rollen_set: e.rollen_set,
+      herleitung: e.herleitung,
+      rechtsstand,
+      engine_version: ENGINE_VERSION,
+    }))
+  );
+  if (insError) {
+    throw new Error(`Rollen-Ergebnisse nicht speicherbar: ${insError.message}`);
+  }
+
+  return ergebnisse;
+}
