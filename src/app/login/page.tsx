@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { loginWithMagicLink } from "./actions";
 
 export const metadata: Metadata = {
@@ -22,56 +23,57 @@ export default async function LoginPage({
   const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-neutral-50 px-4">
+    <main className="flex min-h-screen items-center justify-center bg-surface px-4">
       <div className="w-full max-w-md">
-        <div className="mb-10 text-center">
-          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900">
-            PPWR <span className="text-accent">Radar</span>
-          </h1>
-          <p className="mt-2 text-sm text-neutral-500">
-            Verpackungs-Compliance im Blick
+        <div className="mb-12 text-center">
+          <Image
+            src="/ppwr-radar-logo.svg"
+            alt="PPWR Radar"
+            width={226}
+            height={35}
+            priority
+            className="mx-auto"
+          />
+          <p className="mt-3 text-label uppercase text-ink-muted">
+            by packaging journal
           </p>
         </div>
 
-        <div className="rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
+        <div className="rounded border border-line bg-canvas p-8">
           {params.sent ? (
             <div className="text-center">
-              <h2 className="text-lg font-medium text-neutral-900">
-                E-Mail unterwegs
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-neutral-600">
+              <h1 className="text-headline text-ink">E-Mail unterwegs</h1>
+              <p className="mt-4 text-body text-ink-muted">
                 Wir haben einen Anmelde-Link an{" "}
-                <span className="font-medium text-neutral-900">
-                  {params.email}
-                </span>{" "}
-                gesendet. Öffnen Sie die E-Mail und klicken Sie auf den Link,
-                um sich anzumelden.
+                <span className="font-semibold text-ink">{params.email}</span>{" "}
+                gesendet. Öffnen Sie die E-Mail und klicken Sie auf den Link, um
+                sich anzumelden.
               </p>
               <a
                 href="/login"
-                className="mt-6 inline-block text-sm font-medium text-accent hover:underline"
+                className="mt-8 inline-block text-body-sm font-medium text-legal hover:underline"
               >
                 Andere E-Mail-Adresse verwenden
               </a>
             </div>
           ) : (
             <>
-              <h2 className="text-lg font-medium text-neutral-900">Anmelden</h2>
-              <p className="mt-1 text-sm text-neutral-500">
+              <h1 className="text-headline text-ink">Anmelden</h1>
+              <p className="mt-2 text-body text-ink-muted">
                 Sie erhalten einen Anmelde-Link per E-Mail – ohne Passwort.
               </p>
 
               {errorMessage && (
-                <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+                <p className="mt-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
                   {errorMessage}
                 </p>
               )}
 
-              <form action={loginWithMagicLink} className="mt-6 space-y-4">
+              <form action={loginWithMagicLink} className="mt-8 space-y-6">
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-sm font-medium text-neutral-700"
+                    className="block text-label uppercase text-ink-muted"
                   >
                     E-Mail-Adresse
                   </label>
@@ -82,12 +84,12 @@ export default async function LoginPage({
                     required
                     autoComplete="email"
                     placeholder="name@firma.de"
-                    className="mt-1.5 w-full rounded-lg border border-neutral-300 px-3.5 py-2.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
+                    className="mt-2 w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-accent/40 focus:ring-offset-2"
+                  className="w-full rounded bg-primary px-6 py-4 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
                 >
                   Anmelde-Link senden
                 </button>
@@ -95,6 +97,10 @@ export default async function LoginPage({
             </>
           )}
         </div>
+
+        <p className="mt-8 text-center text-body-sm text-ink-muted">
+          Verpackungs-Compliance im Blick – zur EU-Verpackungsverordnung (PPWR).
+        </p>
       </div>
     </main>
   );
