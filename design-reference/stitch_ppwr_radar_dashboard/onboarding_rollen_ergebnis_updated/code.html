@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PPWR Onboarding - Ihre Rollen</title>
+<!-- Google Fonts & Material Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#003b82",
+                        "surface-container": "#eeeeee",
+                        "on-secondary": "#ffffff",
+                        "primary": "#006950",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "tertiary-fixed": "#ffe08b",
+                        "surface-container-low": "#f3f3f3",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#f1c100",
+                        "surface-tint": "#006c52",
+                        "on-surface-variant": "#3d4944",
+                        "on-error": "#ffffff",
+                        "on-background": "#1b1b1b",
+                        "tertiary-container": "#d0a600",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#4f3d00",
+                        "surface-variant": "#e2e2e2",
+                        "outline": "#6d7a73",
+                        "on-primary-container": "#f5fff8",
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#001a41",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#303030",
+                        "surface": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e8e8e8",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-fixed-variant": "#004494",
+                        "surface-bright": "#f9f9f9",
+                        "secondary": "#2b5cad",
+                        "on-primary-fixed": "#002117",
+                        "surface-dim": "#dadada",
+                        "surface-container-highest": "#e2e2e2",
+                        "inverse-primary": "#68dbb4",
+                        "secondary-container": "#7ca8fe",
+                        "outline-variant": "#bccac2",
+                        "on-primary-fixed-variant": "#00513d",
+                        "tertiary": "#745b00",
+                        "on-surface": "#1b1b1b",
+                        "primary-container": "#008566",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-fixed-dim": "#68dbb4",
+                        "primary-fixed": "#86f7cf",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "md": "16px",
+                        "max-width": "1200px",
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "xxl": "48px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["jetbrainsMono"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "26px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .expand-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, margin 0.3s ease-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            margin-top: 0;
+        }
+        .expand-content.open {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 1rem; /* spacing xl roughly */
+        }
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        .expand-icon.open {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen flex flex-col font-body-md antialiased">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface dark:bg-surface-container-low text-secondary dark:text-secondary-fixed font-headline-md text-headline-md border-b border-outline-variant dark:border-outline flex justify-between items-center h-16 px-gutter sticky top-0 z-10">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-16">
+<div class="font-headline-md text-headline-md text-primary font-bold">
+                PPWR Radar
+            </div>
+<!-- Desktop Nav (None active due to onboarding intent) -->
+<nav class="hidden md:flex gap-xl h-full items-end">
+<a class="text-on-surface-variant hover:text-primary-container transition-colors duration-200 font-body-md text-body-md pb-1 border-b-2 border-transparent" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors duration-200 font-body-md text-body-md pb-1 border-b-2 border-transparent" href="#">Analysen</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors duration-200 font-body-md text-body-md pb-1 border-b-2 border-transparent" href="#">Bibliothek</a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors duration-200 font-body-md text-body-md pb-1 border-b-2 border-transparent" href="#">Profil</a>
+</nav>
+<div class="flex items-center gap-md">
+<button class="font-body-md text-body-md text-primary hover:text-primary-container transition-colors duration-200">
+                    Support
+                </button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-grow w-full flex flex-col items-center justify-center py-xxl px-margin-mobile md:px-margin-desktop">
+<!-- Editorial Container -->
+<div class="max-w-[680px] w-full">
+<!-- Header Section -->
+<div class="text-center mb-xxl">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-md">
+                    Ihre Rollen nach PPWR
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                    Basierend auf Ihren Angaben wurden folgende rechtliche Rollen für Ihre Produktlinien ermittelt.
+                </p>
+</div>
+<!-- Expandable Cards List -->
+<div class="flex flex-col gap-lg w-full">
+<!-- Card 1 -->
+<div aria-expanded="false" class="legal-card rounded cursor-pointer toggle-card flex flex-col">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-xs">Produktlinie</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Transportverpackungen</h2>
+</div>
+<div class="flex items-center gap-md">
+<span class="role-chip font-label-md text-label-md px-sm py-xs rounded flex items-center space-x-xs cursor-pointer hover:bg-secondary-fixed transition-colors">
+                                Hersteller
+                            </span>
+<span class="material-symbols-outlined text-outline expand-icon select-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="expand-content">
+<div class="pt-md border-t border-surface-variant">
+<p class="font-body-md text-body-md text-on-surface mb-md">
+<strong class="font-semibold">Rechtliche Begründung:</strong> Da Sie die Verpackung unter eigenem Namen in den Verkehr bringen, gelten Sie gemäß PPWR als Hersteller.
+                            </p>
+<div class="flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="gavel">gavel</span>
+<span class="font-label-md text-label-md">Art. 13 PPWR</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div aria-expanded="false" class="legal-card rounded cursor-pointer toggle-card flex flex-col">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div>
+<div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-xs">Produktlinie</div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Verkaufsverpackungen (PET)</h2>
+</div>
+<div class="flex items-center gap-md">
+<span class="role-chip font-label-md text-label-md px-sm py-xs rounded flex items-center space-x-xs cursor-pointer hover:bg-secondary-fixed transition-colors">
+                                Einführer
+                            </span>
+<span class="material-symbols-outlined text-outline expand-icon select-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="expand-content">
+<div class="pt-md border-t border-surface-variant">
+<p class="font-body-md text-body-md text-on-surface mb-md">
+<strong class="font-semibold">Rechtliche Begründung:</strong> Der Import aus Drittstaaten klassifiziert Ihr Unternehmen als Einführer mit entsprechenden Sorgfaltspflichten.
+                            </p>
+<div class="flex items-center gap-xs text-secondary">
+<span class="material-symbols-outlined text-[16px]" data-icon="gavel">gavel</span>
+<span class="font-label-md text-label-md">Art. 14 PPWR</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-xxl flex justify-center">
+<button class="action-primary font-label-md text-label-md px-lg py-md rounded uppercase tracking-widest flex items-center space-x-sm hover:opacity-90 transition-opacity">
+                    Zur Status-Analyse
+                    <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="bg-surface-container-low dark:bg-surface-container-lowest text-secondary dark:text-secondary-fixed font-label-md text-label-md border-t border-outline-variant dark:border-outline flex justify-between items-center py-md px-gutter mt-auto">
+<div class="max-w-[1200px] mx-auto px-margin-mobile md:px-margin-desktop py-lg flex flex-col md:flex-row justify-between items-center gap-md">
+<div class="font-label-md text-label-md font-bold">
+                © 2024 PPWR Radar Regulatory Intelligence
+            </div>
+<nav class="flex gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Impressum</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Datenschutz</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Kontakt</a>
+</nav>
+</div>
+</footer>
+<!-- Interactive Logic -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.toggle-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const content = card.querySelector('.expand-content');
+                    const icon = card.querySelector('.expand-icon');
+                    const isExpanded = card.getAttribute('aria-expanded') === 'true';
+                    
+                    if (isExpanded) {
+                        content.classList.remove('open');
+                        icon.classList.remove('open');
+                        card.setAttribute('aria-expanded', 'false');
+                    } else {
+                        content.classList.add('open');
+                        icon.classList.add('open');
+                        card.setAttribute('aria-expanded', 'true');
+                    }
+                });
+            });
+        });
+    </script>
+</body></html>

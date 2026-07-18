@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="antialiased" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ihre Ersteinschätzung - PPWR Radar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#004494",
+                        "outline-variant": "#bccac2",
+                        "on-secondary-fixed": "#001a41",
+                        "primary": "#006950",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "primary-container": "#008566",
+                        "on-surface": "#1b1b1b",
+                        "primary-fixed": "#86f7cf",
+                        "background": "#f9f9f9",
+                        "surface": "#f9f9f9",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f9f9f9",
+                        "tertiary-container": "#d0a600",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#003b82",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f1f1f1",
+                        "on-tertiary-container": "#4f3d00",
+                        "on-primary-container": "#f5fff8",
+                        "tertiary": "#745b00",
+                        "surface-variant": "#e2e2e2",
+                        "surface-container-low": "#f3f3f3",
+                        "on-surface-variant": "#3d4944",
+                        "inverse-surface": "#303030",
+                        "tertiary-fixed-dim": "#f1c100",
+                        "surface-tint": "#006c52",
+                        "surface-container-highest": "#e2e2e2",
+                        "outline": "#6d7a73",
+                        "surface-container-high": "#e8e8e8",
+                        "secondary-container": "#7ca8fe",
+                        "on-primary-fixed": "#002117",
+                        "surface-container-lowest": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-container": "#eeeeee",
+                        "secondary": "#2b5cad",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#dadada",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffe08b",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "secondary-fixed": "#d8e2ff",
+                        "primary-fixed-dim": "#68dbb4",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-background": "#1b1b1b",
+                        "inverse-primary": "#68dbb4",
+                        "on-primary-fixed-variant": "#00513d",
+                        "accent-amber": "#FFCC00",
+                        "accent-green": "#24A27F"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px",
+                        "xl": "32px",
+                        "xs": "4px",
+                        "max-width": "1200px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "base": "8px",
+                        "xxl": "48px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+                        "mono-sm": ["13px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "30px", "fontWeight": "400" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (Minimal) -->
+<header class="bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline flex justify-between items-center h-20 px-margin-desktop max-w-max-width mx-auto w-full">
+<div class="flex flex-col">
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface dark:text-on-surface m-0 leading-tight">PPWR Radar</h1>
+<span class="font-label-md text-label-md text-on-surface-variant">by packaging journal</span>
+</div>
+<!-- Intentionally suppressed navigation for linear funnel -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-margin-mobile md:px-margin-desktop py-xxl">
+<div class="w-full max-w-[800px] flex flex-col gap-xxl">
+<!-- Header Section -->
+<div class="text-center">
+<h2 class="font-display-lg text-display-lg text-on-surface mb-sm">Ihre Ersteinschätzung</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-[600px] mx-auto">
+                    Basierend auf Ihren Angaben im Betroffenheits-Check.
+                </p>
+</div>
+<!-- Result Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-none p-lg md:p-xl flex flex-col gap-lg">
+<!-- Status Line -->
+<div class="flex items-center gap-md p-md bg-surface border border-outline-variant rounded-none">
+<div class="w-4 h-4 rounded-full bg-accent-amber shrink-0 border border-[#CC9900]"></div>
+<p class="font-headline-md text-headline-md m-0">Die PPWR betrifft Ihr Unternehmen voraussichtlich in mehreren Bereichen.</p>
+</div>
+<!-- Content Rows -->
+<div class="flex flex-col gap-md py-sm">
+<!-- Row 1 -->
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-primary mt-1 shrink-0">check_circle</span>
+<p class="font-body-md text-body-md m-0">Ihre Rolle: voraussichtlich <span class="font-semibold text-on-surface">Erzeuger</span> für 2 Produktlinien</p>
+</div>
+<!-- Row 2 -->
+<div class="flex items-start gap-md">
+<span class="material-symbols-outlined text-primary mt-1 shrink-0">check_circle</span>
+<p class="font-body-md text-body-md m-0">Relevante Pflichten seit 12.08.2026: <span class="font-semibold text-on-surface">Konformitätsbewertung, Kennzeichnung</span></p>
+</div>
+<!-- Row 3 -->
+<div class="flex items-start gap-md opacity-60">
+<span class="material-symbols-outlined text-outline mt-1 shrink-0">lock</span>
+<p class="font-body-md text-body-md m-0 blur-[2px] select-none pointer-events-none transition-all duration-300 hover:blur-[1px]">Weitere Anforderungen folgen 2028/2030, inklusive spezifischer Dokumentationspflichten und Recyclingquoten.</p>
+</div>
+</div>
+<!-- Source Line -->
+<div class="mt-sm pt-md border-t border-outline-variant flex items-center justify-between">
+<p class="font-label-md text-label-md text-on-secondary-fixed-variant m-0">Basierend auf Verordnung (EU) 2025/40 · Stand 12.08.2026</p>
+<span class="material-symbols-outlined text-on-secondary-fixed-variant" style="font-variation-settings: 'FILL' 0;">info</span>
+</div>
+</div>
+<!-- Conversion Section -->
+<div class="flex flex-col items-center text-center gap-lg mt-md">
+<div class="max-w-[600px]">
+<h3 class="font-headline-md text-headline-md mb-md">Was heißt das konkret für Ihre Verpackungen?</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                        PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen je Produktlinie, Status-Analyse und persönlichem Fristen-Dashboard.
+                    </p>
+</div>
+<div class="flex flex-col items-center gap-md w-full max-w-[400px]">
+<button class="w-full bg-accent-green hover:bg-primary-container text-on-primary font-headline-md text-headline-md py-md px-lg transition-colors border border-transparent rounded-none shadow-none cursor-pointer flex items-center justify-center gap-sm">
+                        Jetzt PPWR|ready werden – 490 €
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<a class="font-body-md text-body-md text-primary hover:text-on-surface border-b border-primary hover:border-on-surface pb-[1px] transition-colors cursor-pointer" href="#">
+                        Mehr über PPWR Radar erfahren
+                    </a>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-margin-desktop max-w-max-width mx-auto flex flex-col md:flex-row justify-center items-center gap-base mt-auto border-t border-outline-variant dark:border-outline">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-center">Ersteinschätzung auf Basis Ihrer Angaben. Keine Rechtsberatung.</p>
+</footer>
+</body></html>

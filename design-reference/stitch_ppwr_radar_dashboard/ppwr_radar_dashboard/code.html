@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="de"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PPWR Radar - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dadada",
+                        "surface-bright": "#f9f9f9",
+                        "secondary": "#2b5cad",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-fixed-variant": "#004494",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9f9f9",
+                        "surface-container-high": "#e8e8e8",
+                        "inverse-surface": "#303030",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#86f7cf",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#adc6ff",
+                        "primary-fixed-dim": "#68dbb4",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#745b00",
+                        "on-surface": "#1b1b1b",
+                        "inverse-on-surface": "#f1f1f1",
+                        "primary-container": "#008566",
+                        "outline-variant": "#bccac2",
+                        "secondary-container": "#7ca8fe",
+                        "on-primary-fixed-variant": "#00513d",
+                        "inverse-primary": "#68dbb4",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-tint": "#006c52",
+                        "on-surface-variant": "#3d4944",
+                        "tertiary-fixed-dim": "#f1c100",
+                        "on-error": "#ffffff",
+                        "on-background": "#1b1b1b",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f3f3f3",
+                        "on-tertiary-fixed-variant": "#584400",
+                        "tertiary-fixed": "#ffe08b",
+                        "secondary-fixed": "#d8e2ff",
+                        "on-secondary": "#ffffff",
+                        "primary": "#006950",
+                        "on-secondary-container": "#003b82",
+                        "surface-container": "#eeeeee",
+                        "on-primary-container": "#f5fff8",
+                        "background": "#f9f9f9",
+                        "on-secondary-fixed": "#001a41",
+                        "outline": "#6d7a73",
+                        "surface-variant": "#e2e2e2",
+                        "tertiary-container": "#d0a600",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#4f3d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xxl": "48px",
+                        "xl": "32px",
+                        "lg": "24px",
+                        "base": "8px",
+                        "sm": "8px",
+                        "gutter": "24px",
+                        "md": "16px",
+                        "max-width": "1200px",
+                        "xs": "4px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "64px"
+                    },
+                    "fontFamily": {
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-sm": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "22px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "30px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "26px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #ffffff; color: #1b1b1b; }
+        .legal-card { border: 1px solid #E5E5E5; background-color: #ffffff; }
+        .legal-footer { border-top: 1px solid #E5E5E5; color: #004494; }
+        .traffic-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+        .dot-green { background-color: #006950; }
+        .dot-amber { background-color: #FFCC00; }
+        .dot-red { background-color: #ba1a1a; }
+        .timeline-track { position: relative; height: 2px; background-color: #E5E5E5; margin: 32px 0; }
+        .timeline-marker { position: absolute; top: -5px; width: 12px; height: 12px; border-radius: 50%; background-color: #1b1b1b; }
+        .timeline-marker.active { background-color: #FFCC00; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #1b1b1b; }
+        .role-chip { border: 1px solid #004494; color: #004494; }
+        .action-primary { background-color: #006950; color: #ffffff; }
+        .action-secondary { background-color: #ffffff; color: #1b1b1b; border: 1px solid #1b1b1b; }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-surface dark:bg-surface-container-low text-primary dark:text-primary-fixed font-body-md text-body-md fixed left-0 top-0 h-full w-64 border-r border-outline-variant dark:border-outline flex flex-col h-full py-lg px-md z-20">
+<div class="mb-xxl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface">PPWR Radar</h1>
+<p class="font-label-md text-label-md text-on-surface-variant dark:text-surface-variant mt-xs uppercase">by packaging journal</p>
+</div>
+<ul class="flex-1 space-y-md">
+<li>
+<a class="flex items-center space-x-md text-primary dark:text-primary-fixed font-bold border-r-2 border-primary py-sm px-sm hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors opacity-80 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-md text-on-surface-variant dark:text-surface-variant font-medium py-sm px-sm hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Meine Dokumente</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-md text-on-surface-variant dark:text-surface-variant font-medium py-sm px-sm hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span>Assistant</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-md text-on-surface-variant dark:text-surface-variant font-medium py-sm px-sm hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">school</span>
+<span>Wissen</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-md text-on-surface-variant dark:text-surface-variant font-medium py-sm px-sm hover:bg-surface-container dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">video_library</span>
+<span>Webinare</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface-container-low text-secondary dark:text-secondary-fixed font-headline-md text-headline-md border-b border-outline-variant dark:border-outline flex justify-between items-center h-16 px-gutter sticky top-0 z-10">
+<div class="flex items-center">
+<span class="font-headline-md text-headline-md font-bold text-on-surface dark:text-inverse-on-surface hidden md:block">PPWR Radar</span>
+</div>
+<div class="flex items-center space-x-gutter text-on-surface-variant font-body-sm text-body-sm">
+<span class="hidden md:inline-block border border-outline-variant px-sm py-xs rounded">Rechtsstand: 12.08.2026</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface">person</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="p-margin-desktop flex-1 max-w-[1200px] mx-auto w-full">
+<div class="mb-xxl">
+<h2 class="font-display-lg text-display-lg text-on-surface mb-md">Dashboard</h2>
+<div class="flex space-x-md">
+<button class="action-primary font-label-md text-label-md px-lg py-md rounded uppercase tracking-widest flex items-center space-x-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Neues Dokument erstellen</span>
+</button>
+<button class="action-secondary font-label-md text-label-md px-lg py-md rounded uppercase tracking-widest flex items-center space-x-sm hover:bg-surface transition-colors">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+<span>Assistant fragen</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-lg">
+<!-- Status Card (Col 1-4) -->
+<div class="col-span-12 md:col-span-4 legal-card rounded flex flex-col">
+<div class="p-lg flex-1">
+<h3 class="font-headline-md text-headline-md mb-xl">Ihr Compliance-Status</h3>
+<div class="space-y-md">
+<div class="flex items-center justify-between border-b border-surface-container-highest pb-sm">
+<span class="font-body-lg text-body-lg text-on-surface-variant">Vollständig</span>
+<div class="flex space-x-xs">
+<span class="traffic-dot dot-green"></span>
+<span class="traffic-dot dot-green"></span>
+<span class="traffic-dot dot-green"></span>
+</div>
+</div>
+<div class="flex items-center justify-between border-b border-surface-container-highest pb-sm">
+<span class="font-body-lg text-body-lg font-bold text-on-surface">Offen (Kritisch)</span>
+<div class="flex items-center space-x-sm">
+<span class="font-body-md text-body-md font-bold text-error">3 offene Punkte</span>
+<span class="traffic-dot dot-red"></span>
+</div>
+</div>
+<div class="flex items-center justify-between pb-sm">
+<span class="font-body-lg text-body-lg text-on-surface-variant">In Bearbeitung</span>
+<div class="flex space-x-xs">
+<span class="traffic-dot dot-amber"></span>
+<span class="traffic-dot dot-amber"></span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-md legal-footer font-mono-sm text-mono-sm uppercase">
+                        Art. 15 PPWR · Stand 12.08.2026
+                    </div>
+</div>
+<!-- Roles Card (Col 5-8) -->
+<div class="col-span-12 md:col-span-4 legal-card rounded flex flex-col">
+<div class="p-lg flex-1">
+<h3 class="font-headline-md text-headline-md mb-xl">Ihre Rollen</h3>
+<div class="space-y-lg">
+<div>
+<h4 class="font-body-md text-body-md font-bold mb-sm text-on-surface-variant">Produktlinie A</h4>
+<div class="flex flex-wrap gap-sm">
+<span class="role-chip font-label-md text-label-md px-sm py-xs rounded flex items-center space-x-xs cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span>Erzeuger</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</span>
+<span class="role-chip font-label-md text-label-md px-sm py-xs rounded flex items-center space-x-xs cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span>Hersteller</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</span>
+</div>
+</div>
+<div class="border-t border-surface-container-highest pt-md">
+<h4 class="font-body-md text-body-md font-bold mb-sm text-on-surface-variant">Produktlinie B</h4>
+<div class="flex flex-wrap gap-sm">
+<span class="role-chip font-label-md text-label-md px-sm py-xs rounded flex items-center space-x-xs cursor-pointer hover:bg-secondary-fixed transition-colors">
+<span>Importeur</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-md legal-footer font-mono-sm text-mono-sm uppercase">
+                        Art. 15 PPWR · Stand 12.08.2026
+                    </div>
+</div>
+<!-- Timeline Card (Col 9-12) -->
+<div class="col-span-12 md:col-span-4 legal-card rounded flex flex-col">
+<div class="p-lg flex-1">
+<h3 class="font-headline-md text-headline-md mb-xl">Fristen</h3>
+<div class="timeline-track mt-xxl">
+<!-- Markers -->
+<div class="timeline-marker active" style="left: 0%;"></div>
+<div class="timeline-marker" style="left: 50%;"></div>
+<div class="timeline-marker" style="left: 100%;"></div>
+<!-- Labels -->
+<div class="absolute top-md left-0 transform -translate-x-1/4 text-center">
+<div class="font-label-md text-label-md font-bold" style="color: #FFCC00;">12.08.2026</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Phase 1</div>
+</div>
+<div class="absolute top-md left-1/2 transform -translate-x-1/2 text-center">
+<div class="font-label-md text-label-md">2028</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Phase 2</div>
+</div>
+<div class="absolute top-md right-0 transform translate-x-1/4 text-center">
+<div class="font-label-md text-label-md">2030</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Phase 3</div>
+</div>
+</div>
+<div class="mt-xxl pt-md border-t border-surface-container-highest">
+<p class="font-body-sm text-body-sm text-on-surface-variant"><span class="font-bold text-on-surface">Nächste Frist:</span> Einreichung der Erstbewertung.</p>
+</div>
+</div>
+<div class="p-md legal-footer font-mono-sm text-mono-sm uppercase">
+                        Art. 15 PPWR · Stand 12.08.2026
+                    </div>
+</div>
+<!-- Update Feed Card (Full Width) -->
+<div class="col-span-12 legal-card rounded flex flex-col mt-lg">
+<div class="p-lg flex-1">
+<h3 class="font-headline-md text-headline-md mb-xl">Radar-Updates</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-lg border-l border-surface-container-highest pl-md">
+<!-- Memo 1 -->
+<div class="relative pl-md">
+<div class="absolute left-[-24px] top-xs w-2 h-2 rounded-full bg-on-surface"></div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mb-xs">01.10.2024</div>
+<h4 class="font-body-lg text-body-lg font-bold mb-sm">Delegierter Rechtsakt Entwurf veröffentlicht</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Die Kommission hat den ersten Entwurf zur Berechnung der Rezyklatanteile vorgelegt.</p>
+<span class="inline-block font-label-md text-label-md border border-[#006950] text-[#006950] px-sm py-xs rounded bg-[#006950]/5">
+                                    Betrifft 2 Ihrer Verpackungstypen
+                                </span>
+</div>
+<!-- Memo 2 -->
+<div class="relative pl-md">
+<div class="absolute left-[-24px] top-xs w-2 h-2 rounded-full bg-surface-dim"></div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mb-xs">15.09.2024</div>
+<h4 class="font-body-lg text-body-lg font-bold mb-sm">Q&A Dokument aktualisiert</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">Klarstellungen zum Begriff "Inverkehrbringen" wurden hinzugefügt.</p>
+<span class="inline-block font-label-md text-label-md border border-outline-variant text-on-surface-variant px-sm py-xs rounded">
+                                    Allgemeine Info
+                                </span>
+</div>
+<!-- Memo 3 -->
+<div class="relative pl-md">
+<div class="absolute left-[-24px] top-xs w-2 h-2 rounded-full bg-surface-dim"></div>
+<div class="font-mono-sm text-mono-sm text-on-surface-variant mb-xs">02.09.2024</div>
+<h4 class="font-body-lg text-body-lg font-bold mb-sm">Normungsmandat erteilt</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-md">CEN erhält offizielles Mandat zur Entwicklung harmonisierter Normen für Design for Recycling.</p>
+<span class="inline-block font-label-md text-label-md border border-[#006950] text-[#006950] px-sm py-xs rounded bg-[#006950]/5">
+                                    Betrifft 1 Ihrer Produktlinien
+                                </span>
+</div>
+</div>
+</div>
+<div class="p-md legal-footer font-mono-sm text-mono-sm uppercase">
+                        Art. 15 PPWR · Stand 12.08.2026
+                    </div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-low dark:bg-surface-container-lowest text-secondary dark:text-secondary-fixed font-label-md text-label-md border-t border-outline-variant dark:border-outline flex justify-between items-center py-md px-gutter mt-auto">
+<div class="font-label-md text-label-md font-bold">
+                © 2024 PPWR Radar. Legal citations: EU Regulation 2024/PPWR.
+            </div>
+<ul class="flex space-x-lg">
+<li><a class="text-on-surface-variant hover:underline transition-all" href="#">Impressum</a></li>
+<li><a class="text-on-surface-variant hover:underline transition-all" href="#">Datenschutz</a></li>
+<li><a class="text-on-surface-variant hover:underline transition-all" href="#">Kontakt</a></li>
+</ul>
+</footer>
+</main>
+</body></html>
