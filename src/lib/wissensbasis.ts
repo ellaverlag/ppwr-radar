@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { isPreviewMode } from "@/lib/preview";
+import { createClient as createSessionClient } from "@/lib/supabase/server";
 
 /**
  * Zentrale Datenzugriffs-Schicht für die Wissensbasis
@@ -9,7 +10,9 @@ import { isPreviewMode } from "@/lib/preview";
  *
  * Zentrale Regel: Standardmäßig werden nur freigegebene Inhalte gelesen
  * (review_status = 'cattwyk_freigegeben' AND ausspielen = true) – über den
- * Anon-Client. Nur wenn PREVIEW_MODE=true, wird stattdessen der
+ * Session-Client des eingeloggten Nutzers; die RLS-Policies erlauben
+ * Lesen ausschließlich für `authenticated` und erzwingen denselben Filter
+ * serverseitig. Nur wenn PREVIEW_MODE=true, wird stattdessen der
  * Service-Role-Client ohne diesen Filter verwendet, damit die Redaktion
  * ungeprüfte Inhalte in der App sehen kann.
  *
@@ -127,15 +130,18 @@ export interface WizardFrage {
 
 const FREIGEGEBEN: ReviewStatus = "cattwyk_freigegeben";
 
-function wissensbasisClient(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = isPreviewMode()
-    ? process.env.SUPABASE_SERVICE_ROLE_KEY!
-    : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+async function wissensbasisClient(): Promise<SupabaseClient> {
+  if (isPreviewMode()) {
+    return createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
+  }
 
-  return createClient(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
+  // Session-Client des eingeloggten Nutzers – nur so greifen die
+  // RLS-Policies für `authenticated` (anon darf nichts lesen).
+  return createSessionClient();
 }
 
 // ---------------------------------------------------------------------------
@@ -143,7 +149,8 @@ function wissensbasisClient(): SupabaseClient {
 // ---------------------------------------------------------------------------
 
 export async function getAnforderungen(): Promise<Anforderung[]> {
-  let query = wissensbasisClient()
+  const client = await wissensbasisClient();
+  let query = client
     .from("anforderungen")
     .select("*")
     .order("nr", { ascending: true, nullsFirst: false });
@@ -160,7 +167,8 @@ export async function getAnforderungen(): Promise<Anforderung[]> {
 }
 
 export async function getAnforderung(id: string): Promise<Anforderung | null> {
-  let query = wissensbasisClient().from("anforderungen").select("*").eq("id", id);
+  const client = await wissensbasisClient();
+  let query = client.from("anforderungen").select("*").eq("id", id);
 
   if (!isPreviewMode()) {
     query = query.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
@@ -174,7 +182,8 @@ export async function getAnforderung(id: string): Promise<Anforderung | null> {
 }
 
 export async function getAuslegungen(search?: string): Promise<Auslegung[]> {
-  let query = wissensbasisClient()
+  const client = await wissensbasisClient();
+  let query = client
     .from("auslegungen")
     .select("*")
     .order("nr", { ascending: true, nullsFirst: false });
@@ -199,7 +208,8 @@ export async function getAuslegungen(search?: string): Promise<Auslegung[]> {
 
 export async function getRollenDefinitionen(): Promise<RollenDefinition[]> {
   // Kein `ausspielen`-Feld in dieser Tabelle – Sichtbarkeit steuert `aktiv`.
-  let query = wissensbasisClient()
+  const client = await wissensbasisClient();
+  let query = client
     .from("rollen_definitionen")
     .select("*")
     .order("rolle_id", { ascending: true });
@@ -218,7 +228,8 @@ export async function getRollenDefinitionen(): Promise<RollenDefinition[]> {
 export async function getWizardFragen(): Promise<WizardFrage[]> {
   // wizard_fragen hat keine review-/ausspielen-Spalten und wird immer
   // vollständig gelesen.
-  const { data, error } = await wissensbasisClient()
+  const client = await wissensbasisClient();
+  const { data, error } = await client
     .from("wizard_fragen")
     .select("*")
     .order("reihenfolge", { ascending: true });

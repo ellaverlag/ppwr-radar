@@ -53,7 +53,7 @@ Wichtig: In Supabase unter **Auth → URL Configuration** muss die Site-URL bzw.
 
 Der gesamte Lesezugriff auf die Wissensbasis läuft über `src/lib/wissensbasis.ts` (Server-only). Zentrale Regel:
 
-- **Standard:** Anon-Client, nur Inhalte mit `review_status = 'cattwyk_freigegeben'` und `ausspielen = true`
+- **Standard:** Session-Client des eingeloggten Nutzers, nur Inhalte mit `review_status = 'cattwyk_freigegeben'` und `ausspielen = true`. Die RLS-Policies erlauben Lesen nur für `authenticated` und erzwingen denselben Filter zusätzlich serverseitig; `anon` liest bewusst nichts.
 - **`PREVIEW_MODE=true`:** Service-Role-Client **ohne** diesen Filter – die App zeigt dann auch ungeprüfte Inhalte und blendet einen gelben Banner „Vorschau-Modus – ungeprüfte Inhalte" ein
 
 Schema-bedingte Abweichungen: `rollen_definitionen` nutzt `aktiv` statt `ausspielen`; `wizard_fragen` hat keine Review-Spalten und wird immer vollständig gelesen.
