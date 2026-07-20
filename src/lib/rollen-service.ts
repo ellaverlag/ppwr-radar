@@ -70,6 +70,25 @@ export async function ladeRollenBegriffe(): Promise<
   return map;
 }
 
+/**
+ * Wizard-Fragen für den öffentlichen Betroffenheits-Check. Der reguläre
+ * Datenpfad (wissensbasis.getWizardFragen) läuft für anonyme Besucher gegen
+ * die authenticated-RLS und liefert nichts – daher derselbe privilegierte
+ * Fallback wie bei den Regeln.
+ */
+export async function ladeWizardFragenOeffentlich(frageIds: string[]) {
+  const client = await leseClient();
+  const { data, error } = await client
+    .from("wizard_fragen")
+    .select("*")
+    .in("frage_id", frageIds)
+    .order("reihenfolge", { ascending: true });
+  if (error) {
+    throw new Error(`Wizard-Fragen konnten nicht geladen werden: ${error.message}`);
+  }
+  return data ?? [];
+}
+
 export async function ladeAppConfig(key: string): Promise<string | null> {
   const client = await leseClient();
   const { data } = await client
