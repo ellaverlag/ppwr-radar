@@ -2,9 +2,10 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Routen, die ohne Login erreichbar sind. */
-const PUBLIC_PATHS = ["/login", "/auth", "/api/health"];
+const PUBLIC_PATHS = ["/login", "/auth", "/api/health", "/check"];
 
 function isPublicPath(pathname: string) {
+  if (pathname === "/") return true; // Landingpage (leitet eingeloggt selbst weiter)
   return PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(`${p}/`)
   );

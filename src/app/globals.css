@@ -16,9 +16,13 @@
   --color-ink: #1b1b1b;
   --color-ink-muted: #3d4944;
   --color-primary: #006950;
+  --color-primary-dark: #00543f;
+  --color-primary-tint: #e6f0ec;
   --color-legal: #004494;
+  --color-legal-tint: #e6ecf4;
   --color-gold: #ffcc00;
   --color-gold-ink: #745b00;
+  --color-gold-tint: #fff8e0;
   --color-danger: #ba1a1a;
   --color-chip-hover: #d8e2ff;
   --color-logo: #24a27f;
@@ -68,4 +72,20 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-legal);
   outline-offset: 2px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

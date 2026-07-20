@@ -81,6 +81,13 @@ Daten und technische Kennungen. Labels immer 600 mit `0.05em`-Tracking, meist up
 
 ## Ergänzungen (nicht im Dashboard, im Geiste der Tokens ergänzt)
 
+- **Tint-Flächen** (aus `landing.html`): `--color-primary-tint #e6f0ec`, `--color-legal-tint #e6ecf4`,
+  `--color-gold-tint #fff8e0` für hinterlegte Chips, Icon-Kacheln und den Hero-Verlauf; dazu
+  `--color-primary-dark #00543f` als Hover der Primär-Buttons auf der öffentlichen Strecke.
+- **Öffentliche Seiten** (Landing/Check): Sticky-Header mit Blur, Sektionen mit 80 px Vertikal-
+  abstand, Eyebrow-Zeile in `mono-sm` uppercase Grün, blaues CTA-Band (`--color-legal`) und
+  grüne Final-CTA-Fläche (`--color-primary`) mit weißen Buttons.
+
 - **Tabs** (aus Entwurf „Meine Dokumente“): `label`/`body-sm` 600, aktiv `--color-primary` mit
   2-px-Unterstrich, inaktiv `--color-ink-muted`.
 - **Tabellenkopf** (ebd.): Fläche `--color-surface`, `label` uppercase in `--color-ink-muted`.
