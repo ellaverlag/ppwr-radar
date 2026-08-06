@@ -1,19 +1,17 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { SearchIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard } from "@/components/ui";
-import {
-  formatDate,
-  KATEGORIE_LABELS,
-  VERBINDLICHKEIT_LABELS,
-} from "@/lib/labels";
+import { formatDate } from "@/lib/labels";
 import { getAuslegungen } from "@/lib/wissensbasis";
-import { WissenTabs } from "../tabs";
+import { WissenTabsNav } from "../tabs-server";
 
-export const metadata: Metadata = {
-  title: "Auslegungen – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("auslegungen") };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -24,18 +22,22 @@ export default async function AuslegungenPage({
 }) {
   const { q } = await searchParams;
   const auslegungen = await getAuslegungen(q);
+  const t = await getTranslations("Auslegungen");
+  const tWissen = await getTranslations("Wissen");
+  const tCommon = await getTranslations("Common");
+  const tLabels = await getTranslations("Labels");
 
   return (
     <>
       <PageHeader
-        title="Wissen"
-        description="Auslegungsfragen zur PPWR – konkrete Antworten auf häufige Zweifelsfälle aus der Praxis."
+        title={tWissen("titel")}
+        description={tWissen("beschreibungAuslegungen")}
       />
-      <WissenTabs />
+      <WissenTabsNav />
 
       <form method="get" className="mb-10">
         <label htmlFor="q" className="sr-only">
-          Auslegungen durchsuchen
+          {t("suchLabel")}
         </label>
         <div className="flex max-w-xl gap-3">
           <div className="relative w-full">
@@ -45,7 +47,7 @@ export default async function AuslegungenPage({
               name="q"
               type="search"
               defaultValue={q ?? ""}
-              placeholder="Frage oder Stichwort suchen …"
+              placeholder={t("suchPlaceholder")}
               className="w-full rounded border border-line-strong bg-canvas py-3 pl-11 pr-4 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
             />
           </div>
@@ -53,7 +55,7 @@ export default async function AuslegungenPage({
             type="submit"
             className="shrink-0 rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
           >
-            Suchen
+            {tCommon("suchen")}
           </button>
         </div>
       </form>
@@ -61,9 +63,7 @@ export default async function AuslegungenPage({
       {auslegungen.length === 0 ? (
         <LegalCard>
           <p className="p-6 text-body text-ink-muted">
-            {q
-              ? `Keine Auslegungen zu „${q}“ gefunden.`
-              : "Aktuell sind keine freigegebenen Auslegungen verfügbar."}
+            {q ? t("keineTreffer", { query: q }) : t("keineFreigegeben")}
           </p>
         </LegalCard>
       ) : (
@@ -94,7 +94,9 @@ export default async function AuslegungenPage({
                   {a.antwort}
                 </p>
                 <div className="mt-6 flex flex-wrap items-center gap-2">
-                  <Badge variant="green">{KATEGORIE_LABELS[a.kategorie]}</Badge>
+                  <Badge variant="green">
+                    {tLabels(`kategorien.${a.kategorie}`)}
+                  </Badge>
                   <Badge
                     variant={
                       a.verbindlichkeit === "rechtsverbindlich"
@@ -102,14 +104,14 @@ export default async function AuslegungenPage({
                         : "neutral"
                     }
                   >
-                    {VERBINDLICHKEIT_LABELS[a.verbindlichkeit]}
+                    {tLabels(`verbindlichkeit.${a.verbindlichkeit}`)}
                   </Badge>
                 </div>
               </div>
               <div className="border-t border-line px-6 py-4 font-mono text-mono-sm uppercase text-legal">
                 {a.quellen.length > 0
-                  ? `${a.quellen.join(" · ")} · Stand ${formatDate(a.rechtsstand)}`
-                  : `Stand ${formatDate(a.rechtsstand)}`}
+                  ? `${a.quellen.join(" · ")} · ${t("standZeile", { datum: formatDate(a.rechtsstand) })}`
+                  : t("standZeile", { datum: formatDate(a.rechtsstand) })}
               </div>
             </details>
           ))}

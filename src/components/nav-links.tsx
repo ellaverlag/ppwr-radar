@@ -10,17 +10,27 @@ import {
   VideoIcon,
 } from "@/components/icons";
 
-const NAV_ITEMS = [
-  { href: "/dashboard", label: "Dashboard", Icon: DashboardIcon },
-  { href: "/dokumente", label: "Meine Dokumente", Icon: DocumentIcon },
-  { href: "/assistant", label: "Assistant", Icon: ChatIcon },
-  { href: "/wissen", label: "Wissen", Icon: SchoolIcon },
-  { href: "/webinare", label: "Webinare", Icon: VideoIcon },
-];
+const NAV_ICONS = {
+  "/dashboard": DashboardIcon,
+  "/dokumente": DocumentIcon,
+  "/assistant": ChatIcon,
+  "/wissen": SchoolIcon,
+  "/webinare": VideoIcon,
+} as const;
 
+export type NavHref = keyof typeof NAV_ICONS;
+
+export interface NavItem {
+  href: NavHref;
+  label: string;
+}
+
+/** Labels kommen als Props aus dem Server-Layout (Sprachdateien, "Nav"). */
 export function NavLinks({
+  items,
   orientation = "vertical",
 }: {
+  items: NavItem[];
   orientation?: "vertical" | "horizontal";
 }) {
   const pathname = usePathname();
@@ -28,7 +38,7 @@ export function NavLinks({
   if (orientation === "horizontal") {
     return (
       <nav className="flex flex-row gap-1 whitespace-nowrap">
-        {NAV_ITEMS.map((item) => {
+        {items.map((item) => {
           const active =
             pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
@@ -51,9 +61,10 @@ export function NavLinks({
 
   return (
     <nav className="flex flex-col gap-4">
-      {NAV_ITEMS.map((item) => {
+      {items.map((item) => {
         const active =
           pathname === item.href || pathname.startsWith(`${item.href}/`);
+        const Icon = NAV_ICONS[item.href];
         return (
           <Link
             key={item.href}
@@ -64,7 +75,7 @@ export function NavLinks({
                 : "border-transparent font-medium text-ink-muted hover:bg-hover hover:text-ink"
             }`}
           >
-            <item.Icon filled={active} className="h-5 w-5" />
+            <Icon filled={active} className="h-5 w-5" />
             <span>{item.label}</span>
           </Link>
         );

@@ -1,0 +1,645 @@
+{
+  "Meta": {
+    "root": {
+      "title": "PPWR Radar",
+      "description": "Verpackungs-Compliance im Blick – Anforderungen, Auslegungen und Dokumente zur EU-Verpackungsverordnung (PPWR)."
+    },
+    "landing": {
+      "title": "PPWR Radar – Ihre persönliche PPWR-KI | packaging journal",
+      "description": "Die PPWR gilt. PPWR Radar zeigt Ihnen, was das für Ihre Verpackungen bedeutet – Ihre Rolle, Ihre Pflichten, Ihre Dokumente. Verifiziert von Cattwyk Rechtsanwaltsgesellschaft.",
+      "ogTitle": "PPWR Radar – Ihre persönliche PPWR-KI",
+      "ogDescription": "Rolle klären, Pflichten verstehen, Dokumente erstellen – die EU-Verpackungsverordnung, übersetzt für Ihr Unternehmen.",
+      "siteName": "PPWR Radar"
+    },
+    "login": "Anmelden – PPWR Radar",
+    "check": {
+      "title": "Betroffenheits-Check – PPWR Radar",
+      "description": "Fünf kurze Fragen, eine erste Einschätzung: Betrifft die EU-Verpackungsverordnung (PPWR) Ihr Unternehmen? Kostenlos und ohne Anmeldung."
+    },
+    "checkErgebnis": "Ihre Ersteinschätzung – PPWR Radar",
+    "onboarding": "Onboarding – PPWR Radar",
+    "onboardingErgebnis": "Ihre Rollen nach PPWR – PPWR Radar",
+    "dashboard": "Dashboard – PPWR Radar",
+    "dokumente": "Meine Dokumente – PPWR Radar",
+    "webinare": "Webinare – PPWR Radar",
+    "assistant": "Assistant – PPWR Radar",
+    "wissen": "Wissen – PPWR Radar",
+    "auslegungen": "Auslegungen – PPWR Radar",
+    "glossar": "Glossar – PPWR Radar",
+    "anforderung": "Anforderung – PPWR Radar"
+  },
+  "Common": {
+    "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
+    "zurueck": "← Zurück",
+    "weiter": "Weiter →",
+    "suchen": "Suchen",
+    "anmelden": "Anmelden",
+    "abmelden": "Abmelden"
+  },
+  "Nav": {
+    "dashboard": "Dashboard",
+    "dokumente": "Meine Dokumente",
+    "assistant": "Assistant",
+    "wissen": "Wissen",
+    "webinare": "Webinare"
+  },
+  "AppLayout": {
+    "topbarTitel": "PPWR Radar",
+    "footerCopyright": "© 2026 PPWR Radar · by packaging journal",
+    "footerImpressum": "Impressum",
+    "footerDatenschutz": "Datenschutz",
+    "footerKontakt": "Kontakt"
+  },
+  "Landing": {
+    "nav": {
+      "funktionen": "Funktionen",
+      "zielgruppe": "Für wen",
+      "preise": "Preise",
+      "faq": "FAQ",
+      "anmelden": "Anmelden",
+      "jetztStarten": "Jetzt starten"
+    },
+    "hero": {
+      "badge": "Die PPWR gilt seit dem 12. August 2026",
+      "titelVor": "Die PPWR gilt. Wissen Sie, was das für",
+      "titelHighlight": "Ihre Verpackungen",
+      "titelNach": "heißt?",
+      "text": "PPWR Radar ist Ihre persönliche PPWR-KI: Sie klärt Ihre Rolle, zeigt Ihre Pflichten und erstellt die Dokumente, die Sie jetzt brauchen. Verständlich, mit Fundstelle, immer auf Stand.",
+      "ctaPrimaer": "PPWR|ready werden",
+      "ctaSekundaer": "Kostenlos: Bin ich betroffen?",
+      "microcopy": "In 15 Minuten von der Unsicherheit zur Klarheit · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft",
+      "microcopy2": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse.",
+      "karte": {
+        "ariaLabel": "Beispiel einer Rollen-Analyse in PPWR Radar",
+        "kopf": "Ihre PPWR-Rolle",
+        "stand": "Stand 12.08.2026",
+        "produktlinieLabel": "Produktlinie",
+        "produktlinie": "Feinkost im Glas",
+        "rollen": ["Erzeuger", "Hersteller", "Endvertreiber"],
+        "begruendungFett": "Sie gelten als Erzeuger,",
+        "begruendung": "weil Sie das Produkt unter eigener Marke abfüllen lassen – trägt die Konformitätsverantwortung.",
+        "fundstellen": ["Art. 3 Abs. 1 Nr. 13 PPWR", "§ 7 VerpackDG"]
+      }
+    },
+    "trust": {
+      "herausgeberVor": "Herausgegeben vom",
+      "herausgeber": "packaging journal",
+      "partnerVor": "Juristischer Partner:",
+      "partner": "Cattwyk Rechtsanwaltsgesellschaft",
+      "fundstelleVor": "Jede Antwort mit",
+      "fundstelle": "Rechtsstand & Fundstelle"
+    },
+    "problem": {
+      "eyebrow": "Das Problem",
+      "titel": "Andere erklären die PPWR. Wir sagen Ihnen, was sie für Sie bedeutet.",
+      "text": "Merkblätter, Webinare, PDF-Leitfäden – alle erklären die Verordnung allgemein. Ihre Situation ist aber nicht allgemein.",
+      "linksTitel": "Womit Sie gerade allein sind",
+      "linksPunkte": [
+        "Bin ich „Erzeuger“ oder „Hersteller“ – und was ist der Unterschied überhaupt?",
+        "Was von alledem gilt schon jetzt, was erst 2028 oder 2030?",
+        "Welche Dokumente brauche ich – und wie sehen die aus?",
+        "Gilt das auch für meine spezielle Verpackung mit Lebensmittelkontakt?",
+        "Und was ändert sich morgen wieder?"
+      ],
+      "rechtsTitel": "Was PPWR Radar für Sie tut",
+      "rechtsPunkte": [
+        "Leitet Ihre Rolle je Produktlinie her – mit Begründung und Fundstelle",
+        "Trennt klar: „gilt seit dem 12.8.“ von „kommt erst 2028/2030“",
+        "Erstellt Konformitätserklärung & Dokumentationsgerüst als Entwurf",
+        "Antwortet auf Ihre konkrete Frage – im Kontext Ihres Portfolios",
+        "Meldet sich, wenn sich die Rechtslage ändert"
+      ]
+    },
+    "funktionen": {
+      "eyebrow": "Was drin ist",
+      "titel": "Vier Werkzeuge, ein System",
+      "text": "Alles arbeitet mit Ihrem Profil zusammen – einmal angelegt, überall genutzt.",
+      "karten": [
+        {
+          "titel": "Rollen-Klärung",
+          "text": "Der Onboarding-Assistent fragt Ihre Tätigkeiten ab – und leitet daraus Ihre PPWR-Rolle je Produktlinie ab. Endlich Klarheit bei Erzeuger vs. Hersteller, dem größten Verwirrungspunkt der Branche."
+        },
+        {
+          "titel": "Dokumenten-Generator",
+          "text": "Konformitätserklärung nach Anhang VIII, Gerüst der technischen Dokumentation nach Anhang VII, Pflichtenübersicht – vorbefüllt aus Ihrem Profil, als prüffähige Arbeitsgrundlage."
+        },
+        {
+          "titel": "Persönlicher Assistent",
+          "text": "Stellen Sie Ihre Frage in eigenen Worten. Die Antwort kennt Ihr Profil, nennt Artikel und Rechtsstand – und sagt ehrlich, wenn ein Fall in die Rechtsberatung gehört."
+        },
+        {
+          "titel": "Radar-Updates",
+          "text": "Neue Durchführungsrechtsakte, Leitlinien, VerpackDG-Details – geprüft aufbereitet und gegen Ihr Profil abgeglichen: „Diese Änderung betrifft 2 Ihrer Verpackungen.“"
+        },
+        {
+          "titel": "Einfach erklärt",
+          "text": "Jeder Inhalt in drei Tiefen: „Einfach erklärt“ für den schnellen Überblick, „Fachlich“ für die Details, „Rechtstext“ für den Nachweis. Sie entscheiden, wie tief."
+        },
+        {
+          "titel": "Zum Anhören",
+          "text": "Lassen Sie sich Erklärungen vorlesen – und ab Herbst Ihr persönliches Audio-Briefing: die Änderungen der Woche, zugeschnitten auf Ihr Portfolio."
+        },
+        {
+          "titel": "Nachschlagewerk",
+          "text": "Glossar von A wie Abfüller bis Z wie Zweigniederlassung – alle Begriffe, Verpackungsarten und Praxisfragen durchsuchbar, mit Quelle. Für alle, die lieber blättern als chatten."
+        }
+      ]
+    },
+    "zielgruppe": {
+      "eyebrow": "Für wen",
+      "titel": "Gemacht für die Menschen, die es umsetzen müssen",
+      "karten": [
+        {
+          "rolle": "Verpackungshersteller",
+          "frage": "„Bin ich für die Konformität verantwortlich?“",
+          "text": "Klären Sie je Produktlinie, ob Sie Erzeuger sind, welche Stoff- und Mehrweg-Anforderungen gelten und welche Nachweise Ihre Dokumentation braucht."
+        },
+        {
+          "rolle": "Verpackende Unternehmen",
+          "frage": "„Was muss ich als Abfüller oder Markeninhaber tun?“",
+          "text": "Verstehen Sie Ihre Doppelrolle, erzeugen Sie Ihre Konformitätserklärung und behalten Sie Registrierungs- und Systembeteiligungspflichten im Blick."
+        },
+        {
+          "rolle": "Handel & E-Commerce",
+          "frage": "„Werde ich zum Hersteller, ohne es zu wissen?“",
+          "text": "Eigenmarken, Import, grenzüberschreitender Direktvertrieb – Radar zeigt, wann Sie EPR-Pflichten treffen und wann Sie einen Bevollmächtigten brauchen."
+        }
+      ]
+    },
+    "schritte": {
+      "eyebrow": "So funktioniert’s",
+      "titel": "In 15 Minuten zur Klarheit",
+      "punkte": [
+        {
+          "titel": "Profil anlegen",
+          "text": "Beantworten Sie ein paar Fragen zu Tätigkeiten, Verpackungen und Märkten – keine Fachbegriffe nötig."
+        },
+        {
+          "titel": "Rolle erfahren",
+          "text": "Radar leitet Ihre Rolle je Produktlinie her und erklärt, warum – mit Fundstelle zum Nachlesen."
+        },
+        {
+          "titel": "Dokumente erhalten",
+          "text": "Status-Analyse, Pflichtenliste und vorbefüllte Dokumente stehen sofort zum Download bereit."
+        },
+        {
+          "titel": "Aktuell bleiben",
+          "text": "Zwölf Monate Radar inklusive: Bei jeder Änderung wissen Sie, was für Sie zu tun ist."
+        }
+      ]
+    },
+    "preise": {
+      "eyebrow": "Preise",
+      "titel": "Ein Paket. Alles drin. Zwölf Monate aktuell.",
+      "text": "Zum Launch zum Einführungspreis – inklusive der Radar-Updates für ein ganzes Jahr.",
+      "launchBadge": "Launch-Angebot",
+      "paketName": "PPWR|ready Paket",
+      "preisWaehrung": "€",
+      "preisBetrag": "490",
+      "preisZeile1": "einmalig · inkl. 12 Monate PPWR Radar",
+      "preisZeile2": "danach automatische Verlängerung: 290 €/Jahr, jederzeit kündbar · später regulär 690 €",
+      "leistungen": [
+        "Compliance-Profil & individuelle Status-Analyse",
+        "Rollen-Klärung je Produktlinie mit Fundstelle",
+        "Dokumenten-Generator (Konformitätserklärung, technische Doku, Pflichtenübersicht)",
+        "Persönlicher Assistent mit Quellenangabe",
+        "Wissens-Bibliothek in drei Erklärtiefen",
+        "12 Monate Radar-Updates & Quartals-Webinare"
+      ],
+      "ctaPaket": "Jetzt PPWR|ready werden",
+      "festpreisZeile": "Transparenter Festpreis. Kein Angebotsprozess, keine Setup-Gebühr.",
+      "teamName": "Team-Lizenz",
+      "teamPreisVor": "ab",
+      "teamPreis": "1.499",
+      "teamText": "Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams.",
+      "ctaTeam": "Team-Zugang anfragen",
+      "verlaengerungName": "Radar-Verlängerung",
+      "verlaengerungPreis": "290",
+      "verlaengerungEinheit": "/Jahr",
+      "verlaengerungText": "Nach dem ersten Jahr: Updates, Assistent und Webinare bleiben aktuell.",
+      "verlaengerungChip": "im Paket enthalten",
+      "stripeHinweis": "// Zahlungsabwicklung über Stripe – Buttons werden zum Launch aktiviert"
+    },
+    "checkBand": {
+      "eyebrow": "Kostenlos & ohne Anmeldung",
+      "titel": "Erst prüfen: Betrifft mich die PPWR überhaupt?",
+      "text": "Fünf kurze Fragen, eine erste Einschätzung Ihrer Betroffenheit – unverbindlich und ohne Login. Der ehrlichste Einstieg, den wir anbieten können.",
+      "cta": "Betroffenheits-Check starten"
+    },
+    "faq": {
+      "eyebrow": "Häufige Fragen",
+      "titel": "Was Sie vielleicht noch wissen wollen",
+      "eintraege": [
+        {
+          "frage": "Ist PPWR Radar eine Rechtsberatung?",
+          "antwort": "Nein – und das ist bewusst so. PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe als Arbeitsgrundlage. Es ersetzt keine Rechtsberatung und begründet kein Mandatsverhältnis. Genau dort, wo Ihre Situation eine individuelle rechtliche Prüfung braucht, sagt das System das offen und verweist an unseren juristischen Partner, die Cattwyk Rechtsanwaltsgesellschaft."
+        },
+        {
+          "frage": "Wie unterscheidet sich PPWR Radar von Muster-Vorlagen und Compliance-Software?",
+          "antwort": "Muster-Vorlagen sind generisch – sie wissen nicht, wer Sie sind. Enterprise-Compliance-Software ist stark für Konzerne mit großen Datenbeständen, beginnt aber mit einem Angebots- und Integrationsprozess. PPWR Radar startet davor: Es klärt zuerst Ihre Rolle je Produktlinie, füllt Ihre Dokumente daraus vor und hält sie bei Rechtsänderungen aktuell – im Selbstbedienungszugang zum Festpreis. Und wo Ihre Situation Speziallösungen braucht (Labor-Bewertung der Recyclingfähigkeit, ERP-Integration, Rechtsberatung), sagen wir das ehrlich und nennen den richtigen Weg."
+        },
+        {
+          "frage": "Woher weiß ich, dass die Inhalte stimmen?",
+          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert. Der Assistent antwortet ausschließlich aus dieser geprüften Basis – und sagt ehrlich, wenn zu einer Frage keine gesicherte Regelung vorliegt."
+        },
+        {
+          "frage": "Was passiert, wenn sich die Rechtslage ändert?",
+          "antwort": "Genau dafür ist der Radar da. Neue Durchführungsrechtsakte, Leitlinien und nationale Konkretisierungen fließen geprüft ein. Betroffene Nutzer werden aktiv benachrichtigt – und wenn ein bereits erstelltes Dokument auf einem veralteten Stand basiert, zeigt Ihr Dashboard „Update verfügbar“."
+        },
+        {
+          "frage": "Für welche Unternehmen lohnt sich das?",
+          "antwort": "Für alle, die Verpackungen herstellen, befüllen, unter eigener Marke in Verkehr bringen, importieren oder im E-Commerce direkt an Endkunden liefern. Wenn Sie nicht sicher sind, starten Sie mit dem kostenlosen Betroffenheits-Check – er sagt Ihnen in fünf Fragen, ob und wie stark Sie betroffen sind."
+        },
+        {
+          "frage": "Was kostet es nach dem ersten Jahr?",
+          "antwort": "Das Launch-Paket kostet einmalig 490 € und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Radar-Zugang automatisch um jeweils ein Jahr (290 €/Jahr) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Und falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang."
+        }
+      ]
+    },
+    "finalCta": {
+      "eyebrow": "Der 12. August ist da",
+      "titel": "Verschaffen Sie sich Klarheit – heute.",
+      "text": "In 15 Minuten wissen Sie, welche Rolle Sie haben, was für Ihre Verpackungen gilt und welche Dokumente Sie brauchen.",
+      "ctaPrimaer": "PPWR|ready werden",
+      "ctaSekundaer": "Erst kostenlos prüfen"
+    },
+    "footer": {
+      "beschreibung": "PPWR Radar ist ein Produkt des packaging journal. Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft.",
+      "produkt": "Produkt",
+      "funktionen": "Funktionen",
+      "preise": "Preise",
+      "check": "Betroffenheits-Check",
+      "faq": "FAQ",
+      "rechtliches": "Rechtliches",
+      "impressum": "Impressum",
+      "datenschutz": "Datenschutz",
+      "agb": "AGB",
+      "konto": "Konto",
+      "anmelden": "Anmelden",
+      "registrieren": "Registrieren",
+      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+    }
+  },
+  "Login": {
+    "fehler": {
+      "missing_email": "Bitte geben Sie eine E-Mail-Adresse ein.",
+      "send_failed": "Der Anmelde-Link konnte nicht versendet werden. Bitte versuchen Sie es erneut.",
+      "auth_failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist möglicherweise abgelaufen – bitte fordern Sie einen neuen an."
+    },
+    "gesendetTitel": "E-Mail unterwegs",
+    "gesendetTextVor": "Wir haben einen Anmelde-Link an",
+    "gesendetTextNach": "gesendet. Öffnen Sie die E-Mail und klicken Sie auf den Link, um sich anzumelden.",
+    "andereAdresse": "Andere E-Mail-Adresse verwenden",
+    "titel": "Anmelden",
+    "text": "Sie erhalten einen Anmelde-Link per E-Mail – ohne Passwort.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "name@firma.de",
+    "senden": "Anmelde-Link senden",
+    "claim": "Verpackungs-Compliance im Blick – zur EU-Verpackungsverordnung (PPWR)."
+  },
+  "Check": {
+    "anmelden": "Anmelden",
+    "footer": "Kostenlos · Keine Registrierung · Ersteinschätzung, keine Rechtsberatung",
+    "nichtVerfuegbar": "Der Betroffenheits-Check ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "zurStartseite": "Zurück zur Startseite",
+    "titel": "Die PPWR gilt.<br></br>Betrifft sie Ihre Verpackungen?",
+    "untertitel": "{anzahl} Fragen, 2 Minuten – Ihre kostenlose Ersteinschätzung.",
+    "fortschritt": "Frage {aktuell} von {gesamt}",
+    "fehlerAntwort": "Bitte wählen Sie eine Antwort aus.",
+    "mehrfachauswahl": "Mehrfachauswahl möglich.",
+    "zurueck": "← Zurück",
+    "zurStartseiteKurz": "← Zur Startseite",
+    "weiter": "Weiter →"
+  },
+  "CheckErgebnis": {
+    "nichtVerfuegbar": "Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "zurueckZumCheck": "Zurück zum Check",
+    "titel": "Ihre Ersteinschätzung",
+    "untertitel": "Basierend auf Ihren Angaben im Betroffenheits-Check.",
+    "einordnungOffen": "Einordnung offen",
+    "eskalationFallback": "Ihre Angaben lassen keine eindeutige Einordnung zu. Genau für solche Fälle bieten wir ein Erstgespräch mit unseren Compliance-Experten der Cattwyk Rechtsanwaltsgesellschaft an.",
+    "aussage": {
+      "hoch": "Die PPWR betrifft Ihr Unternehmen voraussichtlich in mehreren Bereichen.",
+      "mittel": "Die PPWR betrifft Ihr Unternehmen voraussichtlich in einzelnen Bereichen.",
+      "gering": "Nach Ihren Angaben ist Ihr Unternehmen voraussichtlich nur am Rande betroffen."
+    },
+    "rolleVor": "Ihre Rolle: voraussichtlich",
+    "pflichtenVor": "Relevante Pflichtenbereiche seit 12.08.2026:",
+    "pflichtenTeaser": {
+      "konformitaet": "Konformität & Kennzeichnung",
+      "registrierung": "Registrierung & Systembeteiligung (ZSVR)",
+      "bevollmaechtigter": "Bevollmächtigter für die erweiterte Herstellerverantwortung"
+    },
+    "gesperrtBlur": "Vollständige Pflichtenliste, Fristen 2028/2030 und Ihre Dokumente – Konformitätserklärung, technische Dokumentation.",
+    "gesperrtSr": "Die vollständige Pflichtenliste ist Teil des PPWR|ready-Pakets.",
+    "rechtsstandZeile": "Basierend auf Verordnung (EU) 2025/40 · Stand {datum}",
+    "paywallTitel": "Was heißt das konkret für Ihre Verpackungen?",
+    "paywallText": "PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen je Produktlinie, Status-Analyse, persönlichem Fristen-Dashboard und Ihren Dokumenten.",
+    "paywallCta": "Jetzt PPWR|ready werden – 490 € →",
+    "mehrErfahren": "Mehr über PPWR Radar erfahren",
+    "neuStarten": "Check neu starten"
+  },
+  "Onboarding": {
+    "zumDashboard": "Zum Dashboard",
+    "footer": "Einordnung auf Basis Ihrer Angaben · keine Rechtsberatung",
+    "fehler": {
+      "produktlinien": "Bitte legen Sie mindestens eine Produktlinie an.",
+      "antwort": "Bitte wählen Sie eine Antwort aus.",
+      "firmenname": "Bitte geben Sie Ihren Firmennamen an.",
+      "engine": "Die Rollen-Auswertung konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support."
+    },
+    "fortschritt": "Schritt {aktuell} von {gesamt}",
+    "fragenNichtVerfuegbar": "Die Wizard-Fragen sind aktuell nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "produktlinieLabel": "Produktlinie · {name}",
+    "mehrfachauswahl": "Mehrfachauswahl möglich.",
+    "produktlinienLabel": "Eine Produktlinie je Zeile",
+    "produktlinienPlaceholder": "Feinkost im Glas\nErsatzteile im Versandkarton",
+    "stammdatenTitel": "Stammdaten",
+    "stammdatenText": "Diese Angaben erscheinen später in Ihren Dokumenten (z. B. Konformitätserklärungen).",
+    "felder": {
+      "firmenname": "Firmenname",
+      "strasse": "Straße",
+      "hausnummer": "Nr.",
+      "plz": "PLZ",
+      "ort": "Ort",
+      "land": "Land",
+      "zeichnungsberechtigterName": "Zeichnungsberechtigte Person",
+      "zeichnungsberechtigterFunktion": "Funktion",
+      "lucidNummer": "LUCID-Registrierungsnummer (falls vorhanden)"
+    },
+    "landDefault": "Deutschland",
+    "lucidFrage": "Waren Sie nach dem bisherigen VerpackG registriert (LUCID)?",
+    "ja": "Ja",
+    "nein": "Nein",
+    "abschlussTitel": "Alles beisammen",
+    "abschlussText": "Sie haben {anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst: <linien></linien>. Die Rollen-Engine wertet Ihre Angaben jetzt regelbasiert aus – je Produktlinie, mit Herleitung und Fundstellen.",
+    "abschlussCta": "Rollen jetzt auswerten →"
+  },
+  "OnboardingErgebnis": {
+    "titel": "Ihre Rollen nach PPWR",
+    "untertitel": "Basierend auf Ihren Angaben wurden folgende rechtliche Rollen für Ihre Produktlinien ermittelt.",
+    "produktlinie": "Produktlinie",
+    "einordnungOffen": "Einordnung offen",
+    "eskalationFallback": "Ihre Angaben lassen keine eindeutige Einordnung zu, wer in Deutschland erstmals bereitstellt. Genau für solche Fälle bieten wir ein Erstgespräch mit unseren Compliance-Experten an – wir melden uns gern bei Ihnen.",
+    "vorbehalt": "Vorbehaltlich juristischer Verifikation",
+    "sieGeltenAls": "Sie gelten als {rollen},",
+    "betroffen": "betroffen",
+    "weil": "weil: {grund}",
+    "sieheFundstelle": "siehe Fundstelle.",
+    "pflichtPrefix": "→ Pflicht: {pflicht}",
+    "entlastungPrefix": "→ {entlastung}",
+    "sekundaerquelle": "Sekundärquelle",
+    "pflichtenTitel": "Pflichten aus diesem Rollen-Set",
+    "falleTitel": "Achtung, Übersetzungsfalle: Erzeuger ≠ Hersteller",
+    "zurStatusAnalyse": "Zur Status-Analyse →",
+    "fussUngeprueft": "Enthält ungeprüfte Regeln · ",
+    "fussZeile": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung"
+  },
+  "Dashboard": {
+    "titel": "Dashboard",
+    "onboardingStarten": "Onboarding starten",
+    "assistantFragen": "Assistant fragen",
+    "neuesDokument": "Neues Dokument erstellen",
+    "statusTitel": "Ihr Compliance-Status",
+    "statusVollstaendig": "Vollständig",
+    "statusOffen": "Offen (Kritisch)",
+    "statusInBearbeitung": "In Bearbeitung",
+    "statusHinweisOhneOnboarding": "Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen erstellt.",
+    "statusHinweisMitOnboarding": "{anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst – die Status-Analyse folgt im nächsten Paket.",
+    "statusFooter": "Verordnung (EU) 2025/40 · PPWR",
+    "rollenTitel": "Ihre Rollen",
+    "rollenLeer": "Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie – etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus dem Betroffenheits-Check im Onboarding.",
+    "rollenOnboardingCta": "Onboarding starten →",
+    "einordnungOffen": "Einordnung offen",
+    "herleitungAnsehen": "Herleitung ansehen →",
+    "rollenFooter": "Art. 3 PPWR · Begriffsbestimmungen",
+    "fristenTitel": "Fristen",
+    "fristGeltungDatum": "12.08.2026",
+    "fristGeltung": "Geltung",
+    "fristStufe2Jahr": "2028",
+    "fristStufe2": "Stufe 2",
+    "fristStufe3Jahr": "2030",
+    "fristStufe3": "Stufe 3",
+    "naechsteFrist": "Nächste Frist:",
+    "naechsteFristText": "Geltungsbeginn der PPWR am 12.08.2026.",
+    "fristenFooter": "Art. 71 PPWR · Geltungsbeginn",
+    "schritteTitel": "Meine nächsten Schritte",
+    "schritte": [
+      {
+        "titel": "Betroffenheits-Check durchführen",
+        "text": "Beantworten Sie die Fragen zu Ihrem Unternehmen – daraus leiten wir Ihre Rollen nach PPWR ab."
+      },
+      {
+        "titel": "Verpackungsprofil anlegen",
+        "text": "Erfassen Sie Ihre Produktlinien und Verpackungen, damit Anforderungen zugeordnet werden können."
+      },
+      {
+        "titel": "Status-Analyse starten",
+        "text": "Die Gap-Analyse zeigt, welche Pflichten erfüllt sind und wo Handlungsbedarf besteht."
+      }
+    ],
+    "erledigt": "Erledigt",
+    "schritteFooter": "Status-Analyse und Dokumente folgen im nächsten Paket",
+    "radarTitel": "Radar-Updates",
+    "beispieldaten": "Beispieldaten",
+    "radarBeispiele": [
+      {
+        "datum": "01.10.2026",
+        "titel": "Delegierter Rechtsakt: Entwurf veröffentlicht",
+        "text": "Die Kommission hat den ersten Entwurf zur Berechnung der Rezyklatanteile vorgelegt.",
+        "chip": "Betrifft Ihre Verpackungstypen"
+      },
+      {
+        "datum": "15.09.2026",
+        "titel": "Q&A-Dokument aktualisiert",
+        "text": "Klarstellungen zum Begriff „Inverkehrbringen“ wurden hinzugefügt.",
+        "chip": "Allgemeine Info"
+      },
+      {
+        "datum": "02.09.2026",
+        "titel": "Normungsmandat erteilt",
+        "text": "CEN erhält offizielles Mandat zur Entwicklung harmonisierter Normen für Design for Recycling.",
+        "chip": "Betrifft Ihre Produktlinien"
+      }
+    ],
+    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe"
+  },
+  "Wissen": {
+    "titel": "Wissen",
+    "beschreibungAnforderungen": "Die Anforderungen der EU-Verpackungsverordnung (PPWR) – redaktionell aufbereitet und juristisch geprüft.",
+    "beschreibungAuslegungen": "Auslegungsfragen zur PPWR – konkrete Antworten auf häufige Zweifelsfälle aus der Praxis.",
+    "beschreibungGlossar": "Das Nachschlagewerk zur PPWR: Begriffe, Anforderungen und Praxisfragen von A bis Z – mit Quelle und Link in die Tiefe.",
+    "tabs": {
+      "anforderungen": "Anforderungen",
+      "auslegungen": "Auslegungen",
+      "glossar": "Glossar"
+    },
+    "spalteAnforderung": "Anforderung",
+    "spalteGiltAb": "Gilt ab",
+    "spalteStatus": "Status & Rechtsstand",
+    "keineAnforderungen": "Aktuell sind keine freigegebenen Anforderungen verfügbar.",
+    "rechtsstandChip": "Stand {datum}",
+    "rechtsstandTitle": "Rechtsstand"
+  },
+  "Auslegungen": {
+    "suchLabel": "Auslegungen durchsuchen",
+    "suchPlaceholder": "Frage oder Stichwort suchen …",
+    "keineTreffer": "Keine Auslegungen zu „{query}“ gefunden.",
+    "keineFreigegeben": "Aktuell sind keine freigegebenen Auslegungen verfügbar.",
+    "standZeile": "Stand {datum}"
+  },
+  "Anforderung": {
+    "zurueck": "Zurück zur Übersicht",
+    "rechtsstandChip": "Rechtsstand {datum}",
+    "giltAb": "Gilt ab {datum}",
+    "fachlicheErklaerung": "Fachliche Erklärung",
+    "handlungsanweisung": "Handlungsanweisung",
+    "risiko": "Risiko bei Verstoß",
+    "ausnahmen": "Ausnahmen",
+    "uebergangsregeln": "Übergangsregeln",
+    "betrifft": "Betrifft",
+    "rollen": "Rollen:",
+    "verpackungstypen": "Verpackungstypen:",
+    "materialien": "Materialien:",
+    "quellenangabe": "Quellenangabe",
+    "rechtsquelle": "Rechtsquelle:",
+    "bezugVerpackg": "Bezug VerpackG:",
+    "verweise": "Verweise:",
+    "footerZeile": "{rechtsquelle} · Stand {datum}"
+  },
+  "Glossar": {
+    "suchLabel": "Glossar durchsuchen",
+    "suchPlaceholder": "Begriff, Anforderung oder Frage suchen – auch alte VerpackG-Begriffe …",
+    "typFilterLabel": "Nach Typ filtern",
+    "alleTypen": "Alle Typen",
+    "typFilter": {
+      "begriff": "Begriff/Rolle",
+      "anforderung": "Anforderung",
+      "praxisfrage": "Praxisfrage"
+    },
+    "typBadge": {
+      "begriff": "Begriff",
+      "anforderung": "Anforderung",
+      "praxisfrage": "Praxisfrage"
+    },
+    "artFilterLabel": "Nach Verpackungsart filtern",
+    "alleVerpackungsarten": "Alle Verpackungsarten",
+    "registerLabel": "Alphabet-Register",
+    "alle": "Alle",
+    "betrifftMich": "Betrifft mich",
+    "betrifftMichTitle": "Betrifft Sie laut Ihrem Profil",
+    "zurAnforderung": "Zur Anforderung →",
+    "zurAntwort": "Zur Antwort →",
+    "keinEintragZu": "Zu „{query}“ ist noch kein Eintrag verzeichnet.",
+    "keinEintragAuswahl": "Zu dieser Auswahl ist noch kein Eintrag verzeichnet.",
+    "blaettern": "Stattdessen von A bis Z blättern →",
+    "quelleFallback": "Auslegung"
+  },
+  "Dokumente": {
+    "titel": "Meine Dokumente",
+    "beschreibung": "Zentrales Archiv für alle Compliance-Nachweise, Zertifikate und regulatorischen Dokumente gemäß PPWR-Anforderungen.",
+    "tabs": ["Alle", "Gültig", "Entwürfe", "Archiv"],
+    "suchPlaceholder": "Dokument suchen …",
+    "neuesDokument": "Neues Dokument",
+    "spalteTitel": "Dokumententitel",
+    "spalteVersion": "Version",
+    "spalteRechtsstand": "Rechtsstand",
+    "spalteStatus": "Status",
+    "beispiele": [
+      {
+        "titel": "Konformitätserklärung PET-Flaschen",
+        "quelle": "Richtlinie 94/62/EG",
+        "version": "v1.2",
+        "rechtsstand": "12.08.2026"
+      },
+      {
+        "titel": "Recycling-Nachweis Transportverpackung",
+        "quelle": "DIN EN 13430",
+        "version": "v2.0",
+        "rechtsstand": "05.11.2026"
+      },
+      {
+        "titel": "Materialspezifikation Folien",
+        "quelle": "Internes Dokument",
+        "version": "v1.0",
+        "rechtsstand": "14.02.2026"
+      }
+    ],
+    "statusUpdate": "Update verfügbar",
+    "statusGueltig": "Gültig",
+    "statusArchiviert": "Archiviert",
+    "footer": "Beispieldaten · Der Dokumenten-Generator folgt in einem späteren Paket"
+  },
+  "Webinare": {
+    "titel": "Webinare",
+    "beschreibung": "Aufzeichnungen und Termine unserer Compliance-Webinare zur EU-Verpackungsverordnung.",
+    "platzhalter": "Der Webinar-Bereich wird in einem späteren Arbeitspaket umgesetzt. Hier erscheinen künftig Termine und Aufzeichnungen."
+  },
+  "Assistant": {
+    "titel": "Wie kann ich Ihnen helfen?",
+    "beschreibung": "Stellen Sie rechtliche Fragen zur EU-Verpackungsverordnung (PPWR).",
+    "fragePlaceholder": "Ihre Frage zur PPWR …",
+    "fragen": "Fragen",
+    "erklaertiefen": ["Einfach erklärt", "Fachlich", "Rechtstext"],
+    "beispielansicht": "Beispielansicht",
+    "beispielTitel": "Kennzeichnungspflichten für Kunststoffvliese",
+    "beispielText": "So wird eine Antwort des Assistant aufgebaut sein: eine fachliche Einordnung mit Rechtsstand, gegliederte Pflichten und ein Hinweis auf Grenzen der Auslegung.",
+    "punkt1Titel": "01 · Materialidentifikation",
+    "punkt1Text": "Gliederungspunkte nennen die konkrete Pflicht mit Fundstelle.",
+    "punkt2Titel": "02 · Hinweise zur Entsorgung",
+    "punkt2Text": "Jede Antwort trennt Pflichten, Fristen und Empfehlungen.",
+    "hinweisFett": "Wichtiger Hinweis:",
+    "hinweisText": "Antworten sind redaktionell geprüfte Auslegungen und keine Rechtsberatung.",
+    "footer": "Beispielansicht · Der Assistant folgt in einem späteren Paket"
+  },
+  "Labels": {
+    "kategorien": {
+      "stoffrecht": "Stoffrecht",
+      "mehrweg": "Mehrweg",
+      "konformitaet": "Konformität",
+      "kennzeichnung": "Kennzeichnung",
+      "rollen_epr": "Rollen & EPR",
+      "verbote": "Verbote",
+      "sonstiges": "Sonstiges"
+    },
+    "giltStatus": {
+      "in_kraft": "In Kraft",
+      "kuenftig": "Künftig",
+      "rechtsakt_ausstehend": "Rechtsakt ausstehend",
+      "entwurf_eu": "EU-Entwurf"
+    },
+    "verbindlichkeit": {
+      "rechtsverbindlich": "Rechtsverbindlich",
+      "unverbindliche_auslegung": "Unverbindliche Auslegung"
+    },
+    "verpackungstypen": {
+      "alle": "Alle Verpackungsarten",
+      "verkauf": "Verkaufsverpackung",
+      "umverpackung": "Umverpackung",
+      "transport": "Transportverpackung",
+      "service": "Serviceverpackung",
+      "primaerproduktion": "Primärproduktionsverpackung",
+      "ecommerce_versand": "E-Commerce-Versand",
+      "mehrweg": "Mehrweg"
+    },
+    "rollen": {
+      "erzeuger": "Erzeuger",
+      "hersteller": "Hersteller",
+      "importeur": "Importeur",
+      "vertreiber": "Vertreiber",
+      "endvertreiber": "Endvertreiber",
+      "fulfillment_dienstleister": "Fulfillment-Dienstleister",
+      "lieferant": "Lieferant"
+    },
+    "pflichten": {
+      "bevollmaechtigter_ehv": "Bevollmächtigter für die erweiterte Herstellerverantwortung erforderlich",
+      "registrierung_zsvr": "Registrierung bei der ZSVR (LUCID)",
+      "systembeteiligung": "Systembeteiligung",
+      "datenmeldung": "Datenmeldung"
+    },
+    "entlastungen": {
+      "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
+      "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
+    }
+  }
+}

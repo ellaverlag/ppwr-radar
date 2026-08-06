@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { SearchIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
@@ -10,28 +11,26 @@ import {
   type GlossarEintrag,
   type GlossarTyp,
 } from "@/lib/glossar";
-import { VERPACKUNGSTYP_LABELS } from "@/lib/labels";
-import { WissenTabs } from "../tabs";
+import { WissenTabsNav } from "../tabs-server";
 
-export const metadata: Metadata = {
-  title: "Glossar – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("glossar") };
+}
 
 export const dynamic = "force-dynamic";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-const TYP_FILTER_LABELS: Record<GlossarTyp, string> = {
-  begriff: "Begriff/Rolle",
-  anforderung: "Anforderung",
-  praxisfrage: "Praxisfrage",
-};
-
-const TYP_BADGE_LABELS: Record<GlossarTyp, string> = {
-  begriff: "Begriff",
-  anforderung: "Anforderung",
-  praxisfrage: "Praxisfrage",
-};
+const GLOSSAR_TYPEN: GlossarTyp[] = ["begriff", "anforderung", "praxisfrage"];
+const VERPACKUNGSTYP_KEYS = [
+  "verkauf",
+  "umverpackung",
+  "transport",
+  "service",
+  "primaerproduktion",
+  "ecommerce_versand",
+  "mehrweg",
+];
 
 function glossarUrl(params: {
   q?: string;
@@ -48,69 +47,21 @@ function glossarUrl(params: {
   return query ? `/wissen/glossar?${query}` : "/wissen/glossar";
 }
 
-function BetrifftMichPunkt() {
-  return (
-    <span
-      title="Betrifft Sie laut Ihrem Profil"
-      className="inline-flex items-center gap-1.5 text-label uppercase text-primary"
-    >
-      <span aria-hidden="true" className="h-2 w-2 rounded-full bg-primary" />
-      Betrifft mich
-    </span>
-  );
-}
-
-function EintragInhalt({ eintrag }: { eintrag: GlossarEintrag }) {
-  return (
-    <>
-      <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span
-          className={`text-body-lg font-bold text-ink ${
-            eintrag.href ? "group-hover:text-primary" : ""
-          }`}
-        >
-          {eintrag.begriff}
-        </span>
-        {eintrag.begriff_en && (
-          <span className="text-body-sm italic text-ink-muted">
-            {eintrag.begriff_en}
-          </span>
-        )}
-        {eintrag.betrifft_mich && <BetrifftMichPunkt />}
-      </p>
-      {eintrag.kurztext && (
-        <p className="mt-1.5 max-w-[80ch] text-body-sm text-ink-muted">
-          {eintrag.kurztext}
-        </p>
-      )}
-      <p className="mt-3 flex flex-wrap items-center gap-2">
-        <Badge variant="neutral">{TYP_BADGE_LABELS[eintrag.typ]}</Badge>
-        <span className="rounded border border-legal-tint bg-legal-tint px-2 py-0.5 font-mono text-label font-medium text-legal">
-          {eintrag.quelle}
-        </span>
-        {eintrag.href && (
-          <span className="text-body-sm font-medium text-legal">
-            {eintrag.typ === "anforderung"
-              ? "Zur Anforderung →"
-              : "Zur Antwort →"}
-          </span>
-        )}
-      </p>
-    </>
-  );
-}
-
 export default async function GlossarPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; typ?: string; art?: string; b?: string }>;
 }) {
   const params = await searchParams;
+  const t = await getTranslations("Glossar");
+  const tWissen = await getTranslations("Wissen");
+  const tCommon = await getTranslations("Common");
+  const tLabels = await getTranslations("Labels");
+
   const q = params.q?.trim() ?? "";
-  const typ = (["begriff", "anforderung", "praxisfrage"] as const).find(
-    (t) => t === params.typ
-  );
-  const art = params.art && VERPACKUNGSTYP_LABELS[params.art] ? params.art : "";
+  const typ = GLOSSAR_TYPEN.find((wert) => wert === params.typ);
+  const art =
+    params.art && VERPACKUNGSTYP_KEYS.includes(params.art) ? params.art : "";
   const buchstabe =
     params.b && (ALPHABET.includes(params.b) || params.b === "#")
       ? params.b
@@ -119,10 +70,8 @@ export default async function GlossarPage({
   const { eintraege } = await ladeGlossar();
 
   // Verpackungsart-Optionen aus den tatsächlich vorhandenen Daten
-  const artOptionen = Object.keys(VERPACKUNGSTYP_LABELS).filter(
-    (wert) =>
-      wert !== "alle" &&
-      eintraege.some((e) => e.verpackungstypen.includes(wert))
+  const artOptionen = VERPACKUNGSTYP_KEYS.filter((wert) =>
+    eintraege.some((e) => e.verpackungstypen.includes(wert))
   );
 
   const suchbegriff = q.toLowerCase();
@@ -159,18 +108,69 @@ export default async function GlossarPage({
 
   const filterAktiv = Boolean(q || typ || art || buchstabe);
 
+  function EintragInhalt({ eintrag }: { eintrag: GlossarEintrag }) {
+    return (
+      <>
+        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span
+            className={`text-body-lg font-bold text-ink ${
+              eintrag.href ? "group-hover:text-primary" : ""
+            }`}
+          >
+            {eintrag.begriff}
+          </span>
+          {eintrag.begriff_en && (
+            <span className="text-body-sm italic text-ink-muted">
+              {eintrag.begriff_en}
+            </span>
+          )}
+          {eintrag.betrifft_mich && (
+            <span
+              title={t("betrifftMichTitle")}
+              className="inline-flex items-center gap-1.5 text-label uppercase text-primary"
+            >
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 rounded-full bg-primary"
+              />
+              {t("betrifftMich")}
+            </span>
+          )}
+        </p>
+        {eintrag.kurztext && (
+          <p className="mt-1.5 max-w-[80ch] text-body-sm text-ink-muted">
+            {eintrag.kurztext}
+          </p>
+        )}
+        <p className="mt-3 flex flex-wrap items-center gap-2">
+          <Badge variant="neutral">{t(`typBadge.${eintrag.typ}`)}</Badge>
+          <span className="rounded border border-legal-tint bg-legal-tint px-2 py-0.5 font-mono text-label font-medium text-legal">
+            {eintrag.quelle}
+          </span>
+          {eintrag.href && (
+            <span className="text-body-sm font-medium text-legal">
+              {eintrag.typ === "anforderung"
+                ? t("zurAnforderung")
+                : t("zurAntwort")}
+            </span>
+          )}
+        </p>
+      </>
+    );
+  }
+
   return (
     <>
       <PageHeader
-        title="Wissen"
-        description="Das Nachschlagewerk zur PPWR: Begriffe, Anforderungen und Praxisfragen von A bis Z – mit Quelle und Link in die Tiefe."
+        title={tWissen("titel")}
+        description={tWissen("beschreibungGlossar")}
       />
-      <WissenTabs />
+      <WissenTabsNav />
 
       {/* Suche + Filter */}
       <form method="get" className="mb-8">
         <label htmlFor="q" className="sr-only">
-          Glossar durchsuchen
+          {t("suchLabel")}
         </label>
         <div className="flex flex-wrap gap-3">
           <div className="relative w-full max-w-xl">
@@ -180,12 +180,12 @@ export default async function GlossarPage({
               name="q"
               type="search"
               defaultValue={q}
-              placeholder="Begriff, Anforderung oder Frage suchen – auch alte VerpackG-Begriffe …"
+              placeholder={t("suchPlaceholder")}
               className="w-full rounded border border-line-strong bg-canvas py-3 pl-11 pr-4 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
             />
           </div>
           <label htmlFor="typ" className="sr-only">
-            Nach Typ filtern
+            {t("typFilterLabel")}
           </label>
           <select
             id="typ"
@@ -193,15 +193,15 @@ export default async function GlossarPage({
             defaultValue={typ ?? ""}
             className="rounded border border-line-strong bg-canvas px-3 py-3 text-body text-ink focus:border-ink focus:outline-none"
           >
-            <option value="">Alle Typen</option>
-            {(Object.keys(TYP_FILTER_LABELS) as GlossarTyp[]).map((wert) => (
+            <option value="">{t("alleTypen")}</option>
+            {GLOSSAR_TYPEN.map((wert) => (
               <option key={wert} value={wert}>
-                {TYP_FILTER_LABELS[wert]}
+                {t(`typFilter.${wert}`)}
               </option>
             ))}
           </select>
           <label htmlFor="art" className="sr-only">
-            Nach Verpackungsart filtern
+            {t("artFilterLabel")}
           </label>
           <select
             id="art"
@@ -209,10 +209,10 @@ export default async function GlossarPage({
             defaultValue={art}
             className="rounded border border-line-strong bg-canvas px-3 py-3 text-body text-ink focus:border-ink focus:outline-none"
           >
-            <option value="">Alle Verpackungsarten</option>
+            <option value="">{t("alleVerpackungsarten")}</option>
             {artOptionen.map((wert) => (
               <option key={wert} value={wert}>
-                {VERPACKUNGSTYP_LABELS[wert]}
+                {tLabels(`verpackungstypen.${wert}`)}
               </option>
             ))}
           </select>
@@ -220,14 +220,14 @@ export default async function GlossarPage({
             type="submit"
             className="shrink-0 rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
           >
-            Suchen
+            {tCommon("suchen")}
           </button>
         </div>
       </form>
 
       {/* Alphabet-Register */}
       <nav
-        aria-label="Alphabet-Register"
+        aria-label={t("registerLabel")}
         className="mb-10 flex flex-wrap items-center gap-1 border-b border-line pb-4"
       >
         {buchstabe ? (
@@ -235,11 +235,11 @@ export default async function GlossarPage({
             href={glossarUrl({ q, typ, art })}
             className="mr-2 rounded px-2 py-1 text-body-sm font-semibold text-legal hover:bg-hover"
           >
-            Alle
+            {t("alle")}
           </Link>
         ) : (
           <span className="mr-2 rounded bg-primary px-2 py-1 text-body-sm font-bold text-white">
-            Alle
+            {t("alle")}
           </span>
         )}
         {ALPHABET.map((b) => {
@@ -281,9 +281,7 @@ export default async function GlossarPage({
         <LegalCard>
           <div className="p-6">
             <p className="text-body text-ink-muted">
-              {q
-                ? `Zu „${q}“ ist noch kein Eintrag verzeichnet.`
-                : "Zu dieser Auswahl ist noch kein Eintrag verzeichnet."}
+              {q ? t("keinEintragZu", { query: q }) : t("keinEintragAuswahl")}
             </p>
             {filterAktiv && (
               <p className="mt-3 text-body-sm">
@@ -291,7 +289,7 @@ export default async function GlossarPage({
                   href="/wissen/glossar"
                   className="font-medium text-legal hover:underline"
                 >
-                  Stattdessen von A bis Z blättern →
+                  {t("blaettern")}
                 </Link>
               </p>
             )}

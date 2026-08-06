@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard } from "@/components/ui";
-import { formatDate, GILT_STATUS_LABELS, KATEGORIE_LABELS } from "@/lib/labels";
+import { formatDate } from "@/lib/labels";
 import { getAnforderungen, type GiltStatus } from "@/lib/wissensbasis";
-import { WissenTabs } from "./tabs";
+import { WissenTabsNav } from "./tabs-server";
 
-export const metadata: Metadata = {
-  title: "Wissen – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("wissen") };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -21,27 +23,29 @@ function giltStatusVariant(status: GiltStatus) {
 
 export default async function WissenPage() {
   const anforderungen = await getAnforderungen();
+  const t = await getTranslations("Wissen");
+  const tLabels = await getTranslations("Labels");
 
   return (
     <>
       <PageHeader
-        title="Wissen"
-        description="Die Anforderungen der EU-Verpackungsverordnung (PPWR) – redaktionell aufbereitet und juristisch geprüft."
+        title={t("titel")}
+        description={t("beschreibungAnforderungen")}
       />
-      <WissenTabs />
+      <WissenTabsNav />
 
       {anforderungen.length === 0 ? (
         <LegalCard>
           <p className="p-6 text-body text-ink-muted">
-            Aktuell sind keine freigegebenen Anforderungen verfügbar.
+            {t("keineAnforderungen")}
           </p>
         </LegalCard>
       ) : (
         <LegalCard>
           <div className="hidden grid-cols-12 gap-4 rounded-t bg-surface px-6 py-3 text-label uppercase text-ink-muted md:grid">
-            <span className="col-span-6">Anforderung</span>
-            <span className="col-span-2">Gilt ab</span>
-            <span className="col-span-4">Status &amp; Rechtsstand</span>
+            <span className="col-span-6">{t("spalteAnforderung")}</span>
+            <span className="col-span-2">{t("spalteGiltAb")}</span>
+            <span className="col-span-4">{t("spalteStatus")}</span>
           </div>
           <ul className="divide-y divide-line">
             {anforderungen.map((a) => (
@@ -67,12 +71,14 @@ export default async function WissenPage() {
                     {formatDate(a.gilt_ab)}
                   </div>
                   <div className="flex flex-wrap items-center gap-2 md:col-span-4">
-                    <Badge variant="green">{KATEGORIE_LABELS[a.kategorie]}</Badge>
-                    <Badge variant={giltStatusVariant(a.gilt_status)}>
-                      {GILT_STATUS_LABELS[a.gilt_status]}
+                    <Badge variant="green">
+                      {tLabels(`kategorien.${a.kategorie}`)}
                     </Badge>
-                    <Badge variant="neutral" title="Rechtsstand">
-                      Stand {formatDate(a.rechtsstand)}
+                    <Badge variant={giltStatusVariant(a.gilt_status)}>
+                      {tLabels(`giltStatus.${a.gilt_status}`)}
+                    </Badge>
+                    <Badge variant="neutral" title={t("rechtsstandTitle")}>
+                      {t("rechtsstandChip", { datum: formatDate(a.rechtsstand) })}
                     </Badge>
                   </div>
                 </Link>

@@ -1,6 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { BrandLink } from "@/components/brand";
 import { isPreviewMode } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
@@ -18,30 +19,25 @@ export default async function OnboardingLayout({
     redirect("/login");
   }
 
+  const t = await getTranslations("Onboarding");
+  const tCommon = await getTranslations("Common");
+
   return (
     <div className="flex min-h-screen flex-col">
       {isPreviewMode() && (
         <div className="bg-gold px-4 py-2 text-center text-label uppercase text-ink">
-          Vorschau-Modus – ungeprüfte Inhalte
+          {tCommon("previewBanner")}
         </div>
       )}
 
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 md:px-16">
-          <Link href="/dashboard" className="inline-flex items-center">
-            <Image
-              src="/ppwr-radar-logo.svg"
-              alt="PPWR Radar"
-              width={161}
-              height={25}
-              priority
-            />
-          </Link>
+          <BrandLink href="/dashboard" byline={false} priority />
           <Link
             href="/dashboard"
             className="text-body-sm font-medium text-ink-muted hover:text-ink"
           >
-            Zum Dashboard
+            {t("zumDashboard")}
           </Link>
         </div>
       </header>
@@ -52,7 +48,7 @@ export default async function OnboardingLayout({
 
       <footer className="border-t border-line bg-footer px-6 py-4">
         <p className="text-center text-label uppercase text-ink-muted">
-          Einordnung auf Basis Ihrer Angaben · keine Rechtsberatung
+          {t("footer")}
         </p>
       </footer>
     </div>

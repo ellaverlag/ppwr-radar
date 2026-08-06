@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { ersteinschaetzung } from "@/lib/check-einschaetzung";
 import { evaluiereLinie, type LinienKontext, type RegelRow, type UnternehmenKontext } from "@/lib/rollen-engine";
 import { ladeAppConfig, ladeRegeln } from "@/lib/rollen-service";
@@ -8,25 +9,15 @@ import { formatDate } from "@/lib/labels";
 import { checkNeuStarten } from "../actions";
 import { leseCheckAntworten } from "../check-config";
 
-export const metadata: Metadata = {
-  title: "Ihre Ersteinschätzung – PPWR Radar",
-  robots: { index: false },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return {
+    title: t("checkErgebnis"),
+    robots: { index: false },
+  };
+}
 
 export const dynamic = "force-dynamic";
-
-const ROLLEN_LABELS: Record<string, string> = {
-  erzeuger: "Erzeuger",
-  hersteller: "Hersteller",
-  importeur: "Importeur",
-  vertreiber: "Vertreiber",
-  endvertreiber: "Endvertreiber",
-  fulfillment_dienstleister: "Fulfillment-Dienstleister",
-  lieferant: "Lieferant",
-};
-
-const ESKALATION_FALLBACK =
-  "Ihre Angaben lassen keine eindeutige Einordnung zu. Genau für solche Fälle bieten wir ein Erstgespräch mit unseren Compliance-Experten der Cattwyk Rechtsanwaltsgesellschaft an.";
 
 function CheckZeile({ text }: { text: React.ReactNode }) {
   return (
@@ -53,6 +44,9 @@ export default async function CheckErgebnisPage() {
     redirect("/check");
   }
 
+  const t = await getTranslations("CheckErgebnis");
+  const tLabels = await getTranslations("Labels");
+
   let regeln: RegelRow[] = [];
   try {
     regeln = await ladeRegeln();
@@ -62,12 +56,9 @@ export default async function CheckErgebnisPage() {
   if (regeln.length === 0) {
     return (
       <div className="rounded border border-line bg-canvas p-8 text-center">
-        <p className="text-body text-ink-muted">
-          Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es
-          später erneut.
-        </p>
+        <p className="text-body text-ink-muted">{t("nichtVerfuegbar")}</p>
         <Link href="/check" className="mt-6 inline-block text-body-sm font-medium text-legal hover:underline">
-          Zurück zum Check
+          {t("zurueckZumCheck")}
         </Link>
       </div>
     );
@@ -96,36 +87,39 @@ export default async function CheckErgebnisPage() {
   const ergebnis = evaluiereLinie(regeln, unternehmen, linie);
   const rollen = ergebnis.rollen_set.rollen;
   const pflichten = ergebnis.rollen_set.pflichten;
-  const { stufe, unklar, aussage } = ersteinschaetzung(ergebnis, taetigkeit);
+  const { stufe, unklar } = ersteinschaetzung(ergebnis, taetigkeit);
+  const aussage = t(`aussage.${stufe}`);
+
+  const rollenLabel = (rolle: string) =>
+    tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle;
 
   const pflichtenTeaser: string[] = [];
   if (rollen.includes("erzeuger")) {
-    pflichtenTeaser.push("Konformität & Kennzeichnung");
+    pflichtenTeaser.push(t("pflichtenTeaser.konformitaet"));
   }
   if (
     pflichten.some((p) =>
       ["registrierung_zsvr", "systembeteiligung", "datenmeldung"].includes(p)
     )
   ) {
-    pflichtenTeaser.push("Registrierung & Systembeteiligung (ZSVR)");
+    pflichtenTeaser.push(t("pflichtenTeaser.registrierung"));
   }
   if (pflichten.includes("bevollmaechtigter_ehv")) {
-    pflichtenTeaser.push("Bevollmächtigter für die erweiterte Herstellerverantwortung");
+    pflichtenTeaser.push(t("pflichtenTeaser.bevollmaechtigter"));
   }
 
   const eskalationsText =
-    (await ladeAppConfig("cattwyk_erstgespraech_hinweis")) ?? ESKALATION_FALLBACK;
+    (await ladeAppConfig("cattwyk_erstgespraech_hinweis")) ??
+    t("eskalationFallback");
   const heute = new Date().toISOString().slice(0, 10);
 
   return (
     <>
       <header className="mb-10 text-center">
         <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
-          Ihre Ersteinschätzung
+          {t("titel")}
         </h1>
-        <p className="mt-3 text-body-lg text-ink-muted">
-          Basierend auf Ihren Angaben im Betroffenheits-Check.
-        </p>
+        <p className="mt-3 text-body-lg text-ink-muted">{t("untertitel")}</p>
       </header>
 
       <div className="rounded border border-line bg-canvas">
@@ -133,7 +127,7 @@ export default async function CheckErgebnisPage() {
           {unklar ? (
             <div className="border-l-4 border-line-strong bg-surface p-5">
               <h2 className="text-label uppercase text-ink-muted">
-                Einordnung offen
+                {t("einordnungOffen")}
               </h2>
               <p className="mt-2 text-body text-ink">{eskalationsText}</p>
             </div>
@@ -158,10 +152,8 @@ export default async function CheckErgebnisPage() {
                   <CheckZeile
                     text={
                       <>
-                        Ihre Rolle: voraussichtlich{" "}
-                        <b>
-                          {rollen.map((r) => ROLLEN_LABELS[r] ?? r).join(", ")}
-                        </b>
+                        {t("rolleVor")}{" "}
+                        <b>{rollen.map(rollenLabel).join(", ")}</b>
                       </>
                     }
                   />
@@ -170,8 +162,7 @@ export default async function CheckErgebnisPage() {
                   <CheckZeile
                     text={
                       <>
-                        Relevante Pflichtenbereiche seit 12.08.2026:{" "}
-                        <b>{pflichtenTeaser.join(", ")}</b>
+                        {t("pflichtenVor")} <b>{pflichtenTeaser.join(", ")}</b>
                       </>
                     }
                   />
@@ -192,31 +183,26 @@ export default async function CheckErgebnisPage() {
                     aria-hidden="true"
                     className="select-none text-body text-ink-muted blur-[3px]"
                   >
-                    Vollständige Pflichtenliste, Fristen 2028/2030 und Ihre
-                    Dokumente – Konformitätserklärung, technische Dokumentation.
+                    {t("gesperrtBlur")}
                   </span>
-                  <span className="sr-only">
-                    Die vollständige Pflichtenliste ist Teil des PPWR|ready-Pakets.
-                  </span>
+                  <span className="sr-only">{t("gesperrtSr")}</span>
                 </li>
               </ul>
             </>
           )}
         </div>
         <div className="border-t border-line p-4 font-mono text-mono-sm uppercase text-legal">
-          Basierend auf Verordnung (EU) 2025/40 · Stand {formatDate(heute)}
+          {t("rechtsstandZeile", { datum: formatDate(heute) })}
         </div>
       </div>
 
       {/* Paywall-CTA */}
       <div className="mt-12 text-center">
         <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
-          Was heißt das konkret für Ihre Verpackungen?
+          {t("paywallTitel")}
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-body text-ink-muted">
-          PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen
-          je Produktlinie, Status-Analyse, persönlichem Fristen-Dashboard und
-          Ihren Dokumenten.
+          {t("paywallText")}
         </p>
         {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
         <Link
@@ -224,14 +210,14 @@ export default async function CheckErgebnisPage() {
           data-stripe="paket"
           className="mt-8 inline-flex items-center gap-2 rounded bg-primary px-8 py-4 text-body-lg font-semibold text-white transition-colors hover:bg-primary-dark"
         >
-          Jetzt PPWR|ready werden – 490 € →
+          {t("paywallCta")}
         </Link>
         <div className="mt-4">
           <Link
             href="/#preise"
             className="text-body-sm font-medium text-legal hover:underline"
           >
-            Mehr über PPWR Radar erfahren
+            {t("mehrErfahren")}
           </Link>
         </div>
         <form action={checkNeuStarten} className="mt-8">
@@ -239,7 +225,7 @@ export default async function CheckErgebnisPage() {
             type="submit"
             className="text-body-sm font-medium text-ink-muted hover:text-ink"
           >
-            Check neu starten
+            {t("neuStarten")}
           </button>
         </form>
       </div>

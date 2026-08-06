@@ -1,45 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { formatDate } from "@/lib/labels";
 import type { HerleitungsEintrag, RollenSet } from "@/lib/rollen-engine";
 import { ladeAppConfig, ladeRollenBegriffe } from "@/lib/rollen-service";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = {
-  title: "Ihre Rollen nach PPWR – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("onboardingErgebnis") };
+}
 
 export const dynamic = "force-dynamic";
-
-/** Fallback-Labels, falls rollen_definitionen (noch) nicht lesbar sind. */
-const FALLBACK_LABELS: Record<string, string> = {
-  erzeuger: "Erzeuger",
-  hersteller: "Hersteller",
-  importeur: "Importeur",
-  vertreiber: "Vertreiber",
-  endvertreiber: "Endvertreiber",
-  fulfillment_dienstleister: "Fulfillment-Dienstleister",
-  lieferant: "Lieferant",
-};
-
-const PFLICHT_LABELS: Record<string, string> = {
-  bevollmaechtigter_ehv: "Bevollmächtigter für die erweiterte Herstellerverantwortung erforderlich",
-  registrierung_zsvr: "Registrierung bei der ZSVR (LUCID)",
-  systembeteiligung: "Systembeteiligung",
-  datenmeldung: "Datenmeldung",
-};
-
-const ENTLASTUNG_LABELS: Record<string, string> = {
-  lieferant_als_erzeuger:
-    "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
-  kein_hersteller_export:
-    "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus.",
-};
-
-const ESKALATION_FALLBACK =
-  "Ihre Angaben lassen keine eindeutige Einordnung zu, wer in Deutschland erstmals bereitstellt. Genau für solche Fälle bieten wir ein Erstgespräch mit unseren Compliance-Experten an – wir melden uns gern bei Ihnen.";
 
 interface ErgebnisRow {
   id: string;
@@ -73,12 +47,20 @@ export default async function ErgebnisPage() {
 
   if (ergebnisse.length === 0) redirect("/onboarding");
 
+  const t = await getTranslations("OnboardingErgebnis");
+  const tLabels = await getTranslations("Labels");
+
   const begriffe = await ladeRollenBegriffe();
   const label = (rolle: string) =>
-    begriffe[rolle]?.begriff_de ?? FALLBACK_LABELS[rolle] ?? rolle;
+    begriffe[rolle]?.begriff_de ??
+    (tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle);
+  const istRolle = (wert: string) => tLabels.has(`rollen.${wert}`);
+  const istPflicht = (wert: string) => tLabels.has(`pflichten.${wert}`);
+  const istEntlastung = (wert: string) => tLabels.has(`entlastungen.${wert}`);
 
   const eskalationsText =
-    (await ladeAppConfig("cattwyk_erstgespraech_hinweis")) ?? ESKALATION_FALLBACK;
+    (await ladeAppConfig("cattwyk_erstgespraech_hinweis")) ??
+    t("eskalationFallback");
 
   const verwechslungsText = begriffe["erzeuger"]?.verwechslungsfaelle;
   const zeigeFalle = ergebnisse.some(
@@ -94,11 +76,10 @@ export default async function ErgebnisPage() {
     <>
       <header className="mb-12 text-center">
         <h1 className="text-display-sm text-ink lg:text-display">
-          Ihre Rollen nach PPWR
+          {t("titel")}
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-body-lg text-ink-muted">
-          Basierend auf Ihren Angaben wurden folgende rechtliche Rollen für
-          Ihre Produktlinien ermittelt.
+          {t("untertitel")}
         </p>
       </header>
 
@@ -108,14 +89,14 @@ export default async function ErgebnisPage() {
             {ergebnis.rollen_set.unklar ? (
               <div className="p-6">
                 <p className="text-label uppercase tracking-widest text-ink-muted">
-                  Produktlinie
+                  {t("produktlinie")}
                 </p>
                 <h2 className="mt-1 text-headline text-ink">
                   {ergebnis.produktlinie}
                 </h2>
                 <div className="mt-6 border-l-4 border-line-strong bg-surface p-5">
                   <h3 className="text-label uppercase text-ink-muted">
-                    Einordnung offen
+                    {t("einordnungOffen")}
                   </h3>
                   <p className="mt-2 text-body text-ink">{eskalationsText}</p>
                 </div>
@@ -125,7 +106,7 @@ export default async function ErgebnisPage() {
                 <summary className="flex cursor-pointer list-none flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between [&::-webkit-details-marker]:hidden">
                   <div>
                     <p className="text-label uppercase tracking-widest text-ink-muted">
-                      Produktlinie
+                      {t("produktlinie")}
                     </p>
                     <h2 className="mt-1 text-headline text-ink">
                       {ergebnis.produktlinie}
@@ -138,9 +119,7 @@ export default async function ErgebnisPage() {
                       </Badge>
                     ))}
                     {ergebnis.rollen_set.vorbehalt && (
-                      <Badge variant="neutral">
-                        Vorbehaltlich juristischer Verifikation
-                      </Badge>
+                      <Badge variant="neutral">{t("vorbehalt")}</Badge>
                     )}
                     <span
                       aria-hidden="true"
@@ -159,50 +138,51 @@ export default async function ErgebnisPage() {
                     >
                       <p className="text-body text-ink">
                         <span className="font-semibold">
-                          Sie gelten als{" "}
-                          {schritt.ergebnis
-                            .filter((e) => FALLBACK_LABELS[e])
-                            .map(label)
-                            .join(" und ") || "betroffen"}
-                          ,
+                          {t("sieGeltenAls", {
+                            rollen:
+                              schritt.ergebnis
+                                .filter(istRolle)
+                                .map(label)
+                                .join(" und ") || t("betroffen"),
+                          })}
                         </span>{" "}
-                        weil: {schritt.erlaeuterung ?? "siehe Fundstelle."}
+                        {t("weil", {
+                          grund: schritt.erlaeuterung ?? t("sieheFundstelle"),
+                        })}
                       </p>
-                      {schritt.ergebnis.some((e) => PFLICHT_LABELS[e]) && (
+                      {schritt.ergebnis.some(istPflicht) && (
                         <ul className="mt-2 space-y-1">
-                          {schritt.ergebnis
-                            .filter((e) => PFLICHT_LABELS[e])
-                            .map((p) => (
-                              <li key={p} className="text-body-sm text-ink-muted">
-                                → Pflicht: {PFLICHT_LABELS[p]}
-                              </li>
-                            ))}
+                          {schritt.ergebnis.filter(istPflicht).map((p) => (
+                            <li key={p} className="text-body-sm text-ink-muted">
+                              {t("pflichtPrefix", {
+                                pflicht: tLabels(`pflichten.${p}`),
+                              })}
+                            </li>
+                          ))}
                         </ul>
                       )}
-                      {schritt.ergebnis.some((e) => ENTLASTUNG_LABELS[e]) && (
+                      {schritt.ergebnis.some(istEntlastung) && (
                         <ul className="mt-2 space-y-1">
-                          {schritt.ergebnis
-                            .filter((e) => ENTLASTUNG_LABELS[e])
-                            .map((p) => (
-                              <li key={p} className="text-body-sm text-ink-muted">
-                                → {ENTLASTUNG_LABELS[p]}
-                              </li>
-                            ))}
+                          {schritt.ergebnis.filter(istEntlastung).map((p) => (
+                            <li key={p} className="text-body-sm text-ink-muted">
+                              {t("entlastungPrefix", {
+                                entlastung: tLabels(`entlastungen.${p}`),
+                              })}
+                            </li>
+                          ))}
                         </ul>
                       )}
                       <div className="mt-3 flex flex-wrap gap-2">
                         <Badge variant="blue">{schritt.fundstelle_primaer}</Badge>
                         {schritt.fundstelle_sekundaer && (
-                          <Badge variant="neutral" title="Sekundärquelle">
+                          <Badge variant="neutral" title={t("sekundaerquelle")}>
                             {schritt.fundstelle_sekundaer.length > 60
                               ? `${schritt.fundstelle_sekundaer.slice(0, 57)}…`
                               : schritt.fundstelle_sekundaer}
                           </Badge>
                         )}
                         {schritt.vorbehalt && (
-                          <Badge variant="neutral">
-                            Vorbehaltlich juristischer Verifikation
-                          </Badge>
+                          <Badge variant="neutral">{t("vorbehalt")}</Badge>
                         )}
                       </div>
                     </div>
@@ -211,12 +191,12 @@ export default async function ErgebnisPage() {
                   {ergebnis.rollen_set.pflichten.length > 0 && (
                     <div className="mt-6 border-l-4 border-gold bg-surface p-4">
                       <h3 className="text-label uppercase text-gold-ink">
-                        Pflichten aus diesem Rollen-Set
+                        {t("pflichtenTitel")}
                       </h3>
                       <ul className="mt-2 space-y-1">
                         {ergebnis.rollen_set.pflichten.map((p) => (
                           <li key={p} className="text-body-sm text-ink">
-                            {PFLICHT_LABELS[p] ?? p}
+                            {istPflicht(p) ? tLabels(`pflichten.${p}`) : p}
                           </li>
                         ))}
                       </ul>
@@ -233,7 +213,7 @@ export default async function ErgebnisPage() {
         <div className="mt-8 rounded border border-line bg-canvas">
           <div className="border-l-4 border-gold p-6">
             <h2 className="text-label uppercase text-gold-ink">
-              Achtung, Übersetzungsfalle: Erzeuger ≠ Hersteller
+              {t("falleTitel")}
             </h2>
             <p className="mt-3 whitespace-pre-line text-body text-ink">
               {verwechslungsText}
@@ -247,14 +227,16 @@ export default async function ErgebnisPage() {
           href="/dashboard"
           className="inline-flex items-center gap-2 rounded bg-primary px-6 py-4 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
         >
-          Zur Status-Analyse →
+          {t("zurStatusAnalyse")}
         </Link>
       </div>
 
       <p className="mt-10 border-t border-line pt-4 text-center font-mono text-mono-sm uppercase text-legal">
-        {irgendeinVorbehalt ? "Enthält ungeprüfte Regeln · " : ""}
-        Engine {stand.engine_version} · Rechtsstand {formatDate(stand.rechtsstand)}{" "}
-        · Einordnung, keine Rechtsberatung
+        {irgendeinVorbehalt ? t("fussUngeprueft") : ""}
+        {t("fussZeile", {
+          version: stand.engine_version,
+          datum: formatDate(stand.rechtsstand),
+        })}
       </p>
     </>
   );

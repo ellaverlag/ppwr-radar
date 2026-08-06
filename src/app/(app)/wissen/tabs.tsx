@@ -3,18 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const TABS = [
-  { href: "/wissen", label: "Anforderungen" },
-  { href: "/wissen/auslegungen", label: "Auslegungen" },
-  { href: "/wissen/glossar", label: "Glossar" },
-];
+export interface WissenTab {
+  href: "/wissen" | "/wissen/auslegungen" | "/wissen/glossar";
+  label: string;
+}
 
-export function WissenTabs() {
+/** Labels kommen als Props aus den Server-Seiten (Sprachdateien, "Wissen.tabs"). */
+export function WissenTabs({ tabs }: { tabs: WissenTab[] }) {
   const pathname = usePathname();
 
   return (
     <div className="mb-10 flex gap-8 border-b border-line">
-      {TABS.map((tab) => {
+      {tabs.map((tab) => {
         const active =
           tab.href === "/wissen"
             ? pathname === "/wissen" ||

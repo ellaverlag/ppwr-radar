@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { ChatIcon, PlusIcon } from "@/components/icons";
 import {
@@ -12,45 +13,12 @@ import {
 import type { RollenSet } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
 
-export const metadata: Metadata = {
-  title: "Dashboard – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("dashboard") };
+}
 
 export const dynamic = "force-dynamic";
-
-const ROLLEN_LABELS: Record<string, string> = {
-  erzeuger: "Erzeuger",
-  hersteller: "Hersteller",
-  importeur: "Importeur",
-  vertreiber: "Vertreiber",
-  endvertreiber: "Endvertreiber",
-  fulfillment_dienstleister: "Fulfillment-Dienstleister",
-  lieferant: "Lieferant",
-};
-
-const RADAR_BEISPIELE = [
-  {
-    datum: "01.10.2026",
-    titel: "Delegierter Rechtsakt: Entwurf veröffentlicht",
-    text: "Die Kommission hat den ersten Entwurf zur Berechnung der Rezyklatanteile vorgelegt.",
-    chip: { label: "Betrifft Ihre Verpackungstypen", variant: "green" as const },
-    aktiv: true,
-  },
-  {
-    datum: "15.09.2026",
-    titel: "Q&A-Dokument aktualisiert",
-    text: "Klarstellungen zum Begriff „Inverkehrbringen“ wurden hinzugefügt.",
-    chip: { label: "Allgemeine Info", variant: "neutral" as const },
-    aktiv: false,
-  },
-  {
-    datum: "02.09.2026",
-    titel: "Normungsmandat erteilt",
-    text: "CEN erhält offizielles Mandat zur Entwicklung harmonisierter Normen für Design for Recycling.",
-    chip: { label: "Betrifft Ihre Produktlinien", variant: "green" as const },
-    aktiv: false,
-  },
-];
 
 interface ErgebnisZeile {
   id: string;
@@ -63,6 +31,9 @@ export default async function DashboardPage() {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  const t = await getTranslations("Dashboard");
+  const tLabels = await getTranslations("Labels");
 
   const { data: profil } = user
     ? await supabase
@@ -83,53 +54,49 @@ export default async function DashboardPage() {
   }
   const onboardingFertig = Boolean(profil?.onboarding_abgeschlossen);
 
-  const schritte = [
-    {
-      nr: "01",
-      titel: "Betroffenheits-Check durchführen",
-      text: "Beantworten Sie die Fragen zu Ihrem Unternehmen – daraus leiten wir Ihre Rollen nach PPWR ab.",
-      erledigt: onboardingFertig,
-    },
-    {
-      nr: "02",
-      titel: "Verpackungsprofil anlegen",
-      text: "Erfassen Sie Ihre Produktlinien und Verpackungen, damit Anforderungen zugeordnet werden können.",
-      erledigt: onboardingFertig,
-    },
-    {
-      nr: "03",
-      titel: "Status-Analyse starten",
-      text: "Die Gap-Analyse zeigt, welche Pflichten erfüllt sind und wo Handlungsbedarf besteht.",
-      erledigt: false,
-    },
-  ];
+  const rollenLabel = (rolle: string) =>
+    tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle;
+
+  const schritteTexte = t.raw("schritte") as { titel: string; text: string }[];
+  const schritte = schritteTexte.map((schritt, i) => ({
+    nr: String(i + 1).padStart(2, "0"),
+    ...schritt,
+    erledigt: i < 2 ? onboardingFertig : false,
+  }));
+
+  const radarBeispiele = t.raw("radarBeispiele") as {
+    datum: string;
+    titel: string;
+    text: string;
+    chip: string;
+  }[];
 
   return (
     <>
       <header className="mb-12">
         <h1 className="mb-4 text-display-sm text-ink lg:text-display">
-          Dashboard
+          {t("titel")}
         </h1>
         <div className="flex flex-wrap gap-4">
           {!onboardingFertig ? (
             <>
               <PrimaryButtonLink href="/onboarding">
-                <span>Onboarding starten</span>
+                <span>{t("onboardingStarten")}</span>
               </PrimaryButtonLink>
               <SecondaryButtonLink href="/assistant">
                 <ChatIcon className="h-4 w-4" />
-                <span>Assistant fragen</span>
+                <span>{t("assistantFragen")}</span>
               </SecondaryButtonLink>
             </>
           ) : (
             <>
               <PrimaryButtonLink href="/dokumente">
                 <PlusIcon className="h-4 w-4" />
-                <span>Neues Dokument erstellen</span>
+                <span>{t("neuesDokument")}</span>
               </PrimaryButtonLink>
               <SecondaryButtonLink href="/assistant">
                 <ChatIcon className="h-4 w-4" />
-                <span>Assistant fragen</span>
+                <span>{t("assistantFragen")}</span>
               </SecondaryButtonLink>
             </>
           )}
@@ -140,12 +107,12 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <LegalCard>
           <div className="flex-1 p-6">
-            <h2 className="mb-8 text-headline text-ink">
-              Ihr Compliance-Status
-            </h2>
+            <h2 className="mb-8 text-headline text-ink">{t("statusTitel")}</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-line-strong pb-2">
-                <span className="text-body-lg text-ink-muted">Vollständig</span>
+                <span className="text-body-lg text-ink-muted">
+                  {t("statusVollstaendig")}
+                </span>
                 <span className="flex gap-1">
                   <TrafficDot color="dim" />
                   <TrafficDot color="dim" />
@@ -154,43 +121,37 @@ export default async function DashboardPage() {
               </div>
               <div className="flex items-center justify-between border-b border-line-strong pb-2">
                 <span className="text-body-lg text-ink-muted">
-                  Offen (Kritisch)
+                  {t("statusOffen")}
                 </span>
                 <TrafficDot color="dim" />
               </div>
               <div className="flex items-center justify-between pb-2">
                 <span className="text-body-lg text-ink-muted">
-                  In Bearbeitung
+                  {t("statusInBearbeitung")}
                 </span>
                 <TrafficDot color="dim" />
               </div>
             </div>
             <p className="mt-6 text-body-sm text-ink-muted">
               {onboardingFertig
-                ? `${ergebnisse.length} ${
-                    ergebnisse.length === 1 ? "Produktlinie" : "Produktlinien"
-                  } erfasst – die Status-Analyse folgt im nächsten Paket.`
-                : "Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen erstellt."}
+                ? t("statusHinweisMitOnboarding", { anzahl: ergebnisse.length })
+                : t("statusHinweisOhneOnboarding")}
             </p>
           </div>
-          <LegalCardFooter>Verordnung (EU) 2025/40 · PPWR</LegalCardFooter>
+          <LegalCardFooter>{t("statusFooter")}</LegalCardFooter>
         </LegalCard>
 
         <LegalCard>
           <div className="flex-1 p-6">
-            <h2 className="mb-8 text-headline text-ink">Ihre Rollen</h2>
+            <h2 className="mb-8 text-headline text-ink">{t("rollenTitel")}</h2>
             {!onboardingFertig ? (
               <>
-                <p className="text-body text-ink-muted">
-                  Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie –
-                  etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus
-                  dem Betroffenheits-Check im Onboarding.
-                </p>
+                <p className="text-body text-ink-muted">{t("rollenLeer")}</p>
                 <Link
                   href="/onboarding"
                   className="mt-6 inline-flex items-center rounded bg-primary px-5 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
                 >
-                  Onboarding starten →
+                  {t("rollenOnboardingCta")}
                 </Link>
               </>
             ) : (
@@ -207,11 +168,11 @@ export default async function DashboardPage() {
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {zeile.rollen_set.unklar ? (
-                        <Badge variant="gold">Einordnung offen</Badge>
+                        <Badge variant="gold">{t("einordnungOffen")}</Badge>
                       ) : (
                         zeile.rollen_set.rollen.map((rolle) => (
                           <Badge key={rolle} variant="blue">
-                            {ROLLEN_LABELS[rolle] ?? rolle}
+                            {rollenLabel(rolle)}
                           </Badge>
                         ))
                       )}
@@ -222,51 +183,57 @@ export default async function DashboardPage() {
                   href="/onboarding/ergebnis"
                   className="inline-block text-body-sm font-medium text-legal hover:underline"
                 >
-                  Herleitung ansehen →
+                  {t("herleitungAnsehen")}
                 </Link>
               </div>
             )}
           </div>
-          <LegalCardFooter>Art. 3 PPWR · Begriffsbestimmungen</LegalCardFooter>
+          <LegalCardFooter>{t("rollenFooter")}</LegalCardFooter>
         </LegalCard>
 
         <LegalCard>
           <div className="flex-1 p-6">
-            <h2 className="mb-8 text-headline text-ink">Fristen</h2>
+            <h2 className="mb-8 text-headline text-ink">{t("fristenTitel")}</h2>
             <div className="relative mx-2 mt-12 h-0.5 bg-line">
               <span className="absolute -top-[5px] left-0 h-3 w-3 rounded-full border-2 border-white bg-gold shadow-[0_0_0_1px_#1b1b1b]" />
               <span className="absolute -top-[5px] left-1/2 h-3 w-3 -translate-x-1/2 rounded-full bg-ink" />
               <span className="absolute -top-[5px] right-0 h-3 w-3 rounded-full bg-ink" />
               <div className="absolute left-0 top-4 -translate-x-1/4 text-center">
                 <div className="text-label font-bold uppercase text-gold-ink">
-                  12.08.2026
+                  {t("fristGeltungDatum")}
                 </div>
-                <div className="text-body-sm text-ink-muted">Geltung</div>
+                <div className="text-body-sm text-ink-muted">
+                  {t("fristGeltung")}
+                </div>
               </div>
               <div className="absolute left-1/2 top-4 -translate-x-1/2 text-center">
-                <div className="text-label uppercase">2028</div>
-                <div className="text-body-sm text-ink-muted">Stufe 2</div>
+                <div className="text-label uppercase">{t("fristStufe2Jahr")}</div>
+                <div className="text-body-sm text-ink-muted">
+                  {t("fristStufe2")}
+                </div>
               </div>
               <div className="absolute right-0 top-4 translate-x-1/4 text-center">
-                <div className="text-label uppercase">2030</div>
-                <div className="text-body-sm text-ink-muted">Stufe 3</div>
+                <div className="text-label uppercase">{t("fristStufe3Jahr")}</div>
+                <div className="text-body-sm text-ink-muted">
+                  {t("fristStufe3")}
+                </div>
               </div>
             </div>
             <div className="mt-20 border-t border-line-strong pt-4">
               <p className="text-body-sm text-ink-muted">
-                <span className="font-bold text-ink">Nächste Frist:</span>{" "}
-                Geltungsbeginn der PPWR am 12.08.2026.
+                <span className="font-bold text-ink">{t("naechsteFrist")}</span>{" "}
+                {t("naechsteFristText")}
               </p>
             </div>
           </div>
-          <LegalCardFooter>Art. 71 PPWR · Geltungsbeginn</LegalCardFooter>
+          <LegalCardFooter>{t("fristenFooter")}</LegalCardFooter>
         </LegalCard>
       </div>
 
       {/* Meine nächsten Schritte */}
       <LegalCard className="mt-6">
         <div className="flex-1 p-6">
-          <h2 className="mb-8 text-headline text-ink">Meine nächsten Schritte</h2>
+          <h2 className="mb-8 text-headline text-ink">{t("schritteTitel")}</h2>
           <ol className="space-y-6 border-l border-line-strong pl-6">
             {schritte.map((schritt) => (
               <li key={schritt.nr} className="flex gap-4">
@@ -276,7 +243,9 @@ export default async function DashboardPage() {
                 <div>
                   <h3 className="flex flex-wrap items-center gap-2 text-label uppercase text-ink">
                     <span>{schritt.titel}</span>
-                    {schritt.erledigt && <Badge variant="green">Erledigt</Badge>}
+                    {schritt.erledigt && (
+                      <Badge variant="green">{t("erledigt")}</Badge>
+                    )}
                   </h3>
                   <p className="mt-1 text-body-sm text-ink-muted">
                     {schritt.text}
@@ -286,25 +255,23 @@ export default async function DashboardPage() {
             ))}
           </ol>
         </div>
-        <LegalCardFooter>
-          Status-Analyse und Dokumente folgen im nächsten Paket
-        </LegalCardFooter>
+        <LegalCardFooter>{t("schritteFooter")}</LegalCardFooter>
       </LegalCard>
 
       {/* Radar-Feed */}
       <LegalCard className="mt-6">
         <div className="flex-1 p-6">
           <div className="mb-8 flex flex-wrap items-center gap-3">
-            <h2 className="text-headline text-ink">Radar-Updates</h2>
-            <Badge variant="neutral">Beispieldaten</Badge>
+            <h2 className="text-headline text-ink">{t("radarTitel")}</h2>
+            <Badge variant="neutral">{t("beispieldaten")}</Badge>
           </div>
           <div className="grid grid-cols-1 gap-6 border-l border-line-strong pl-4 md:grid-cols-3">
-            {RADAR_BEISPIELE.map((memo) => (
+            {radarBeispiele.map((memo, i) => (
               <div key={memo.datum} className="relative pl-4">
                 <span
                   aria-hidden="true"
                   className={`absolute -left-[22px] top-1.5 h-2 w-2 rounded-full ${
-                    memo.aktiv ? "bg-ink" : "bg-dim"
+                    i === 0 ? "bg-ink" : "bg-dim"
                   }`}
                 />
                 <div className="mb-1 font-mono text-mono-sm text-ink-muted">
@@ -314,14 +281,14 @@ export default async function DashboardPage() {
                   {memo.titel}
                 </h3>
                 <p className="mb-4 text-body-sm text-ink-muted">{memo.text}</p>
-                <Badge variant={memo.chip.variant}>{memo.chip.label}</Badge>
+                <Badge variant={i === 1 ? "neutral" : "green"}>
+                  {memo.chip}
+                </Badge>
               </div>
             ))}
           </div>
         </div>
-        <LegalCardFooter>
-          Update-Memos erscheinen hier nach redaktioneller Freigabe
-        </LegalCardFooter>
+        <LegalCardFooter>{t("radarFooter")}</LegalCardFooter>
       </LegalCard>
     </>
   );

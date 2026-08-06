@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { getTranslations } from "next-intl/server";
+import { BrandLink } from "@/components/brand";
 import { loginWithMagicLink } from "./actions";
 
-export const metadata: Metadata = {
-  title: "Anmelden – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("login") };
+}
 
-const ERROR_MESSAGES: Record<string, string> = {
-  missing_email: "Bitte geben Sie eine E-Mail-Adresse ein.",
-  send_failed:
-    "Der Anmelde-Link konnte nicht versendet werden. Bitte versuchen Sie es erneut.",
-  auth_failed:
-    "Die Anmeldung ist fehlgeschlagen. Der Link ist möglicherweise abgelaufen – bitte fordern Sie einen neuen an.",
-};
+const ERROR_KEYS = ["missing_email", "send_failed", "auth_failed"] as const;
 
 export default async function LoginPage({
   searchParams,
@@ -20,48 +16,37 @@ export default async function LoginPage({
   searchParams: Promise<{ sent?: string; email?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const errorMessage = params.error ? ERROR_MESSAGES[params.error] : null;
+  const t = await getTranslations("Login");
+  const errorKey = ERROR_KEYS.find((key) => key === params.error);
+  const errorMessage = errorKey ? t(`fehler.${errorKey}`) : null;
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-surface px-4">
       <div className="w-full max-w-md">
         <div className="mb-12 text-center">
-          <Image
-            src="/ppwr-radar-logo.svg"
-            alt="PPWR Radar"
-            width={226}
-            height={35}
-            priority
-            className="mx-auto"
-          />
-          <p className="mt-3 text-label uppercase text-ink-muted">
-            by packaging journal
-          </p>
+          <BrandLink href="/" width={226} priority center />
         </div>
 
         <div className="rounded border border-line bg-canvas p-8">
           {params.sent ? (
             <div className="text-center">
-              <h1 className="text-headline text-ink">E-Mail unterwegs</h1>
+              <h1 className="text-headline text-ink">{t("gesendetTitel")}</h1>
               <p className="mt-4 text-body text-ink-muted">
-                Wir haben einen Anmelde-Link an{" "}
+                {t("gesendetTextVor")}{" "}
                 <span className="font-semibold text-ink">{params.email}</span>{" "}
-                gesendet. Öffnen Sie die E-Mail und klicken Sie auf den Link, um
-                sich anzumelden.
+                {t("gesendetTextNach")}
               </p>
               <a
                 href="/login"
                 className="mt-8 inline-block text-body-sm font-medium text-legal hover:underline"
               >
-                Andere E-Mail-Adresse verwenden
+                {t("andereAdresse")}
               </a>
             </div>
           ) : (
             <>
-              <h1 className="text-headline text-ink">Anmelden</h1>
-              <p className="mt-2 text-body text-ink-muted">
-                Sie erhalten einen Anmelde-Link per E-Mail – ohne Passwort.
-              </p>
+              <h1 className="text-headline text-ink">{t("titel")}</h1>
+              <p className="mt-2 text-body text-ink-muted">{t("text")}</p>
 
               {errorMessage && (
                 <p className="mt-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
@@ -75,7 +60,7 @@ export default async function LoginPage({
                     htmlFor="email"
                     className="block text-label uppercase text-ink-muted"
                   >
-                    E-Mail-Adresse
+                    {t("emailLabel")}
                   </label>
                   <input
                     id="email"
@@ -83,7 +68,7 @@ export default async function LoginPage({
                     type="email"
                     required
                     autoComplete="email"
-                    placeholder="name@firma.de"
+                    placeholder={t("emailPlaceholder")}
                     className="mt-2 w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
                   />
                 </div>
@@ -91,7 +76,7 @@ export default async function LoginPage({
                   type="submit"
                   className="w-full rounded bg-primary px-6 py-4 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
                 >
-                  Anmelde-Link senden
+                  {t("senden")}
                 </button>
               </form>
             </>
@@ -99,7 +84,7 @@ export default async function LoginPage({
         </div>
 
         <p className="mt-8 text-center text-body-sm text-ink-muted">
-          Verpackungs-Compliance im Blick – zur EU-Verpackungsverordnung (PPWR).
+          {t("claim")}
         </p>
       </div>
     </main>

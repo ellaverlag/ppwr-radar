@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   computeSteps,
   firstOpenStep,
@@ -20,32 +21,31 @@ import {
   stammdatenSpeichern,
 } from "./actions";
 
-export const metadata: Metadata = {
-  title: "Onboarding – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("onboarding") };
+}
 
 export const dynamic = "force-dynamic";
 
-const FEHLER_TEXTE: Record<string, string> = {
-  produktlinien: "Bitte legen Sie mindestens eine Produktlinie an.",
-  antwort: "Bitte wählen Sie eine Antwort aus.",
-  firmenname: "Bitte geben Sie Ihren Firmennamen an.",
-  engine:
-    "Die Rollen-Auswertung konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
-};
+const FEHLER_KEYS = ["produktlinien", "antwort", "firmenname", "engine"] as const;
+
+type Uebersetzer = Awaited<ReturnType<typeof getTranslations<"Onboarding">>>;
 
 function Fortschritt({
   aktuell,
   gesamt,
+  t,
 }: {
   aktuell: number;
   gesamt: number;
+  t: Uebersetzer;
 }) {
   const prozent = Math.round((aktuell / gesamt) * 100);
   return (
     <div className="mb-8">
       <p className="mb-2 text-label uppercase text-ink-muted">
-        Schritt {aktuell} von {gesamt}
+        {t("fortschritt", { aktuell, gesamt })}
       </p>
       <div className="h-1.5 w-full rounded-full bg-line">
         <div
@@ -88,11 +88,17 @@ function FrageSchritt({
   linie,
   linienName,
   state,
+  t,
+  zurueckText,
+  weiterText,
 }: {
   frage: WizardFrage;
   linie: number | null;
   linienName: string | null;
   state: WizardState;
+  t: Uebersetzer;
+  zurueckText: string;
+  weiterText: string;
 }) {
   const zielVariable = frage.ziel_variable.split(";")[0].trim();
   const bisherige =
@@ -112,13 +118,13 @@ function FrageSchritt({
 
       {linienName && (
         <p className="mb-3 text-label uppercase tracking-widest text-legal">
-          Produktlinie · {linienName}
+          {t("produktlinieLabel", { name: linienName })}
         </p>
       )}
       <h1 className="text-headline text-ink">{frage.frage_text}</h1>
       {frage.antwort_typ === "multi_select" && (
         <p className="mt-2 text-body-sm text-ink-muted">
-          Mehrfachauswahl möglich.
+          {t("mehrfachauswahl")}
         </p>
       )}
 
@@ -135,7 +141,7 @@ function FrageSchritt({
               htmlFor="produktlinien"
               className="block text-label uppercase text-ink-muted"
             >
-              Eine Produktlinie je Zeile
+              {t("produktlinienLabel")}
             </label>
             <textarea
               id="produktlinien"
@@ -143,7 +149,7 @@ function FrageSchritt({
               rows={5}
               required
               defaultValue={state.produktlinien.join("\n")}
-              placeholder={"Feinkost im Glas\nErsatzteile im Versandkarton"}
+              placeholder={t("produktlinienPlaceholder")}
               className="w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
             />
           </>
@@ -167,25 +173,25 @@ function FrageSchritt({
       </div>
 
       <div className="mt-10 flex items-center justify-between">
-        <ZurueckLink />
+        <ZurueckLink label={zurueckText} />
         <button
           type="submit"
           className="rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
         >
-          Weiter →
+          {weiterText}
         </button>
       </div>
     </form>
   );
 }
 
-function ZurueckLink() {
+function ZurueckLink({ label }: { label: string }) {
   return (
     <Link
       href="/onboarding?zurueck=1"
       className="text-body-sm font-medium text-ink-muted hover:text-ink"
     >
-      ← Zurück
+      {label}
     </Link>
   );
 }
@@ -233,6 +239,9 @@ export default async function OnboardingPage({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  const t = await getTranslations("Onboarding");
+  const tCommon = await getTranslations("Common");
+
   const { data: profil } = await supabase
     .from("profile")
     .select("*")
@@ -243,10 +252,7 @@ export default async function OnboardingPage({
   const fragen = await getWizardFragen();
   if (fragen.length === 0) {
     return (
-      <p className="text-body text-ink-muted">
-        Die Wizard-Fragen sind aktuell nicht verfügbar. Bitte versuchen Sie es
-        später erneut.
-      </p>
+      <p className="text-body text-ink-muted">{t("fragenNichtVerfuegbar")}</p>
     );
   }
 
@@ -269,11 +275,12 @@ export default async function OnboardingPage({
   }
   const aktivIndex = steps.findIndex((s) => stepKey(s) === stepKey(aktiv));
 
-  const fehlerText = params.fehler ? FEHLER_TEXTE[params.fehler] : null;
+  const fehlerKey = FEHLER_KEYS.find((key) => key === params.fehler);
+  const fehlerText = fehlerKey ? t(`fehler.${fehlerKey}`) : null;
 
   return (
     <>
-      <Fortschritt aktuell={aktivIndex + 1} gesamt={steps.length} />
+      <Fortschritt aktuell={aktivIndex + 1} gesamt={steps.length} t={t} />
 
       {fehlerText && (
         <p className="mb-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
@@ -290,53 +297,65 @@ export default async function OnboardingPage({
               aktiv.linie != null ? state.produktlinien[aktiv.linie] ?? null : null
             }
             state={state}
+            t={t}
+            zurueckText={tCommon("zurueck")}
+            weiterText={tCommon("weiter")}
           />
         )}
 
         {aktiv.art === "stammdaten" && (
           <form action={stammdatenSpeichern}>
-            <h1 className="text-headline text-ink">Stammdaten</h1>
+            <h1 className="text-headline text-ink">{t("stammdatenTitel")}</h1>
             <p className="mt-2 text-body text-ink-muted">
-              Diese Angaben erscheinen später in Ihren Dokumenten (z. B.
-              Konformitätserklärungen).
+              {t("stammdatenText")}
             </p>
             <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-6">
               <Eingabe
                 name="firmenname"
-                label="Firmenname"
+                label={t("felder.firmenname")}
                 wert={profil?.firmenname}
                 required
                 breite="sm:col-span-6"
               />
               <Eingabe
                 name="strasse"
-                label="Straße"
+                label={t("felder.strasse")}
                 wert={profil?.strasse}
                 breite="sm:col-span-4"
               />
               <Eingabe
                 name="hausnummer"
-                label="Nr."
+                label={t("felder.hausnummer")}
                 wert={profil?.hausnummer}
                 breite="sm:col-span-2"
               />
-              <Eingabe name="plz" label="PLZ" wert={profil?.plz} breite="sm:col-span-2" />
-              <Eingabe name="ort" label="Ort" wert={profil?.ort} breite="sm:col-span-4" />
+              <Eingabe
+                name="plz"
+                label={t("felder.plz")}
+                wert={profil?.plz}
+                breite="sm:col-span-2"
+              />
+              <Eingabe
+                name="ort"
+                label={t("felder.ort")}
+                wert={profil?.ort}
+                breite="sm:col-span-4"
+              />
               <Eingabe
                 name="land"
-                label="Land"
-                wert={profil?.land ?? "Deutschland"}
+                label={t("felder.land")}
+                wert={profil?.land ?? t("landDefault")}
                 breite="sm:col-span-6"
               />
               <Eingabe
                 name="zeichnungsberechtigter_name"
-                label="Zeichnungsberechtigte Person"
+                label={t("felder.zeichnungsberechtigterName")}
                 wert={profil?.zeichnungsberechtigter_name}
                 breite="sm:col-span-4"
               />
               <Eingabe
                 name="zeichnungsberechtigter_funktion"
-                label="Funktion"
+                label={t("felder.zeichnungsberechtigterFunktion")}
                 wert={profil?.zeichnungsberechtigter_funktion}
                 breite="sm:col-span-2"
               />
@@ -344,7 +363,7 @@ export default async function OnboardingPage({
 
             <fieldset className="mt-8">
               <legend className="text-label uppercase text-ink-muted">
-                Waren Sie nach dem bisherigen VerpackG registriert (LUCID)?
+                {t("lucidFrage")}
               </legend>
               <div className="mt-3 flex gap-3">
                 <label className="flex cursor-pointer items-center gap-3 rounded border border-line-strong px-5 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
@@ -355,7 +374,7 @@ export default async function OnboardingPage({
                     defaultChecked={profil?.war_verpackg_registriert === true}
                     className="h-4 w-4 accent-[#006950]"
                   />
-                  <span className="text-body font-semibold">Ja</span>
+                  <span className="text-body font-semibold">{t("ja")}</span>
                 </label>
                 <label className="flex cursor-pointer items-center gap-3 rounded border border-line-strong px-5 py-3 has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                   <input
@@ -365,7 +384,7 @@ export default async function OnboardingPage({
                     defaultChecked={profil?.war_verpackg_registriert === false}
                     className="h-4 w-4 accent-[#006950]"
                   />
-                  <span className="text-body font-semibold">Nein</span>
+                  <span className="text-body font-semibold">{t("nein")}</span>
                 </label>
               </div>
             </fieldset>
@@ -373,18 +392,18 @@ export default async function OnboardingPage({
             <div className="mt-6">
               <Eingabe
                 name="lucid_nummer"
-                label="LUCID-Registrierungsnummer (falls vorhanden)"
+                label={t("felder.lucidNummer")}
                 wert={profil?.lucid_nummer}
               />
             </div>
 
             <div className="mt-10 flex items-center justify-between">
-              <ZurueckLink />
+              <ZurueckLink label={tCommon("zurueck")} />
               <button
                 type="submit"
                 className="rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
               >
-                Weiter →
+                {tCommon("weiter")}
               </button>
             </div>
           </form>
@@ -392,24 +411,24 @@ export default async function OnboardingPage({
 
         {aktiv.art === "abschluss" && (
           <form action={onboardingAbschliessen}>
-            <h1 className="text-headline text-ink">Alles beisammen</h1>
+            <h1 className="text-headline text-ink">{t("abschlussTitel")}</h1>
             <p className="mt-2 text-body text-ink-muted">
-              Sie haben {state.produktlinien.length}{" "}
-              {state.produktlinien.length === 1 ? "Produktlinie" : "Produktlinien"}{" "}
-              erfasst:{" "}
-              <span className="font-semibold text-ink">
-                {state.produktlinien.join(", ")}
-              </span>
-              . Die Rollen-Engine wertet Ihre Angaben jetzt regelbasiert aus –
-              je Produktlinie, mit Herleitung und Fundstellen.
+              {t.rich("abschlussText", {
+                anzahl: state.produktlinien.length,
+                linien: () => (
+                  <span className="font-semibold text-ink">
+                    {state.produktlinien.join(", ")}
+                  </span>
+                ),
+              })}
             </p>
             <div className="mt-10 flex items-center justify-between">
-              <ZurueckLink />
+              <ZurueckLink label={tCommon("zurueck")} />
               <button
                 type="submit"
                 className="rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
               >
-                Rollen jetzt auswerten →
+                {t("abschlussCta")}
               </button>
             </div>
           </form>

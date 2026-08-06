@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { ArrowBackIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
-import { formatDate, GILT_STATUS_LABELS, KATEGORIE_LABELS } from "@/lib/labels";
+import { formatDate } from "@/lib/labels";
 import { getAnforderung, type GiltStatus } from "@/lib/wissensbasis";
 
-export const metadata: Metadata = {
-  title: "Anforderung – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("anforderung") };
+}
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +50,9 @@ export default async function AnforderungDetailPage({
     notFound();
   }
 
+  const t = await getTranslations("Anforderung");
+  const tLabels = await getTranslations("Labels");
+
   return (
     <article className="max-w-3xl">
       <Link
@@ -55,19 +60,19 @@ export default async function AnforderungDetailPage({
         className="inline-flex items-center gap-2 text-body-sm font-medium text-legal hover:underline"
       >
         <ArrowBackIcon className="h-4 w-4" />
-        <span>Zurück zur Übersicht</span>
+        <span>{t("zurueck")}</span>
       </Link>
 
       <header className="mt-8">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="green">
-            {KATEGORIE_LABELS[anforderung.kategorie]}
+            {tLabels(`kategorien.${anforderung.kategorie}`)}
           </Badge>
           <Badge variant={giltStatusVariant(anforderung.gilt_status)}>
-            {GILT_STATUS_LABELS[anforderung.gilt_status]}
+            {tLabels(`giltStatus.${anforderung.gilt_status}`)}
           </Badge>
           <Badge variant="neutral">
-            Rechtsstand {formatDate(anforderung.rechtsstand)}
+            {t("rechtsstandChip", { datum: formatDate(anforderung.rechtsstand) })}
           </Badge>
         </div>
         <h1 className="mt-6 text-display-sm text-ink">
@@ -79,7 +84,7 @@ export default async function AnforderungDetailPage({
           {anforderung.titel}
         </h1>
         <p className="mt-3 font-mono text-mono-sm uppercase text-ink-muted">
-          Gilt ab {formatDate(anforderung.gilt_ab)}
+          {t("giltAb", { datum: formatDate(anforderung.gilt_ab) })}
         </p>
       </header>
 
@@ -90,7 +95,7 @@ export default async function AnforderungDetailPage({
       )}
 
       {anforderung.erklaerung_fachlich && (
-        <Section title="Fachliche Erklärung">
+        <Section title={t("fachlicheErklaerung")}>
           <p className="whitespace-pre-line">
             {anforderung.erklaerung_fachlich}
           </p>
@@ -98,13 +103,13 @@ export default async function AnforderungDetailPage({
       )}
 
       {anforderung.handlungsanweisung && (
-        <Section title="Handlungsanweisung">
+        <Section title={t("handlungsanweisung")}>
           <p className="whitespace-pre-line">{anforderung.handlungsanweisung}</p>
         </Section>
       )}
 
       {anforderung.risiko_bei_verstoss && (
-        <Section title="Risiko bei Verstoß">
+        <Section title={t("risiko")}>
           <p className="whitespace-pre-line">
             {anforderung.risiko_bei_verstoss}
           </p>
@@ -112,33 +117,37 @@ export default async function AnforderungDetailPage({
       )}
 
       {anforderung.ausnahmen && (
-        <Section title="Ausnahmen">
+        <Section title={t("ausnahmen")}>
           <p className="whitespace-pre-line">{anforderung.ausnahmen}</p>
         </Section>
       )}
 
       {anforderung.uebergangsregeln && (
-        <Section title="Übergangsregeln">
+        <Section title={t("uebergangsregeln")}>
           <p className="whitespace-pre-line">{anforderung.uebergangsregeln}</p>
         </Section>
       )}
 
-      <Section title="Betrifft">
+      <Section title={t("betrifft")}>
         <dl className="space-y-2 text-body">
           <div>
-            <dt className="inline font-semibold text-ink">Rollen: </dt>
+            <dt className="inline font-semibold text-ink">{t("rollen")} </dt>
             <dd className="inline text-ink-muted">
               {anforderung.betrifft_rollen.join(", ")}
             </dd>
           </div>
           <div>
-            <dt className="inline font-semibold text-ink">Verpackungstypen: </dt>
+            <dt className="inline font-semibold text-ink">
+              {t("verpackungstypen")}{" "}
+            </dt>
             <dd className="inline text-ink-muted">
               {anforderung.betrifft_verpackungstypen.join(", ")}
             </dd>
           </div>
           <div>
-            <dt className="inline font-semibold text-ink">Materialien: </dt>
+            <dt className="inline font-semibold text-ink">
+              {t("materialien")}{" "}
+            </dt>
             <dd className="inline text-ink-muted">
               {anforderung.betrifft_materialien.join(", ")}
             </dd>
@@ -148,10 +157,14 @@ export default async function AnforderungDetailPage({
 
       <LegalCard className="mt-12">
         <div className="p-6">
-          <h2 className="text-label uppercase text-ink-muted">Quellenangabe</h2>
+          <h2 className="text-label uppercase text-ink-muted">
+            {t("quellenangabe")}
+          </h2>
           <dl className="mt-4 space-y-3 text-body">
             <div>
-              <dt className="inline font-semibold text-ink">Rechtsquelle: </dt>
+              <dt className="inline font-semibold text-ink">
+                {t("rechtsquelle")}{" "}
+              </dt>
               <dd className="inline">
                 {anforderung.rechtsquelle_link ? (
                   <a
@@ -172,7 +185,7 @@ export default async function AnforderungDetailPage({
             {anforderung.verpackdg_quelle && (
               <div>
                 <dt className="inline font-semibold text-ink">
-                  Bezug VerpackG:{" "}
+                  {t("bezugVerpackg")}{" "}
                 </dt>
                 <dd className="inline text-ink-muted">
                   {anforderung.verpackdg_quelle}
@@ -181,7 +194,9 @@ export default async function AnforderungDetailPage({
             )}
             {anforderung.verweise && anforderung.verweise.length > 0 && (
               <div>
-                <dt className="inline font-semibold text-ink">Verweise: </dt>
+                <dt className="inline font-semibold text-ink">
+                  {t("verweise")}{" "}
+                </dt>
                 <dd className="inline text-ink-muted">
                   {anforderung.verweise.join(", ")}
                 </dd>
@@ -190,7 +205,10 @@ export default async function AnforderungDetailPage({
           </dl>
         </div>
         <LegalCardFooter>
-          {anforderung.rechtsquelle} · Stand {formatDate(anforderung.rechtsstand)}
+          {t("footerZeile", {
+            rechtsquelle: anforderung.rechtsquelle,
+            datum: formatDate(anforderung.rechtsstand),
+          })}
         </LegalCardFooter>
       </LegalCard>
     </article>

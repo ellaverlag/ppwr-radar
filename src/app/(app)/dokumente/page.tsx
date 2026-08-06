@@ -1,50 +1,37 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { DocumentIcon, PlusIcon, SearchIcon, WarningIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 
-export const metadata: Metadata = {
-  title: "Meine Dokumente – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("dokumente") };
+}
 
-const TABS = ["Alle", "Gültig", "Entwürfe", "Archiv"];
+const BEISPIEL_STATUS = ["update", "gueltig", "archiviert"] as const;
 
-const BEISPIEL_DOKUMENTE = [
-  {
-    titel: "Konformitätserklärung PET-Flaschen",
-    quelle: "Richtlinie 94/62/EG",
-    version: "v1.2",
-    rechtsstand: "12.08.2026",
-    status: "update" as const,
-  },
-  {
-    titel: "Recycling-Nachweis Transportverpackung",
-    quelle: "DIN EN 13430",
-    version: "v2.0",
-    rechtsstand: "05.11.2026",
-    status: "gueltig" as const,
-  },
-  {
-    titel: "Materialspezifikation Folien",
-    quelle: "Internes Dokument",
-    version: "v1.0",
-    rechtsstand: "14.02.2026",
-    status: "archiviert" as const,
-  },
-];
+export default async function DokumentePage() {
+  const t = await getTranslations("Dokumente");
 
-export default function DokumentePage() {
+  const tabs = t.raw("tabs") as string[];
+  const beispiele = (
+    t.raw("beispiele") as {
+      titel: string;
+      quelle: string;
+      version: string;
+      rechtsstand: string;
+    }[]
+  ).map((dok, i) => ({ ...dok, status: BEISPIEL_STATUS[i] }));
+
   return (
     <>
-      <PageHeader
-        title="Meine Dokumente"
-        description="Zentrales Archiv für alle Compliance-Nachweise, Zertifikate und regulatorischen Dokumente gemäß PPWR-Anforderungen."
-      />
+      <PageHeader title={t("titel")} description={t("beschreibung")} />
 
       <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex gap-8 border-b border-line">
-          {TABS.map((tab, i) => (
+          {tabs.map((tab, i) => (
             <span
               key={tab}
               className={`-mb-px border-b-2 pb-3 text-body-sm ${
@@ -63,26 +50,26 @@ export default function DokumentePage() {
             <input
               type="search"
               disabled
-              placeholder="Dokument suchen …"
+              placeholder={t("suchPlaceholder")}
               className="w-64 rounded border border-line-strong bg-canvas py-2.5 pl-11 pr-4 text-body text-ink placeholder:text-ink-muted/60 disabled:bg-surface"
             />
           </div>
           <span className="inline-flex cursor-not-allowed items-center gap-2 rounded bg-primary px-5 py-2.5 text-label uppercase tracking-widest text-white opacity-60">
             <PlusIcon className="h-4 w-4" />
-            <span>Neues Dokument</span>
+            <span>{t("neuesDokument")}</span>
           </span>
         </div>
       </div>
 
       <LegalCard>
         <div className="hidden grid-cols-12 gap-4 rounded-t bg-surface px-6 py-3 text-label uppercase text-ink-muted md:grid">
-          <span className="col-span-6">Dokumententitel</span>
-          <span className="col-span-2">Version</span>
-          <span className="col-span-2">Rechtsstand</span>
-          <span className="col-span-2">Status</span>
+          <span className="col-span-6">{t("spalteTitel")}</span>
+          <span className="col-span-2">{t("spalteVersion")}</span>
+          <span className="col-span-2">{t("spalteRechtsstand")}</span>
+          <span className="col-span-2">{t("spalteStatus")}</span>
         </div>
         <ul className="divide-y divide-line">
-          {BEISPIEL_DOKUMENTE.map((dok) => (
+          {beispiele.map((dok) => (
             <li
               key={dok.titel}
               className="grid grid-cols-1 gap-3 px-6 py-5 md:grid-cols-12 md:items-center md:gap-4"
@@ -114,20 +101,20 @@ export default function DokumentePage() {
                 {dok.status === "update" && (
                   <Badge variant="gold">
                     <WarningIcon className="mr-1 h-3 w-3" />
-                    Update verfügbar
+                    {t("statusUpdate")}
                   </Badge>
                 )}
-                {dok.status === "gueltig" && <Badge variant="green">Gültig</Badge>}
+                {dok.status === "gueltig" && (
+                  <Badge variant="green">{t("statusGueltig")}</Badge>
+                )}
                 {dok.status === "archiviert" && (
-                  <Badge variant="neutral">Archiviert</Badge>
+                  <Badge variant="neutral">{t("statusArchiviert")}</Badge>
                 )}
               </div>
             </li>
           ))}
         </ul>
-        <LegalCardFooter>
-          Beispieldaten · Der Dokumenten-Generator folgt in einem späteren Paket
-        </LegalCardFooter>
+        <LegalCardFooter>{t("footer")}</LegalCardFooter>
       </LegalCard>
     </>
   );

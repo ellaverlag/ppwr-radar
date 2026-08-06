@@ -11,11 +11,14 @@ export type BetroffenheitsStufe = "hoch" | "mittel" | "gering";
 export interface Ersteinschaetzung {
   stufe: BetroffenheitsStufe;
   unklar: boolean;
-  aussage: string;
 }
 
 const KERNROLLEN = ["erzeuger", "hersteller", "importeur"];
 
+/**
+ * Liefert nur die Einstufung; der zugehörige Aussagetext wird in der UI über
+ * die Sprachdateien aufgelöst (CheckErgebnis.aussage.<stufe>).
+ */
 export function ersteinschaetzung(
   ergebnis: LinienErgebnis,
   taetigkeit: string[]
@@ -31,12 +34,5 @@ export function ersteinschaetzung(
         ? "mittel"
         : "gering";
 
-  const aussage =
-    stufe === "hoch"
-      ? "Die PPWR betrifft Ihr Unternehmen voraussichtlich in mehreren Bereichen."
-      : stufe === "mittel"
-        ? "Die PPWR betrifft Ihr Unternehmen voraussichtlich in einzelnen Bereichen."
-        : "Nach Ihren Angaben ist Ihr Unternehmen voraussichtlich nur am Rande betroffen.";
-
-  return { stufe, unklar, aussage };
+  return { stufe, unklar };
 }

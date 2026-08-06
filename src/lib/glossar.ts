@@ -151,7 +151,8 @@ export async function ladeGlossar(): Promise<{
       begriff: a.frage,
       begriff_en: null,
       kurztext: kuerze(a.antwort),
-      quelle: a.quellen[0] ?? `Auslegung${a.code ? ` ${a.code}` : ""}`,
+      // Sprachneutral: fehlt eine Quelle, trägt der Chip den Auslegungs-Code.
+      quelle: a.quellen[0] ?? a.code ?? "—",
       href: `/wissen/auslegungen?q=${encodeURIComponent(a.frage)}`,
       suchtext: alsSuchtext(a.frage),
       verpackungstypen: [],

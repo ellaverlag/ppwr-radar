@@ -1,32 +1,32 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 
-export const metadata: Metadata = {
-  title: "Assistant – PPWR Radar",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Meta");
+  return { title: t("assistant") };
+}
 
-const ERKLAERTIEFEN = ["Einfach erklärt", "Fachlich", "Rechtstext"];
+export default async function AssistantPage() {
+  const t = await getTranslations("Assistant");
+  const erklaertiefen = t.raw("erklaertiefen") as string[];
 
-export default function AssistantPage() {
   return (
     <>
-      <PageHeader
-        title="Wie kann ich Ihnen helfen?"
-        description="Stellen Sie rechtliche Fragen zur EU-Verpackungsverordnung (PPWR)."
-      />
+      <PageHeader title={t("titel")} description={t("beschreibung")} />
 
       <LegalCard>
         <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center">
           <input
             type="text"
             disabled
-            placeholder="Ihre Frage zur PPWR …"
+            placeholder={t("fragePlaceholder")}
             className="w-full rounded border border-line-strong bg-surface px-4 py-3 text-body text-ink placeholder:text-ink-muted/60"
           />
           <span className="inline-flex shrink-0 cursor-not-allowed items-center justify-center rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white opacity-60">
-            Fragen
+            {t("fragen")}
           </span>
         </div>
       </LegalCard>
@@ -34,7 +34,7 @@ export default function AssistantPage() {
       <LegalCard className="mt-6">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-4">
           <div className="flex rounded border border-line-strong">
-            {ERKLAERTIEFEN.map((tiefe, i) => (
+            {erklaertiefen.map((tiefe, i) => (
               <span
                 key={tiefe}
                 className={`px-4 py-2 text-body-sm font-semibold ${
@@ -47,45 +47,39 @@ export default function AssistantPage() {
               </span>
             ))}
           </div>
-          <Badge variant="neutral">Beispielansicht</Badge>
+          <Badge variant="neutral">{t("beispielansicht")}</Badge>
         </div>
         <div className="p-6 md:p-10">
           <h2 className="border-b border-ink pb-3 text-headline text-ink">
-            Kennzeichnungspflichten für Kunststoffvliese
+            {t("beispielTitel")}
           </h2>
-          <p className="mt-6 text-body text-ink">
-            So wird eine Antwort des Assistant aufgebaut sein: eine fachliche
-            Einordnung mit Rechtsstand, gegliederte Pflichten und ein Hinweis
-            auf Grenzen der Auslegung.
-          </p>
+          <p className="mt-6 text-body text-ink">{t("beispielText")}</p>
           <ol className="mt-8 space-y-6 border-l border-line-strong pl-6">
             <li>
               <h3 className="text-label uppercase text-ink">
-                01 · Materialidentifikation
+                {t("punkt1Titel")}
               </h3>
               <p className="mt-1 text-body-sm text-ink-muted">
-                Gliederungspunkte nennen die konkrete Pflicht mit Fundstelle.
+                {t("punkt1Text")}
               </p>
             </li>
             <li>
               <h3 className="text-label uppercase text-ink">
-                02 · Hinweise zur Entsorgung
+                {t("punkt2Titel")}
               </h3>
               <p className="mt-1 text-body-sm text-ink-muted">
-                Jede Antwort trennt Pflichten, Fristen und Empfehlungen.
+                {t("punkt2Text")}
               </p>
             </li>
           </ol>
           <div className="mt-8 border-l-4 border-gold bg-surface p-4">
             <p className="text-body-sm text-ink">
-              <span className="font-bold">Wichtiger Hinweis:</span> Antworten
-              sind redaktionell geprüfte Auslegungen und keine Rechtsberatung.
+              <span className="font-bold">{t("hinweisFett")}</span>{" "}
+              {t("hinweisText")}
             </p>
           </div>
         </div>
-        <LegalCardFooter>
-          Beispielansicht · Der Assistant folgt in einem späteren Paket
-        </LegalCardFooter>
+        <LegalCardFooter>{t("footer")}</LegalCardFooter>
       </LegalCard>
     </>
   );

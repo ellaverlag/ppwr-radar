@@ -1,12 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { BrandLink } from "@/components/brand";
 import { LogoutIcon, PersonIcon } from "@/components/icons";
-import { NavLinks } from "@/components/nav-links";
+import { NavLinks, type NavItem } from "@/components/nav-links";
 import { isPreviewMode } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
-function SignoutButton() {
+function SignoutButton({ label }: { label: string }) {
   return (
     <form action="/auth/signout" method="post">
       <button
@@ -14,7 +14,7 @@ function SignoutButton() {
         className="flex items-center gap-2 rounded px-2 py-1 text-body-sm font-medium text-ink-muted transition-colors hover:bg-hover hover:text-ink"
       >
         <LogoutIcon className="h-4 w-4" />
-        <span>Abmelden</span>
+        <span>{label}</span>
       </button>
     </form>
   );
@@ -34,11 +34,23 @@ export default async function AppLayout({
     redirect("/login");
   }
 
+  const t = await getTranslations("AppLayout");
+  const tCommon = await getTranslations("Common");
+  const tNav = await getTranslations("Nav");
+
+  const navItems: NavItem[] = [
+    { href: "/dashboard", label: tNav("dashboard") },
+    { href: "/dokumente", label: tNav("dokumente") },
+    { href: "/assistant", label: tNav("assistant") },
+    { href: "/wissen", label: tNav("wissen") },
+    { href: "/webinare", label: tNav("webinare") },
+  ];
+
   return (
     <div className="flex min-h-screen flex-col">
       {isPreviewMode() && (
         <div className="bg-gold px-4 py-2 text-center text-label uppercase text-ink">
-          Vorschau-Modus – ungeprüfte Inhalte
+          {tCommon("previewBanner")}
         </div>
       )}
 
@@ -46,21 +58,10 @@ export default async function AppLayout({
         {/* Sidebar (Desktop) */}
         <aside className="hidden w-64 shrink-0 border-r border-line bg-surface md:flex md:flex-col">
           <div className="px-6 py-6">
-            <Link href="/dashboard" className="inline-block">
-              <Image
-                src="/ppwr-radar-logo.svg"
-                alt="PPWR Radar"
-                width={161}
-                height={25}
-                priority
-              />
-            </Link>
-            <p className="mt-2 text-label uppercase text-ink-muted">
-              by packaging journal
-            </p>
+            <BrandLink href="/dashboard" priority />
           </div>
           <div className="flex-1 px-4 pt-6">
-            <NavLinks />
+            <NavLinks items={navItems} />
           </div>
           <div className="space-y-2 border-t border-line px-6 py-4">
             <p
@@ -69,14 +70,14 @@ export default async function AppLayout({
             >
               {user.email}
             </p>
-            <SignoutButton />
+            <SignoutButton label={tCommon("abmelden")} />
           </div>
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Topbar (Desktop) */}
           <header className="hidden h-16 items-center justify-between border-b border-line bg-surface px-6 md:flex">
-            <span className="text-headline text-ink">PPWR Radar</span>
+            <span className="text-headline text-ink">{t("topbarTitel")}</span>
             <div className="flex items-center gap-4">
               <span
                 className="hidden max-w-64 truncate rounded border border-line-strong px-3 py-1 text-body-sm text-ink-muted lg:inline-block"
@@ -93,19 +94,11 @@ export default async function AppLayout({
           {/* Topbar + Navigation (Mobil) */}
           <header className="border-b border-line bg-surface md:hidden">
             <div className="flex items-center justify-between px-4 py-3">
-              <Link href="/dashboard" className="inline-flex items-center">
-                <Image
-                  src="/ppwr-radar-logo.svg"
-                  alt="PPWR Radar"
-                  width={129}
-                  height={20}
-                  priority
-                />
-              </Link>
-              <SignoutButton />
+              <BrandLink href="/dashboard" width={129} byline={false} priority />
+              <SignoutButton label={tCommon("abmelden")} />
             </div>
             <div className="overflow-x-auto px-2 pb-1">
-              <NavLinks orientation="horizontal" />
+              <NavLinks items={navItems} orientation="horizontal" />
             </div>
           </header>
 
@@ -115,22 +108,22 @@ export default async function AppLayout({
 
           <footer className="flex flex-col items-start justify-between gap-2 border-t border-line bg-footer px-6 py-4 sm:flex-row sm:items-center">
             <p className="text-label font-bold uppercase text-ink-muted">
-              © 2026 PPWR Radar · by packaging journal
+              {t("footerCopyright")}
             </p>
             <ul className="flex gap-6 text-label uppercase">
               <li>
                 <a className="text-ink-muted hover:underline" href="#">
-                  Impressum
+                  {t("footerImpressum")}
                 </a>
               </li>
               <li>
                 <a className="text-ink-muted hover:underline" href="#">
-                  Datenschutz
+                  {t("footerDatenschutz")}
                 </a>
               </li>
               <li>
                 <a className="text-ink-muted hover:underline" href="#">
-                  Kontakt
+                  {t("footerKontakt")}
                 </a>
               </li>
             </ul>
