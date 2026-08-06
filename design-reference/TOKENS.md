@@ -32,14 +32,28 @@ Umsetzung: Tailwind-4-Theme in [`src/app/globals.css`](../src/app/globals.css) (
 Schriften: **Inter** (400/500/600/700) für alles, **JetBrains Mono** (400) für Rechtsquellen,
 Daten und technische Kennungen. Labels immer 600 mit `0.05em`-Tracking, meist uppercase.
 
-**Ausnahme öffentliche Strecke** (`/`, `/check`, `/check/ergebnis` – PJ-Online-Markenschrift,
-geladen nur dort via `src/app/landing-fonts.ts`): Headlines h1–h3 **IBM Plex Sans** (600/700)
-mit `-0.04em`-Tracking bei unveränderter Größenskala; Fließtext, Buttons und UI **Manrope**
-(400/500/600); Eyebrows/Kategorie-Label Manrope uppercase mit `0.02em`-Tracking (Post-Category-
-Stil von packaging-journal.de). JetBrains Mono bleibt dort nur Bedeutungsträger für exakte
-Quellen: Fundstellen-Chips, Rechtsstand-Angaben, Stripe-Hinweiszeile. Fallback-Stacks laufen
-über Inter auf system-ui (`--font-plex`, `--font-landing`); das App-Innere bleibt vollständig
-bei Inter/JetBrains Mono.
+## Öffentliche Seiten / PJ-Markenschrift
+
+Es existieren bewusst **zwei Schriftsysteme**, und die Grenze verläuft am Login:
+
+- **Öffentlich = Verlagsmarke** (`/`, `/check`, `/check/ergebnis`): Die Seiten sprechen als
+  Angebot des packaging journal und tragen dessen Online-Markenschrift.
+- **App = Produktmarke** (alles hinter dem Login inkl. `/login` selbst): Das Werkzeug spricht
+  als PPWR Radar und bleibt vollständig bei Inter/JetBrains Mono gemäß der Tabelle oben.
+
+Regeln der öffentlichen Strecke (Fonts laden nur dort, via `src/app/landing-fonts.ts`):
+
+- Headlines h1–h3: **IBM Plex Sans** (600/700), Tracking `-0.04em`, Größenskala unverändert –
+  der Charakter kommt aus Schriftfamilie und Spacing, nicht aus der Punktgröße.
+- Fließtext, Buttons, UI-Elemente: **Manrope** (400/500/600) statt Inter.
+- Eyebrows/Kategorie-Label („Das Problem“, „Preise“ …): Manrope, UPPERCASE, Tracking `0.02em` –
+  entspricht dem Post-Category-Stil von packaging-journal.de.
+- **JetBrains Mono** bleibt öffentlich nur Bedeutungsträger für exakte Quellen („technische“
+  Mikroelemente): Fundstellen-Chips der Hero-Beispielkarte, Rechtsstand-Angaben,
+  Stripe-Hinweiszeile. Mono ist dort kein Stilmittel.
+- Fallback-Stacks über Inter auf system-ui: Theme-Tokens `--font-plex`
+  (`IBM Plex Sans, Inter, system-ui`) und `--font-landing` (`Manrope, Inter, system-ui`),
+  `font-display: swap`; next/font liefert metrik-angepasste Fallbacks gegen Layout-Sprünge.
 
 | Token | Größe/Zeile | Gewicht | Verwendung |
 | --- | --- | --- | --- |
