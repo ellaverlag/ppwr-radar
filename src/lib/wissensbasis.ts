@@ -103,6 +103,7 @@ export interface RollenDefinition {
   fundstelle_ppwr: string;
   definition_kurz: string;
   funktion_im_system: string | null;
+  alt_bedeutung_verpackg: string | null;
   abgrenzung: string | null;
   verwechslungsfaelle: string | null;
   verpackdg_bezug: string | null;

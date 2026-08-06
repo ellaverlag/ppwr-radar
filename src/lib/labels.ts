@@ -22,6 +22,18 @@ export const VERBINDLICHKEIT_LABELS: Record<Verbindlichkeit, string> = {
   unverbindliche_auslegung: "Unverbindliche Auslegung",
 };
 
+/** Werte aus anforderungen.betrifft_verpackungstypen. */
+export const VERPACKUNGSTYP_LABELS: Record<string, string> = {
+  alle: "Alle Verpackungsarten",
+  verkauf: "Verkaufsverpackung",
+  umverpackung: "Umverpackung",
+  transport: "Transportverpackung",
+  service: "Serviceverpackung",
+  primaerproduktion: "Primärproduktionsverpackung",
+  ecommerce_versand: "E-Commerce-Versand",
+  mehrweg: "Mehrweg",
+};
+
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "–";
   return new Date(iso).toLocaleDateString("de-DE", {

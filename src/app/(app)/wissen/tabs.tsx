@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const TABS = [
   { href: "/wissen", label: "Anforderungen" },
   { href: "/wissen/auslegungen", label: "Auslegungen" },
+  { href: "/wissen/glossar", label: "Glossar" },
 ];
 
 export function WissenTabs() {
