@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { landingFontClasses } from "@/app/landing-fonts";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -42,7 +43,7 @@ function Brand() {
         aria-hidden="true"
       />
       <span className="leading-tight">
-        <span className="block text-body-lg font-extrabold tracking-tight text-ink">
+        <span className="block font-plex text-body-lg font-bold tracking-tight text-ink">
           PPWR Radar
         </span>
         <span className="-mt-0.5 block text-label font-medium normal-case tracking-normal text-ink-muted">
@@ -62,7 +63,7 @@ function Eyebrow({
 }) {
   return (
     <span
-      className={`inline-block font-mono text-mono-sm font-medium uppercase tracking-[0.08em] ${className}`}
+      className={`inline-block text-mono-sm font-semibold uppercase tracking-[0.02em] ${className}`}
     >
       {children}
     </span>
@@ -83,7 +84,7 @@ function SectionHead({
   return (
     <div className={`mb-12 max-w-[60ch] ${zentriert ? "mx-auto text-center" : ""}`}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mb-3 mt-2 text-[clamp(1.7rem,3.2vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink">
+      <h2 className="mb-3 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em] text-ink">
         {titel}
       </h2>
       {text && <p className="text-body-lg text-ink-muted">{text}</p>}
@@ -141,6 +142,11 @@ const FEATURES = [
     text: "Lassen Sie sich Erklärungen vorlesen – und ab Herbst Ihr persönliches Audio-Briefing: die Änderungen der Woche, zugeschnitten auf Ihr Portfolio.",
     icon: "M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z",
   },
+  {
+    titel: "Nachschlagewerk",
+    text: "Glossar von A wie Abfüller bis Z wie Zweigniederlassung – alle Begriffe, Verpackungsarten und Praxisfragen durchsuchbar, mit Quelle. Für alle, die lieber blättern als chatten.",
+    icon: "M12 6.5A5.5 5.5 0 0 0 6.5 3H2v15h5a5 5 0 0 1 5 3 5 5 0 0 1 5-3h5V3h-4.5A5.5 5.5 0 0 0 12 6.5V21",
+  },
 ];
 
 // ---------------------------------------------------------------------------
@@ -155,7 +161,7 @@ export default async function LandingPage() {
   if (user) redirect("/dashboard");
 
   return (
-    <div className="bg-canvas text-ink">
+    <div className={`${landingFontClasses} bg-canvas text-ink`}>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-6">
@@ -189,11 +195,11 @@ export default async function LandingPage() {
       <section className="border-b border-line bg-[radial-gradient(120%_90%_at_88%_-10%,#e6f0ec_0%,rgba(230,240,236,0)_55%)]">
         <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-10 px-6 py-12 md:grid-cols-[1.05fr_0.95fr] md:gap-14 md:py-18">
           <div>
-            <span className="inline-flex items-center gap-2 rounded border border-[#f0dfa0] bg-gold-tint px-3 py-1.5 font-mono text-mono-sm font-medium text-gold-ink">
+            <span className="inline-flex items-center gap-2 rounded border border-[#f0dfa0] bg-gold-tint px-3 py-1.5 text-mono-sm font-medium text-gold-ink">
               <span className="h-[7px] w-[7px] rounded-full bg-gold shadow-[0_0_0_3px_#f4e4a8]" />
               Die PPWR gilt seit dem 12. August 2026
             </span>
-            <h1 className="mb-4 mt-4 text-[clamp(2.1rem,4.6vw,3.4rem)] font-extrabold leading-[1.15] tracking-[-0.02em]">
+            <h1 className="mb-4 mt-4 font-plex text-[clamp(2.1rem,4.6vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.04em]">
               Die PPWR gilt. Wissen Sie, was das für{" "}
               <span className="text-primary">Ihre Verpackungen</span> heißt?
             </h1>
@@ -214,6 +220,10 @@ export default async function LandingPage() {
               In 15 Minuten von der Unsicherheit zur Klarheit · Juristisch
               verifiziert von Cattwyk Rechtsanwaltsgesellschaft
             </p>
+            <p className="mt-1.5 text-body-sm text-ink-muted">
+              Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in
+              15 Minuten Ergebnisse.
+            </p>
           </div>
 
           {/* Beispiel-Rollenkarte */}
@@ -223,7 +233,7 @@ export default async function LandingPage() {
             className="overflow-hidden rounded border border-line bg-canvas"
           >
             <div className="flex items-center justify-between border-b border-line bg-surface px-4 py-3.5">
-              <span className="font-mono text-label font-medium uppercase tracking-[0.06em] text-ink-muted">
+              <span className="text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                 Ihre PPWR-Rolle
               </span>
               <span className="font-mono text-label text-ink-muted">
@@ -237,7 +247,7 @@ export default async function LandingPage() {
                 {["Erzeuger", "Hersteller", "Endvertreiber"].map((rolle) => (
                   <span
                     key={rolle}
-                    className="rounded border border-legal bg-legal-tint px-2.5 py-1 font-mono text-label font-medium text-legal"
+                    className="rounded border border-legal bg-legal-tint px-2.5 py-1 text-label font-medium text-legal"
                   >
                     {rolle}
                   </span>
@@ -289,7 +299,7 @@ export default async function LandingPage() {
           />
           <div className="grid grid-cols-1 overflow-hidden rounded border border-line md:grid-cols-2">
             <div className="border-b border-line bg-surface p-8 md:border-b-0 md:border-r">
-              <h3 className="mb-4 text-body-lg font-bold">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
                 Womit Sie gerade allein sind
               </h3>
               <ul className="space-y-3">
@@ -308,7 +318,7 @@ export default async function LandingPage() {
               </ul>
             </div>
             <div className="bg-primary-tint p-8">
-              <h3 className="mb-4 text-body-lg font-bold">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
                 Was PPWR Radar für Sie tut
               </h3>
               <ul className="space-y-3">
@@ -345,7 +355,7 @@ export default async function LandingPage() {
                 className="rounded border border-line bg-canvas p-7 transition-colors hover:border-primary"
               >
                 <FeatureIcon d={feature.icon} />
-                <h3 className="mb-2 text-body-lg font-bold">{feature.titel}</h3>
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">{feature.titel}</h3>
                 <p className="text-body-sm text-ink-muted">{feature.text}</p>
               </div>
             ))}
@@ -379,10 +389,10 @@ export default async function LandingPage() {
               },
             ].map((karte) => (
               <div key={karte.rolle} className="rounded border border-line bg-canvas p-7">
-                <p className="mb-2.5 font-mono text-label font-medium uppercase tracking-[0.06em] text-primary">
+                <p className="mb-2.5 text-label font-semibold uppercase tracking-[0.02em] text-primary">
                   {karte.rolle}
                 </p>
-                <h3 className="mb-2 text-body-lg font-bold">{karte.frage}</h3>
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">{karte.frage}</h3>
                 <p className="text-body-sm text-ink-muted">{karte.text}</p>
               </div>
             ))}
@@ -417,10 +427,10 @@ export default async function LandingPage() {
                 key={schritt.titel}
                 className="border border-line p-7 max-md:border-b-0 max-md:last:border-b md:border-r-0 md:last:border-r"
               >
-                <span className="mb-3.5 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-primary font-mono text-body-sm font-medium text-white">
+                <span className="mb-3.5 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-primary text-body-sm font-medium text-white">
                   {i + 1}
                 </span>
-                <h3 className="mb-1.5 text-body font-bold">{schritt.titel}</h3>
+                <h3 className="mb-1.5 font-plex text-body font-bold tracking-[-0.04em]">{schritt.titel}</h3>
                 <p className="text-body-sm text-ink-muted">{schritt.text}</p>
               </div>
             ))}
@@ -438,13 +448,13 @@ export default async function LandingPage() {
           />
           <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-[1.2fr_1fr]">
             <div className="relative rounded border-2 border-primary bg-canvas p-8">
-              <span className="absolute -top-3 left-8 rounded bg-primary px-2.5 py-1 font-mono text-[0.68rem] uppercase tracking-[0.06em] text-white">
+              <span className="absolute -top-3 left-8 rounded bg-primary px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.02em] text-white">
                 Launch-Angebot
               </span>
-              <p className="mb-3 font-mono text-mono-sm uppercase tracking-[0.06em] text-ink-muted">
+              <p className="mb-3 text-mono-sm font-semibold uppercase tracking-[0.02em] text-ink-muted">
                 PPWR|ready Paket
               </p>
-              <p className="text-[2.6rem] font-extrabold leading-none tracking-[-0.03em]">
+              <p className="font-plex text-[2.6rem] font-bold leading-none tracking-[-0.03em]">
                 <span className="align-top text-[1.4rem] font-bold">€</span>490
               </p>
               <p className="mb-1 mt-1.5 text-body-sm text-ink-muted">
@@ -476,13 +486,17 @@ export default async function LandingPage() {
               >
                 Jetzt PPWR|ready werden
               </Link>
+              <p className="mt-3 text-center text-body-sm text-ink-muted">
+                Transparenter Festpreis. Kein Angebotsprozess, keine
+                Setup-Gebühr.
+              </p>
             </div>
             <div className="flex flex-col gap-5">
               <div className="rounded border border-line bg-canvas p-6">
-                <p className="mb-2 font-mono text-label uppercase tracking-[0.06em] text-ink-muted">
+                <p className="mb-2 text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                   Team-Lizenz
                 </p>
-                <p className="text-headline font-extrabold">
+                <p className="font-plex text-headline font-bold">
                   ab <span className="text-body-lg font-bold">€</span>1.499
                 </p>
                 <p className="mb-4 mt-2 text-body-sm text-ink-muted">
@@ -499,10 +513,10 @@ export default async function LandingPage() {
                 </Link>
               </div>
               <div className="rounded border border-line bg-canvas p-6">
-                <p className="mb-2 font-mono text-label uppercase tracking-[0.06em] text-ink-muted">
+                <p className="mb-2 text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                   Radar-Verlängerung
                 </p>
-                <p className="text-headline font-extrabold">
+                <p className="font-plex text-headline font-bold">
                   <span className="text-body-lg font-bold">€</span>290
                   <span className="text-body-sm font-medium text-ink-muted"> /Jahr</span>
                 </p>
@@ -513,7 +527,7 @@ export default async function LandingPage() {
                 {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
                 <span
                   data-stripe="verlaengerung"
-                  className="inline-block rounded border border-line-strong bg-surface px-2.5 py-1 font-mono text-label text-ink-muted"
+                  className="inline-block rounded border border-line-strong bg-surface px-2.5 py-1 text-label font-medium text-ink-muted"
                 >
                   im Paket enthalten
                 </span>
@@ -533,7 +547,7 @@ export default async function LandingPage() {
             <div className="flex flex-wrap items-center justify-between gap-8 p-8 md:p-11">
               <div className="max-w-[52ch]">
                 <Eyebrow className="text-gold">Kostenlos &amp; ohne Anmeldung</Eyebrow>
-                <h2 className="mt-2 text-[clamp(1.7rem,3.2vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.02em]">
+                <h2 className="mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
                   Erst prüfen: Betrifft mich die PPWR überhaupt?
                 </h2>
                 <p className="mt-2.5 text-body-lg text-[#cdd9ec]">
@@ -570,6 +584,12 @@ export default async function LandingPage() {
                 offen: true,
               },
               {
+                frage:
+                  "Wie unterscheidet sich PPWR Radar von Muster-Vorlagen und Compliance-Software?",
+                antwort:
+                  "Muster-Vorlagen sind generisch – sie wissen nicht, wer Sie sind. Enterprise-Compliance-Software ist stark für Konzerne mit großen Datenbeständen, beginnt aber mit einem Angebots- und Integrationsprozess. PPWR Radar startet davor: Es klärt zuerst Ihre Rolle je Produktlinie, füllt Ihre Dokumente daraus vor und hält sie bei Rechtsänderungen aktuell – im Selbstbedienungszugang zum Festpreis. Und wo Ihre Situation Speziallösungen braucht (Labor-Bewertung der Recyclingfähigkeit, ERP-Integration, Rechtsberatung), sagen wir das ehrlich und nennen den richtigen Weg.",
+              },
+              {
                 frage: "Woher weiß ich, dass die Inhalte stimmen?",
                 antwort:
                   "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert. Der Assistent antwortet ausschließlich aus dieser geprüften Basis – und sagt ehrlich, wenn zu einer Frage keine gesicherte Regelung vorliegt.",
@@ -599,13 +619,13 @@ export default async function LandingPage() {
                   {eintrag.frage}
                   <span
                     aria-hidden="true"
-                    className="font-mono text-body-lg text-primary group-open:hidden"
+                    className="text-body-lg text-primary group-open:hidden"
                   >
                     +
                   </span>
                   <span
                     aria-hidden="true"
-                    className="hidden font-mono text-body-lg text-primary group-open:block"
+                    className="hidden text-body-lg text-primary group-open:block"
                   >
                     –
                   </span>
@@ -623,7 +643,7 @@ export default async function LandingPage() {
       <section className="bg-primary py-20 text-center text-white">
         <div className="mx-auto w-full max-w-[1200px] px-6">
           <Eyebrow className="text-[#bfe0d6]">Der 12. August ist da</Eyebrow>
-          <h2 className="mb-4 mt-2 text-[clamp(1.7rem,3.2vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.02em]">
+          <h2 className="mb-4 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
             Verschaffen Sie sich Klarheit – heute.
           </h2>
           <p className="mx-auto mb-8 max-w-[52ch] text-body-lg text-[#bfe0d6]">
@@ -661,7 +681,7 @@ export default async function LandingPage() {
           </div>
           <div className="flex flex-wrap gap-12">
             <div>
-              <h4 className="mb-3 font-mono text-label uppercase tracking-[0.06em] text-ink-muted">
+              <h4 className="mb-3 text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                 Produkt
               </h4>
               <a href="#funktionen" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">
@@ -678,7 +698,7 @@ export default async function LandingPage() {
               </a>
             </div>
             <div>
-              <h4 className="mb-3 font-mono text-label uppercase tracking-[0.06em] text-ink-muted">
+              <h4 className="mb-3 text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                 Rechtliches
               </h4>
               <a href="#" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">
@@ -692,7 +712,7 @@ export default async function LandingPage() {
               </a>
             </div>
             <div>
-              <h4 className="mb-3 font-mono text-label uppercase tracking-[0.06em] text-ink-muted">
+              <h4 className="mb-3 text-label font-semibold uppercase tracking-[0.02em] text-ink-muted">
                 Konto
               </h4>
               <Link href="/login" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">

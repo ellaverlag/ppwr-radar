@@ -120,7 +120,9 @@ export default async function CheckErgebnisPage() {
   return (
     <>
       <header className="mb-10 text-center">
-        <h1 className="text-display-sm text-ink">Ihre Ersteinschätzung</h1>
+        <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
+          Ihre Ersteinschätzung
+        </h1>
         <p className="mt-3 text-body-lg text-ink-muted">
           Basierend auf Ihren Angaben im Betroffenheits-Check.
         </p>
@@ -208,7 +210,7 @@ export default async function CheckErgebnisPage() {
 
       {/* Paywall-CTA */}
       <div className="mt-12 text-center">
-        <h2 className="text-headline text-ink">
+        <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
           Was heißt das konkret für Ihre Verpackungen?
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-body text-ink-muted">

@@ -30,6 +30,12 @@
   /* Schriften */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+  /* PJ-Online-Markenschrift – nur öffentliche Strecke (/, /check).
+     Fallback-Stack jeweils über Inter auf system-ui. */
+  --font-plex: var(--font-ibm-plex-sans), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-landing: var(--font-manrope-sans), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
 
   /* Typo-Skala */
   --text-display: 3rem;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { landingFontClasses } from "@/app/landing-fonts";
 
 export const metadata: Metadata = {
   title: "Betroffenheits-Check – PPWR Radar",
@@ -14,13 +15,13 @@ export default function CheckLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex min-h-screen flex-col bg-canvas">
+    <div className={`${landingFontClasses} flex min-h-screen flex-col bg-canvas`}>
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 md:px-16">
           <Link href="/" className="flex items-center gap-2.5">
             <Image src="/ppwr-radar-icon.svg" alt="" width={30} height={30} aria-hidden="true" />
             <span className="leading-tight">
-              <span className="block text-body-lg font-extrabold tracking-tight text-ink">
+              <span className="block font-plex text-body-lg font-bold tracking-tight text-ink">
                 PPWR Radar
               </span>
               <span className="-mt-0.5 block text-label font-medium text-ink-muted">

@@ -65,7 +65,7 @@ export default async function CheckPage({
   return (
     <>
       <header className="mb-10 text-center">
-        <h1 className="text-display-sm text-ink">
+        <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
           Die PPWR gilt.
           <br />
           Betrifft sie Ihre Verpackungen?
@@ -76,7 +76,7 @@ export default async function CheckPage({
       </header>
 
       <div className="mb-8">
-        <p className="mb-2 text-label uppercase text-ink-muted">
+        <p className="mb-2 text-label uppercase tracking-[0.02em] text-ink-muted">
           Frage {aktivIndex + 1} von {fragen.length}
         </p>
         <div className="h-1.5 w-full rounded-full bg-line">
@@ -96,7 +96,9 @@ export default async function CheckPage({
       <div className="rounded border border-line bg-canvas p-6 md:p-10">
         <form action={checkAntwortSpeichern}>
           <input type="hidden" name="frage_id" value={frage.frage_id} />
-          <h2 className="text-headline text-ink">{frage.frage_text}</h2>
+          <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
+            {frage.frage_text}
+          </h2>
           {frage.antwort_typ === "multi_select" && (
             <p className="mt-2 text-body-sm text-ink-muted">
               Mehrfachauswahl möglich.
