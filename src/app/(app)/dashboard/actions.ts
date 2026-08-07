@@ -30,10 +30,34 @@ export async function checkoutStarten() {
       ],
       // User-ID für die Webhook-Zuordnung – robuster als E-Mail-Abgleich
       client_reference_id: zugang.user.id,
-      // Bestandskunde am Customer festmachen, sonst E-Mail vorbefüllen
+      // B2B-Rechnungsdaten: Rechnungsadresse Pflicht, USt-ID-Feld für
+      // Firmen, Steuerberechnung über Stripe Tax. Der validierte Firmenname
+      // aus der USt-ID wird von Stripe am Customer hinterlegt; zusätzlich
+      // ein optionales Freitextfeld für den Rechnungs-Firmennamen.
+      billing_address_collection: "required",
+      tax_id_collection: { enabled: true },
+      automatic_tax: { enabled: true },
+      custom_fields: [
+        {
+          key: "firma",
+          label: { type: "custom", custom: "Firmenname (für die Rechnung)" },
+          type: "text",
+          optional: true,
+        },
+      ],
+      // Bestandskunde am Customer festmachen (customer_update ist Pflicht,
+      // wenn tax_id_collection mit Bestands-Customer läuft), sonst E-Mail
+      // vorbefüllen
       ...(zugang.stripeCustomerId
-        ? { customer: zugang.stripeCustomerId }
+        ? {
+            customer: zugang.stripeCustomerId,
+            customer_update: { address: "auto" as const, name: "auto" as const },
+          }
         : { customer_email: zugang.user.email }),
+      // Abo-Rechnungen entstehen im Subscription-Modus automatisch je
+      // Periode (invoice_creation ist hier weder nötig noch erlaubt); ob
+      // Stripe die Rechnung auch per Mail verschickt, steuert die
+      // Konto-Einstellung „Customer emails“ im Stripe-Dashboard.
       subscription_data: {
         billing_mode: { type: "flexible" },
       },

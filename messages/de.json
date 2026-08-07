@@ -205,8 +205,8 @@
       "paketName": "PPWR|ready Paket",
       "preisWaehrung": "€",
       "preisBetrag": "490",
-      "preisZeile1": "einmalig · inkl. 12 Monate PPWR Radar",
-      "preisZeile2": "danach automatische Verlängerung: 290 €/Jahr, jederzeit kündbar · später regulär 690 €",
+      "preisZeile1": "einmalig zzgl. USt. · inkl. 12 Monate PPWR Radar",
+      "preisZeile2": "danach automatische Verlängerung: 290 €/Jahr zzgl. USt., jederzeit kündbar · später regulär 690 €",
       "leistungen": [
         "Compliance-Profil & individuelle Status-Analyse",
         "Rollen-Klärung je Produktlinie mit Fundstelle",
@@ -220,11 +220,11 @@
       "teamName": "Team-Lizenz",
       "teamPreisVor": "ab",
       "teamPreis": "1.499",
-      "teamText": "Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams.",
+      "teamText": "Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams. Preise zzgl. USt.",
       "ctaTeam": "Team-Zugang anfragen",
       "verlaengerungName": "Radar-Verlängerung",
       "verlaengerungPreis": "290",
-      "verlaengerungEinheit": "/Jahr",
+      "verlaengerungEinheit": "/Jahr zzgl. USt.",
       "verlaengerungText": "Nach dem ersten Jahr: Updates, Assistent und Webinare bleiben aktuell.",
       "verlaengerungChip": "im Paket enthalten",
       "stripeHinweis": "// Zahlungsabwicklung über Stripe – Buttons werden zum Launch aktiviert"
@@ -261,7 +261,7 @@
         },
         {
           "frage": "Was kostet es nach dem ersten Jahr?",
-          "antwort": "Das Launch-Paket kostet einmalig 490 € und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Radar-Zugang automatisch um jeweils ein Jahr (290 €/Jahr) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Und falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang."
+          "antwort": "Das Launch-Paket kostet einmalig 490 € zzgl. USt. und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Radar-Zugang automatisch um jeweils ein Jahr (290 €/Jahr zzgl. USt.) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Und falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang."
         }
       ]
     },
@@ -352,7 +352,7 @@
     "paywallCta": "Kostenlos registrieren und Ergebnis sichern",
     "mehrErfahren": "Mehr über PPWR Radar erfahren",
     "neuStarten": "Check neu starten",
-    "preisNebenzeile": "Die vollständige Analyse mit Pflichtenliste und Dokumenten schalten Sie danach mit dem PPWR|ready Paket frei – 490 € im ersten Jahr."
+    "preisNebenzeile": "Die vollständige Analyse mit Pflichtenliste und Dokumenten schalten Sie danach mit dem PPWR|ready Paket frei – 490 € im ersten Jahr zzgl. USt."
   },
   "Onboarding": {
     "zumDashboard": "Zum Dashboard",
@@ -670,8 +670,8 @@
   "Vorzimmer": {
     "badge": "Launch-Angebot",
     "titel": "PPWR|ready Paket freischalten",
-    "preis": "490 € im ersten Jahr",
-    "konditionen": "danach automatische Verlängerung 290 €/Jahr · jederzeit zum Laufzeitende kündbar",
+    "preis": "490 € im ersten Jahr zzgl. USt.",
+    "konditionen": "danach automatische Verlängerung 290 €/Jahr zzgl. USt. · jederzeit zum Laufzeitende kündbar",
     "checkoutCta": "Jetzt freischalten – 490 €",
     "zahlungVerwalten": "Zahlung verwalten",
     "stripeFooter": "Zahlungsabwicklung über Stripe · Rechnung per E-Mail",
