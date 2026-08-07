@@ -57,7 +57,8 @@
       "preise": "Preise",
       "faq": "FAQ",
       "anmelden": "Anmelden",
-      "jetztStarten": "Jetzt starten"
+      "jetztStarten": "Jetzt starten",
+      "kostenlosPruefen": "Kostenlos prüfen"
     },
     "hero": {
       "badge": "Die PPWR gilt seit dem 12. August 2026",
@@ -75,11 +76,19 @@
         "stand": "Stand 12.08.2026",
         "produktlinieLabel": "Produktlinie",
         "produktlinie": "Feinkost im Glas",
-        "rollen": ["Erzeuger", "Hersteller", "Endvertreiber"],
+        "rollen": [
+          "Erzeuger",
+          "Hersteller",
+          "Endvertreiber"
+        ],
         "begruendungFett": "Sie gelten als Erzeuger,",
         "begruendung": "weil Sie das Produkt unter eigener Marke abfüllen lassen – trägt die Konformitätsverantwortung.",
-        "fundstellen": ["Art. 3 Abs. 1 Nr. 13 PPWR", "§ 7 VerpackDG"]
-      }
+        "fundstellen": [
+          "Art. 3 Abs. 1 Nr. 13 PPWR",
+          "§ 7 VerpackDG"
+        ]
+      },
+      "checkMicrocopy": "5 Fragen · 2 Minuten · ohne Anmeldung"
     },
     "trust": {
       "herausgeberVor": "Herausgegeben vom",
@@ -278,6 +287,10 @@
       "anmelden": "Anmelden",
       "registrieren": "Registrieren",
       "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+    },
+    "checkBandKompakt": {
+      "titel": "Noch unsicher? Erst kostenlos prüfen.",
+      "cta": "Zum Betroffenheits-Check"
     }
   },
   "Login": {
@@ -538,7 +551,12 @@
   "Dokumente": {
     "titel": "Meine Dokumente",
     "beschreibung": "Zentrales Archiv für alle Compliance-Nachweise, Zertifikate und regulatorischen Dokumente gemäß PPWR-Anforderungen.",
-    "tabs": ["Alle", "Gültig", "Entwürfe", "Archiv"],
+    "tabs": [
+      "Alle",
+      "Gültig",
+      "Entwürfe",
+      "Archiv"
+    ],
     "suchPlaceholder": "Dokument suchen …",
     "neuesDokument": "Neues Dokument",
     "spalteTitel": "Dokumententitel",
@@ -580,7 +598,11 @@
     "beschreibung": "Stellen Sie rechtliche Fragen zur EU-Verpackungsverordnung (PPWR).",
     "fragePlaceholder": "Ihre Frage zur PPWR …",
     "fragen": "Fragen",
-    "erklaertiefen": ["Einfach erklärt", "Fachlich", "Rechtstext"],
+    "erklaertiefen": [
+      "Einfach erklärt",
+      "Fachlich",
+      "Rechtstext"
+    ],
     "beispielansicht": "Beispielansicht",
     "beispielTitel": "Kennzeichnungspflichten für Kunststoffvliese",
     "beispielText": "So wird eine Antwort des Assistant aufgebaut sein: eine fachliche Einordnung mit Rechtsstand, gegliederte Pflichten und ein Hinweis auf Grenzen der Auslegung.",

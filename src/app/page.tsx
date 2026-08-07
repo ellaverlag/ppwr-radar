@@ -35,6 +35,8 @@ const BTN_PRIMARY = `${BTN} border-transparent bg-primary text-white hover:bg-pr
 const BTN_GHOST = `${BTN} border-primary bg-canvas text-primary hover:bg-primary-tint`;
 const BTN_MD = "px-6 py-3 text-body";
 const BTN_LG = "px-8 py-4 text-body-lg";
+/* Größter Button der Seite – reserviert für das Check-Band */
+const BTN_XL = "px-10 py-5 text-[1.25rem] leading-8";
 
 function Eyebrow({
   children,
@@ -69,7 +71,7 @@ function SectionHead({
   return (
     <div className={`mb-12 max-w-[60ch] ${zentriert ? "mx-auto text-center" : ""}`}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mb-3 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem] text-ink">
+      <h2 className="mb-3 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em] text-ink">
         {titel}
       </h2>
       {text && <p className="text-body-lg text-ink-muted">{text}</p>}
@@ -146,7 +148,7 @@ export default async function LandingPage() {
       <header className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-6">
           <BrandLink href="/" priority />
-          <nav className="flex items-center gap-8">
+          <nav className="flex items-center gap-3 md:gap-8">
             <a href="#funktionen" className="hidden text-body-sm font-medium text-ink-muted hover:text-primary md:block">
               {t("nav.funktionen")}
             </a>
@@ -162,7 +164,10 @@ export default async function LandingPage() {
             <Link href="/login" className="hidden text-body-sm font-medium text-ink-muted hover:text-primary sm:block">
               {t("nav.anmelden")}
             </Link>
-            <a href="#preise" className={`${BTN_PRIMARY} px-5 py-2.5 text-body-sm`}>
+            <a href="#check" className={`${BTN_GHOST} px-4 py-2.5 text-body-sm sm:px-5`}>
+              {t("nav.kostenlosPruefen")}
+            </a>
+            <a href="#preise" className={`${BTN_PRIMARY} px-4 py-2.5 text-body-sm sm:px-5`}>
               {t("nav.jetztStarten")}
             </a>
           </nav>
@@ -177,7 +182,7 @@ export default async function LandingPage() {
               <span className="h-[7px] w-[7px] rounded-full bg-gold shadow-[0_0_0_3px_#f4e4a8]" />
               {t("hero.badge")}
             </span>
-            <h1 className="mb-4 mt-4 font-plex text-[clamp(2.1rem,4.6vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
+            <h1 className="mb-4 mt-4 font-plex text-[clamp(2.1rem,4.6vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.04em]">
               {t("hero.titelVor")}{" "}
               <span className="text-primary">{t("hero.titelHighlight")}</span>{" "}
               {t("hero.titelNach")}
@@ -185,13 +190,18 @@ export default async function LandingPage() {
             <p className="mb-8 max-w-[34ch] text-body-lg leading-[1.4] text-ink-soft">
               {t("hero.text")}
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-start gap-3">
               <Link href="/login" className={`${BTN_PRIMARY} ${BTN_LG}`}>
                 {t("hero.ctaPrimaer")}
               </Link>
-              <a href="#check" className={`${BTN_GHOST} ${BTN_LG}`}>
-                {t("hero.ctaSekundaer")}
-              </a>
+              <span className="flex flex-col gap-1.5">
+                <a href="#check" className={`${BTN_GHOST} ${BTN_LG}`}>
+                  {t("hero.ctaSekundaer")}
+                </a>
+                <span className="text-body-sm text-ink-muted">
+                  {t("hero.checkMicrocopy")}
+                </span>
+              </span>
             </div>
             <p className="mt-4 text-body-sm text-ink-muted">
               {t("hero.microcopy")}
@@ -281,7 +291,7 @@ export default async function LandingPage() {
           />
           <div className="grid grid-cols-1 overflow-hidden rounded border border-line md:grid-cols-2">
             <div className="border-b border-line bg-surface p-8 md:border-b-0 md:border-r">
-              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04rem]">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
                 {t("problem.linksTitel")}
               </h3>
               <ul className="space-y-3">
@@ -294,7 +304,7 @@ export default async function LandingPage() {
               </ul>
             </div>
             <div className="bg-primary-tint p-8">
-              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04rem]">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
                 {t("problem.rechtsTitel")}
               </h3>
               <ul className="space-y-3">
@@ -325,7 +335,7 @@ export default async function LandingPage() {
                 className="rounded border border-line bg-canvas p-7 transition-colors hover:border-primary"
               >
                 <FeatureIcon d={FEATURE_ICONS[i]} />
-                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04rem]">
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">
                   {feature.titel}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{feature.text}</p>
@@ -348,7 +358,7 @@ export default async function LandingPage() {
                 <p className="mb-2.5 text-label font-semibold uppercase tracking-[0.02em] text-primary">
                   {karte.rolle}
                 </p>
-                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04rem]">
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">
                   {karte.frage}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{karte.text}</p>
@@ -371,12 +381,29 @@ export default async function LandingPage() {
                 <span className="mb-3.5 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-primary text-body-sm font-medium text-white">
                   {i + 1}
                 </span>
-                <h3 className="mb-1.5 font-plex text-body font-bold tracking-[-0.04rem]">
+                <h3 className="mb-1.5 font-plex text-body font-bold tracking-[-0.04em]">
                   {schritt.titel}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{schritt.text}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Kompaktes Check-Band – fängt zweifelnde Preisseiten-Besucher ab */}
+      <section aria-label={t("checkBandKompakt.titel")} className="pb-20">
+        <div className="mx-auto w-full max-w-[1200px] px-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 rounded bg-legal p-6 text-white">
+            <p className="text-body-lg font-bold">
+              {t("checkBandKompakt.titel")}
+            </p>
+            <Link
+              href="/check"
+              className={`${BTN} ${BTN_MD} border-transparent bg-white text-legal hover:bg-[#eef2f8]`}
+            >
+              {t("checkBandKompakt.cta")}
+            </Link>
           </div>
         </div>
       </section>
@@ -493,7 +520,7 @@ export default async function LandingPage() {
             <div className="flex flex-wrap items-center justify-between gap-8 p-8 md:p-11">
               <div className="max-w-[52ch]">
                 <Eyebrow className="text-gold">{t("checkBand.eyebrow")}</Eyebrow>
-                <h2 className="mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
+                <h2 className="mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
                   {t("checkBand.titel")}
                 </h2>
                 <p className="mt-2.5 text-body-lg text-[#cdd9ec]">
@@ -502,7 +529,7 @@ export default async function LandingPage() {
               </div>
               <Link
                 href="/check"
-                className={`${BTN} ${BTN_LG} border-transparent bg-white text-legal hover:bg-[#eef2f8]`}
+                className={`${BTN} ${BTN_XL} border-transparent bg-white text-legal hover:bg-[#eef2f8]`}
               >
                 {t("checkBand.cta")}
               </Link>
@@ -554,7 +581,7 @@ export default async function LandingPage() {
       <section className="bg-primary py-20 text-center text-white">
         <div className="mx-auto w-full max-w-[1200px] px-6">
           <Eyebrow className="text-[#bfe0d6]">{t("finalCta.eyebrow")}</Eyebrow>
-          <h2 className="mb-4 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
+          <h2 className="mb-4 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
             {t("finalCta.titel")}
           </h2>
           <p className="mx-auto mb-8 max-w-[52ch] text-body-lg text-[#bfe0d6]">

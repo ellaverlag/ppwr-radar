@@ -44,8 +44,9 @@ Es existieren bewusst **zwei Schriftsysteme**, und die Grenze verläuft am Login
 Regeln der öffentlichen Strecke (Fonts laden nur dort, via `src/app/landing-fonts.ts`):
 
 - Headlines h1–h3: **IBM Plex Sans** (nur echte Schnitte 600/700, nie > 700 – Faux-Bold ist
-  global per `font-synthesis-weight: none` auf `.font-plex` unterbunden), Tracking konstant
-  `-0.04rem` (wie packaging-journal.de, unabhängig von der Schriftgröße), Größenskala
+  global per `font-synthesis-weight: none` auf `.font-plex` unterbunden), Tracking relativ
+  `-0.04em` (exakt wie das PJ-Theme-CSS, `--cs-font-headings-letter-spacing`; der frühere
+  rem-Wert war eine Fehlangabe aus dem Elementor-Panel), Größenskala
   unverändert – der Charakter kommt aus Schriftfamilie und Spacing, nicht aus der Punktgröße.
 - Fließtext, Buttons, UI-Elemente: **Manrope** (400/500/600) statt Inter.
 - Hero-/Teaser-Lead: Zeilenhöhe `1.4` und neutrales Dunkelgrau `--color-ink-soft #3a3a3a`
