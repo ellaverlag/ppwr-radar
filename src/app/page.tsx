@@ -310,8 +310,8 @@ export default async function LandingPage({
               <Image
                 src="/pj-logo.png"
                 alt={t("trust.herausgeber")}
-                width={116}
-                height={24}
+                width={83}
+                height={34}
               />
             </a>
           </span>
@@ -664,7 +664,7 @@ export default async function LandingPage({
                 rel="noopener noreferrer"
                 className="inline-flex items-center"
               >
-                <Image src="/pj-logo.png" alt="packaging journal" width={97} height={20} />
+                <Image src="/pj-logo.png" alt="packaging journal" width={68} height={28} />
               </a>
             </p>
             <p className="mt-2 text-body-sm text-ink-muted">

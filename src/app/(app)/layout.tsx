@@ -108,8 +108,8 @@ export default async function AppLayout({
               <Image
                 src="/pj-logo.png"
                 alt="packaging journal"
-                width={180}
-                height={37}
+                width={146}
+                height={60}
               />
             </a>
           </div>
@@ -164,8 +164,8 @@ export default async function AppLayout({
                       <Image
                         src="/pj-logo.png"
                         alt="packaging journal"
-                        width={150}
-                        height={31}
+                        width={110}
+                        height={45}
                       />
                     </a>
                   </div>
@@ -191,7 +191,7 @@ export default async function AppLayout({
                 rel="noopener noreferrer"
                 className="inline-flex items-center"
               >
-                <Image src="/pj-logo.png" alt="packaging journal" width={78} height={16} />
+                <Image src="/pj-logo.png" alt="packaging journal" width={49} height={20} />
               </a>
             </p>
             <ul className="flex gap-6 text-label uppercase">

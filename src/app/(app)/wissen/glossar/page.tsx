@@ -148,6 +148,11 @@ export default async function GlossarPage({
             {eintrag.kurztext}
           </p>
         )}
+        {eintrag.merkmale && (
+          <p className="mt-1.5 font-mono text-mono-sm text-ink-muted">
+            {eintrag.merkmale}
+          </p>
+        )}
         <p className="mt-3 flex flex-wrap items-center gap-2">
           <Badge variant="neutral">{t(`typBadge.${eintrag.typ}`)}</Badge>
           <span className="rounded border border-legal-tint bg-legal-tint px-2 py-0.5 font-mono text-label font-medium text-legal">
@@ -161,6 +166,19 @@ export default async function GlossarPage({
             </span>
           )}
         </p>
+        {(eintrag.verweisChips?.length ?? 0) > 0 && (
+          <p className="mt-2 flex flex-wrap gap-2">
+            {eintrag.verweisChips!.map((chip) => (
+              <Link
+                key={`${chip.href}-${chip.label}`}
+                href={chip.href}
+                className="rounded border border-legal px-2 py-0.5 font-mono text-label font-medium text-legal transition-colors hover:bg-chip-hover"
+              >
+                {chip.label}
+              </Link>
+            ))}
+          </p>
+        )}
       </>
     );
   }

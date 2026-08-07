@@ -95,8 +95,8 @@ export async function AktuellesBereich({
           <Image
             src="/pj-logo.png"
             alt="packaging journal"
-            width={116}
-            height={24}
+            width={78}
+            height={32}
           />
         </a>
       </h2>

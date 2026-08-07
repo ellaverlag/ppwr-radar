@@ -1,5 +1,10 @@
 import "server-only";
 
+import {
+  createClient as createBareClient,
+  type SupabaseClient,
+} from "@supabase/supabase-js";
+import { isPreviewMode } from "@/lib/preview";
 import { createClient as createSessionClient } from "@/lib/supabase/server";
 import type { RollenSet } from "@/lib/rollen-engine";
 import {
@@ -43,6 +48,10 @@ export interface GlossarEintrag {
   antwort: string | null;
   /** Nur Praxisfragen: Code für den Deep-Link (#A01) in die Praxisfragen. */
   code: string | null;
+  /** Nur Praxis-Glossar (glossar_lemmata): Merkmale-Zeile. */
+  merkmale?: string | null;
+  /** Nur Praxis-Glossar: klickbare Verweis-Chips. */
+  verweisChips?: { label: string; href: string }[];
   /** Profil vorhanden und Matching greift. */
   betrifft_mich: boolean;
 }
@@ -66,48 +75,103 @@ const alsSuchtext = (...teile: (string | null | undefined)[]) =>
   teile.filter(Boolean).join(" ").toLowerCase();
 
 /**
- * Kommender Bestand „Verpackungen & Materialien“ aus der Tabelle
- * glossar_lemmata. Die endgültige Struktur liefert Malte nach dem Import –
- * bis dahin fail-soft: Fehlt die Tabelle oder ist sie leer, liefert der
- * Loader [] und der Typ-Filter bleibt ausgeblendet. Die Spalten-Zuordnung
- * ist tolerant gehalten und wird nach dem Import fixiert.
+ * Praxis-Glossar „Verpackungen & Materialien“ aus glossar_lemmata
+ * (60 Lemmata: Objekte, Materialien, Begriffe). Lesepfad wie überall:
+ * live Session-Client (RLS: freigegeben + ausspielen), im Preview-Modus
+ * Service-Role inkl. Entwürfen. Fail-soft: Fehler/leer → keine Einträge,
+ * der Typ-Filter bleibt ausgeblendet.
  */
-async function ladeLemmata(): Promise<GlossarEintrag[]> {
+interface LemmaZeile {
+  nr: number;
+  code: string | null;
+  lemma: string;
+  synonyme: string[] | null;
+  typ: "objekt" | "material" | "begriff";
+  kurzerklaerung: string | null;
+  merkmale: string | null;
+  verweis_anforderungen: number[] | null;
+  verweis_auslegungen: string[] | null;
+  verweis_rollen: string[] | null;
+}
+
+async function lemmataClient(): Promise<SupabaseClient> {
+  if (isPreviewMode() && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return createBareClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
+  }
+  return createSessionClient();
+}
+
+async function ladeLemmata(
+  anforderungen: { id: string; nr: number | null; titel: string }[],
+  rollen: { rolle_id: string; begriff_de: string }[]
+): Promise<GlossarEintrag[]> {
   try {
-    const supabase = await createSessionClient();
-    const { data, error } = await supabase
-      .from("glossar_lemmata")
-      .select("*")
-      .limit(500);
+    const client = await lemmataClient();
+    let query = client.from("glossar_lemmata").select("*").order("nr");
+    if (!isPreviewMode()) {
+      query = query
+        .eq("review_status", "cattwyk_freigegeben")
+        .eq("ausspielen", true);
+    }
+    const { data, error } = await query;
     if (error || !data) return [];
-    return data.flatMap((roh) => {
-      const r = roh as Record<string, unknown>;
-      const begriff = (r.begriff ?? r.lemma ?? r.titel ?? r.name) as
-        | string
-        | undefined;
-      if (!begriff) return [];
-      const kurz = (r.definition_kurz ??
-        r.definition ??
-        r.kurztext ??
-        r.beschreibung ??
-        null) as string | null;
-      const quelle = (r.fundstelle ?? r.quelle ?? r.fundstelle_ppwr ?? "Glossar") as string;
-      return [
-        {
-          id: `lemma:${String(r.id ?? begriff)}`,
-          typ: "verpackung_material" as const,
-          begriff,
-          begriff_en: (r.begriff_en as string | null) ?? null,
-          kurztext: kurz ? kuerze(String(kurz)) : null,
-          quelle: String(quelle),
-          href: null,
-          verpackungstypen: [],
-          suchtext: alsSuchtext(begriff, kurz),
-          antwort: null,
-          code: null,
-          betrifft_mich: false,
-        },
-      ];
+
+    const anfNachNr = new Map(
+      anforderungen.filter((a) => a.nr != null).map((a) => [a.nr as number, a])
+    );
+    const rolleNachId = new Map(rollen.map((r) => [r.rolle_id, r.begriff_de]));
+
+    return (data as LemmaZeile[]).map((lemma) => {
+      const chips: { label: string; href: string }[] = [];
+      for (const nr of lemma.verweis_anforderungen ?? []) {
+        const anforderung = anfNachNr.get(nr);
+        if (anforderung) {
+          chips.push({
+            label: `#${String(nr).padStart(2, "0")} ${kuerze(anforderung.titel, 32)}`,
+            href: `/wissen/anforderungen/${anforderung.id}`,
+          });
+        }
+      }
+      for (const code of lemma.verweis_auslegungen ?? []) {
+        chips.push({ label: code, href: `/wissen/auslegungen#${code}` });
+      }
+      for (const rolleId of lemma.verweis_rollen ?? []) {
+        const begriff = rolleNachId.get(rolleId);
+        chips.push({
+          label: begriff ?? rolleId,
+          href: `/wissen/glossar?q=${encodeURIComponent(begriff ?? rolleId)}`,
+        });
+      }
+
+      return {
+        id: `lemma:${lemma.nr}`,
+        typ:
+          lemma.typ === "begriff"
+            ? ("begriff" as const)
+            : ("verpackung_material" as const),
+        begriff: lemma.lemma,
+        begriff_en: null,
+        kurztext: lemma.kurzerklaerung,
+        quelle: lemma.code ?? "Glossar",
+        href: null,
+        verpackungstypen: [],
+        // Synonyme sind Suchanker: „Twist-off“ findet das Marmeladenglas
+        suchtext: alsSuchtext(
+          lemma.lemma,
+          ...(lemma.synonyme ?? []),
+          lemma.kurzerklaerung,
+          lemma.merkmale
+        ),
+        antwort: null,
+        code: null,
+        merkmale: lemma.merkmale,
+        verweisChips: chips,
+        betrifft_mich: false,
+      };
     });
   } catch {
     return [];
@@ -146,14 +210,14 @@ export async function ladeGlossar(): Promise<{
   hatProfil: boolean;
   hatLemmata: boolean;
 }> {
-  const [rollen, anforderungen, auslegungen, lemmata, nutzerRollen] =
-    await Promise.all([
-      getRollenDefinitionen(),
-      getAnforderungen(),
-      getAuslegungen(),
-      ladeLemmata(),
-      ladeNutzerRollen().catch(() => new Set<string>()),
-    ]);
+  const [rollen, anforderungen, auslegungen, nutzerRollen] = await Promise.all([
+    getRollenDefinitionen(),
+    getAnforderungen(),
+    getAuslegungen(),
+    ladeNutzerRollen().catch(() => new Set<string>()),
+  ]);
+  // Lemmata brauchen Anforderungen + Rollen-Begriffe für die Verweis-Chips
+  const lemmata = await ladeLemmata(anforderungen, rollen);
   const hatProfil = nutzerRollen.size > 0;
 
   const eintraege: GlossarEintrag[] = [];
