@@ -38,6 +38,7 @@ export default async function PraxisfragenPage() {
   const fragen: PraxisFrage[] = auslegungen.map((a) => ({
     id: a.id,
     code: a.code,
+    rechtsstand: a.rechtsstand,
     frage: a.frage,
     antwort: a.antwort,
     kategorie: a.kategorie,
@@ -50,6 +51,7 @@ export default async function PraxisfragenPage() {
   }));
 
   const labels: PraxisLabels = {
+    rechtsstand: t("rechtsstandLabel"),
     meistgelesen: t("meistgelesen"),
     suchPlaceholder: t("suchPlaceholder"),
     suchLabel: tCommon("suchen"),

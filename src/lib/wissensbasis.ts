@@ -66,6 +66,8 @@ export interface Anforderung {
   lebensmittelkontakt: string;
   ausnahmen: string | null;
   uebergangsregeln: string | null;
+  tatbestand: string | null;
+  rechtsfolgen_je_rolle: Record<string, string> | null;
   verweise: string[] | null;
   kurzerklaerung: string | null;
   erklaerung_fachlich: string | null;
@@ -83,6 +85,7 @@ export interface Auslegung {
   id: string;
   nr: number | null;
   code: string | null;
+  kurztitel: string | null;
   frage: string;
   antwort: string;
   kategorie: Kategorie;

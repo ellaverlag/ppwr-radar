@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { SearchIcon } from "@/components/icons";
+import { formatDate } from "@/lib/labels";
 import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
 
 /**
@@ -16,6 +17,7 @@ import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
 export interface PraxisFrage {
   id: string;
   code: string | null;
+  rechtsstand: string;
   frage: string;
   antwort: string;
   kategorie: Kategorie;
@@ -25,6 +27,7 @@ export interface PraxisFrage {
 }
 
 export interface PraxisLabels {
+  rechtsstand: string;
   meistgelesen: string;
   suchPlaceholder: string;
   suchLabel: string;
@@ -240,6 +243,9 @@ export function PraxisfragenListe({
                           </p>
                         </div>
                       )}
+                      <p className="mt-5 font-mono text-mono-sm uppercase text-ink-muted">
+                        {labels.rechtsstand} {formatDate(frage.rechtsstand)}
+                      </p>
                       {frage.verwandte.length > 0 && (
                         <div className="mt-5">
                           <p className="text-label uppercase text-ink-muted">

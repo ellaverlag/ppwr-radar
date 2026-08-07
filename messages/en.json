@@ -510,7 +510,16 @@
     "sortNummer": "Number",
     "sortGiltAb": "Applies from",
     "sortKategorie": "Category",
-    "keineTrefferAnforderungen": "No requirements match your selection."
+    "keineTrefferAnforderungen": "No requirements match your selection.",
+    "tiefen": {
+      "einfach": "Plain language",
+      "fachlich": "Professional",
+      "rechtstext": "Legal text"
+    },
+    "wasZuTun": "What to do",
+    "tatbestandTitel": "Conditions",
+    "rechtsfolgenTitel": "Legal consequences per role",
+    "keineErklaerung": "The editorial explanations for this requirement follow with the content approval."
   },
   "Auslegungen": {
     "suchLabel": "Auslegungen durchsuchen",
@@ -774,6 +783,7 @@
     "fundstellen": "References",
     "verwandte": "Related requirements",
     "keineTreffer": "No practical questions match your selection – adjust the wording or reset the filters.",
-    "zurFrage": "See the full answer in the practical questions →"
+    "zurFrage": "See the full answer in the practical questions →",
+    "rechtsstandLabel": "Legal status"
   }
 }

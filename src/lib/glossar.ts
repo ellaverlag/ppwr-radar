@@ -36,8 +36,10 @@ export interface GlossarEintrag {
   begriff_en: string | null;
   /** Kurzdefinition unter dem Begriff. */
   kurztext: string | null;
-  /** Quelle-Chip (Fundstelle bzw. Rechtsquelle). */
-  quelle: string;
+  /** Quelle-Chip (Fundstelle bzw. Rechtsquelle); null = kein Chip. */
+  quelle: string | null;
+  /** Nur Praxisfragen: vollständige Frage (Zeile zeigt den Kurztitel). */
+  frageVoll?: string | null;
   /** Bestehende Detailseite; null, wenn der Eintrag selbst das Ziel ist. */
   href: string | null;
   /** Für den Verpackungsart-Filter (nur Anforderungen tragen diese Daten). */
@@ -107,7 +109,8 @@ async function lemmataClient(): Promise<SupabaseClient> {
 
 async function ladeLemmata(
   anforderungen: { id: string; nr: number | null; titel: string }[],
-  rollen: { rolle_id: string; begriff_de: string }[]
+  rollen: { rolle_id: string; begriff_de: string }[],
+  auslegungen: { code: string | null; kurztitel: string | null; frage: string }[]
 ): Promise<GlossarEintrag[]> {
   try {
     const client = await lemmataClient();
@@ -124,6 +127,11 @@ async function ladeLemmata(
       anforderungen.filter((a) => a.nr != null).map((a) => [a.nr as number, a])
     );
     const rolleNachId = new Map(rollen.map((r) => [r.rolle_id, r.begriff_de]));
+    const auslegungNachCode = new Map(
+      auslegungen
+        .filter((a) => a.code)
+        .map((a) => [a.code as string, a.kurztitel ?? kuerze(a.frage, 40)])
+    );
 
     return (data as LemmaZeile[]).map((lemma) => {
       const chips: { label: string; href: string }[] = [];
@@ -137,7 +145,11 @@ async function ladeLemmata(
         }
       }
       for (const code of lemma.verweis_auslegungen ?? []) {
-        chips.push({ label: code, href: `/wissen/auslegungen#${code}` });
+        // Sprechendes Label statt internem Code; der Code bleibt nur im Anker
+        chips.push({
+          label: auslegungNachCode.get(code) ?? code,
+          href: `/wissen/auslegungen#${code}`,
+        });
       }
       for (const rolleId of lemma.verweis_rollen ?? []) {
         const begriff = rolleNachId.get(rolleId);
@@ -156,7 +168,8 @@ async function ladeLemmata(
         begriff: lemma.lemma,
         begriff_en: null,
         kurztext: lemma.kurzerklaerung,
-        quelle: lemma.code ?? "Glossar",
+        // Interner Datensatz-Code (L01 …) bleibt aus der Nutzer-Ansicht heraus
+        quelle: null,
         href: null,
         verpackungstypen: [],
         // Synonyme sind Suchanker: „Twist-off“ findet das Marmeladenglas
@@ -217,7 +230,7 @@ export async function ladeGlossar(): Promise<{
     ladeNutzerRollen().catch(() => new Set<string>()),
   ]);
   // Lemmata brauchen Anforderungen + Rollen-Begriffe für die Verweis-Chips
-  const lemmata = await ladeLemmata(anforderungen, rollen);
+  const lemmata = await ladeLemmata(anforderungen, rollen, auslegungen);
   const hatProfil = nutzerRollen.size > 0;
 
   const eintraege: GlossarEintrag[] = [];
@@ -276,16 +289,18 @@ export async function ladeGlossar(): Promise<{
     eintraege.push({
       id: `auslegung:${a.id}`,
       typ: "praxisfrage",
-      begriff: a.frage,
+      // Kurztitel als Nachschlage-Zeile; die volle Frage erscheint aufgeklappt
+      begriff: a.kurztitel ?? a.frage,
+      frageVoll: a.frage,
       begriff_en: null,
       kurztext: kuerze(a.antwort),
-      // Sprachneutral: fehlt eine Quelle, trägt der Chip den Auslegungs-Code.
-      quelle: a.quellen[0] ?? a.code ?? "—",
+      // Interne Codes (A01 …) bleiben aus der Nutzer-Ansicht heraus
+      quelle: a.quellen[0] ?? null,
       // Deep-Link in die Praxisfragen (#Code); ohne Code Volltext-Fallback
       href: a.code
         ? `/wissen/auslegungen#${a.code}`
         : `/wissen/auslegungen?q=${encodeURIComponent(a.frage)}`,
-      suchtext: alsSuchtext(a.frage, a.antwort),
+      suchtext: alsSuchtext(a.kurztitel, a.frage, a.antwort),
       verpackungstypen: [],
       antwort: a.antwort,
       code: a.code,

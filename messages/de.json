@@ -510,7 +510,16 @@
     "sortNummer": "Nummer",
     "sortGiltAb": "Gilt ab",
     "sortKategorie": "Kategorie",
-    "keineTrefferAnforderungen": "Keine Anforderungen zu Ihrer Auswahl gefunden."
+    "keineTrefferAnforderungen": "Keine Anforderungen zu Ihrer Auswahl gefunden.",
+    "tiefen": {
+      "einfach": "Einfach erklärt",
+      "fachlich": "Fachlich",
+      "rechtstext": "Rechtstext"
+    },
+    "wasZuTun": "Was ist zu tun",
+    "tatbestandTitel": "Tatbestand",
+    "rechtsfolgenTitel": "Rechtsfolgen je Rolle",
+    "keineErklaerung": "Die redaktionellen Erklärtexte zu dieser Anforderung folgen mit der Inhalts-Freigabe."
   },
   "Auslegungen": {
     "suchLabel": "Auslegungen durchsuchen",
@@ -774,6 +783,7 @@
     "fundstellen": "Fundstellen",
     "verwandte": "Verwandte Anforderungen",
     "keineTreffer": "Keine Praxisfragen zu Ihrer Auswahl – Formulierung ändern oder Filter zurücksetzen.",
-    "zurFrage": "Zur vollständigen Antwort in den Praxisfragen →"
+    "zurFrage": "Zur vollständigen Antwort in den Praxisfragen →",
+    "rechtsstandLabel": "Rechtsstand"
   }
 }

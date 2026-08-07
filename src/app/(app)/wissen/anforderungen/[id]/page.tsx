@@ -7,6 +7,7 @@ import { ArrowBackIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import { getAnforderung, type GiltStatus } from "@/lib/wissensbasis";
+import { Erklaertiefen, type Tiefe } from "./erklaertiefen";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -51,7 +52,18 @@ export default async function AnforderungDetailPage({
   }
 
   const t = await getTranslations("Anforderung");
+  const tWissen = await getTranslations("Wissen");
   const tLabels = await getTranslations("Labels");
+
+  const tiefen: Tiefe[] = [
+    { key: "einfach", text: anforderung.kurzerklaerung },
+    { key: "fachlich", text: anforderung.erklaerung_fachlich },
+    { key: "rechtstext", text: anforderung.erklaerung_rechtstext },
+  ]
+    .filter((tiefe): tiefe is { key: string; text: string } =>
+      Boolean(tiefe.text)
+    )
+    .map((tiefe) => ({ ...tiefe, label: tWissen(`tiefen.${tiefe.key}`) }));
 
   return (
     <article className="max-w-3xl">
@@ -88,25 +100,49 @@ export default async function AnforderungDetailPage({
         </p>
       </header>
 
-      {anforderung.kurzerklaerung && (
-        <p className="mt-8 text-body-lg text-ink">
-          {anforderung.kurzerklaerung}
+      {/* Erklärtiefen: Einfach (kurzerklaerung) | Fachlich | Rechtstext */}
+      {tiefen.length > 0 ? (
+        <div className="mt-8">
+          <Erklaertiefen tiefen={tiefen} />
+        </div>
+      ) : (
+        <p className="mt-8 rounded border border-line-strong bg-surface px-4 py-3 text-body-sm text-ink-muted">
+          {tWissen("keineErklaerung")}
         </p>
       )}
 
-      {anforderung.erklaerung_fachlich && (
-        <Section title={t("fachlicheErklaerung")}>
-          <p className="whitespace-pre-line">
-            {anforderung.erklaerung_fachlich}
-          </p>
-        </Section>
-      )}
-
       {anforderung.handlungsanweisung && (
-        <Section title={t("handlungsanweisung")}>
+        <Section title={tWissen("wasZuTun")}>
           <p className="whitespace-pre-line">{anforderung.handlungsanweisung}</p>
         </Section>
       )}
+
+      {anforderung.tatbestand && (
+        <Section title={tWissen("tatbestandTitel")}>
+          <p className="whitespace-pre-line">{anforderung.tatbestand}</p>
+        </Section>
+      )}
+
+      {anforderung.rechtsfolgen_je_rolle &&
+        Object.keys(anforderung.rechtsfolgen_je_rolle).length > 0 && (
+          <Section title={tWissen("rechtsfolgenTitel")}>
+            <dl className="space-y-2">
+              {Object.entries(anforderung.rechtsfolgen_je_rolle).map(
+                ([rolle, folge]) => (
+                  <div key={rolle}>
+                    <dt className="inline font-semibold text-ink">
+                      {tLabels.has(`rollen.${rolle}`)
+                        ? tLabels(`rollen.${rolle}`)
+                        : rolle}
+                      :{" "}
+                    </dt>
+                    <dd className="inline text-ink-muted">{String(folge)}</dd>
+                  </div>
+                )
+              )}
+            </dl>
+          </Section>
+        )}
 
       {anforderung.risiko_bei_verstoss && (
         <Section title={t("risiko")}>
