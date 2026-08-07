@@ -26,6 +26,9 @@
   --color-danger: #ba1a1a;
   --color-chip-hover: #d8e2ff;
   --color-logo: #24a27f;
+  /* Neutrales Dunkelgrau für Teaser-/Lead-Texte der öffentlichen Strecke
+     (PJ-Online-Anmutung; das grünstichige ink-muted bleibt fürs App-Innere) */
+  --color-ink-soft: #3a3a3a;
 
   /* Schriften */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
@@ -72,6 +75,13 @@ body {
   font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.625rem;
+}
+
+/* Kein Faux-Bold: IBM Plex Sans ist nur in den echten Schnitten 600/700
+   geladen – Gewichte darüber dürfen nicht synthetisiert werden. */
+.font-plex,
+.font-plex * {
+  font-synthesis-weight: none;
 }
 
 /* Sichtbare Fokus-Zustände (Zielgruppe 50+, WCAG AA) */

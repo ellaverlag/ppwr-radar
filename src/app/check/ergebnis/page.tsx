@@ -116,7 +116,7 @@ export default async function CheckErgebnisPage() {
   return (
     <>
       <header className="mb-10 text-center">
-        <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
+        <h1 className="font-plex text-display-sm tracking-[-0.04rem] text-ink">
           {t("titel")}
         </h1>
         <p className="mt-3 text-body-lg text-ink-muted">{t("untertitel")}</p>
@@ -198,7 +198,7 @@ export default async function CheckErgebnisPage() {
 
       {/* Paywall-CTA */}
       <div className="mt-12 text-center">
-        <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
+        <h2 className="font-plex text-headline tracking-[-0.04rem] text-ink">
           {t("paywallTitel")}
         </h2>
         <p className="mx-auto mt-3 max-w-lg text-body text-ink-muted">

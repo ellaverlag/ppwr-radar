@@ -65,7 +65,7 @@ export default async function CheckPage({
   return (
     <>
       <header className="mb-10 text-center">
-        <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
+        <h1 className="font-plex text-display-sm tracking-[-0.04rem] text-ink">
           {t.rich("titel", { br: () => <br /> })}
         </h1>
         <p className="mt-3 text-body-lg text-ink-muted">
@@ -94,7 +94,7 @@ export default async function CheckPage({
       <div className="rounded border border-line bg-canvas p-6 md:p-10">
         <form action={checkAntwortSpeichern}>
           <input type="hidden" name="frage_id" value={frage.frage_id} />
-          <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
+          <h2 className="font-plex text-headline tracking-[-0.04rem] text-ink">
             {frage.frage_text}
           </h2>
           {frage.antwort_typ === "multi_select" && (

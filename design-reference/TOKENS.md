@@ -43,10 +43,15 @@ Es existieren bewusst **zwei Schriftsysteme**, und die Grenze verläuft am Login
 
 Regeln der öffentlichen Strecke (Fonts laden nur dort, via `src/app/landing-fonts.ts`):
 
-- Headlines h1–h3: **IBM Plex Sans** (600/700), Tracking `-0.04em`, Größenskala unverändert –
-  der Charakter kommt aus Schriftfamilie und Spacing, nicht aus der Punktgröße.
+- Headlines h1–h3: **IBM Plex Sans** (nur echte Schnitte 600/700, nie > 700 – Faux-Bold ist
+  global per `font-synthesis-weight: none` auf `.font-plex` unterbunden), Tracking konstant
+  `-0.04rem` (wie packaging-journal.de, unabhängig von der Schriftgröße), Größenskala
+  unverändert – der Charakter kommt aus Schriftfamilie und Spacing, nicht aus der Punktgröße.
 - Fließtext, Buttons, UI-Elemente: **Manrope** (400/500/600) statt Inter.
-- Eyebrows/Kategorie-Label („Das Problem“, „Preise“ …): Manrope, UPPERCASE, Tracking `0.02em` –
+- Hero-/Teaser-Lead: Zeilenhöhe `1.4` und neutrales Dunkelgrau `--color-ink-soft #3a3a3a`
+  (kompaktere PJ-Teaser-Anmutung; das grünstichige `ink-muted` bleibt fürs App-Innere).
+- Eyebrows/Kategorie-Label („Das Problem“, „Preise“ …): Manrope, UPPERCASE, Tracking `0.02em`,
+  mit vorangestelltem „▸“ in der Label-Farbe (Standard Grün) –
   entspricht dem Post-Category-Stil von packaging-journal.de.
 - **JetBrains Mono** bleibt öffentlich nur Bedeutungsträger für exakte Quellen („technische“
   Mikroelemente): Fundstellen-Chips der Hero-Beispielkarte, Rechtsstand-Angaben,

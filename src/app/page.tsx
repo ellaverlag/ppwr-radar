@@ -45,6 +45,9 @@ function Eyebrow({
     <span
       className={`inline-block text-mono-sm font-semibold uppercase tracking-[0.02em] ${className}`}
     >
+      {/* Rubrik-Marker wie bei packaging-journal.de; erbt die Eyebrow-Farbe
+          (standardmäßig Grün), damit er auf farbigen Bändern lesbar bleibt */}
+      <span aria-hidden="true">▸ </span>
       {children}
     </span>
   );
@@ -64,7 +67,7 @@ function SectionHead({
   return (
     <div className={`mb-12 max-w-[60ch] ${zentriert ? "mx-auto text-center" : ""}`}>
       <Eyebrow>{eyebrow}</Eyebrow>
-      <h2 className="mb-3 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em] text-ink">
+      <h2 className="mb-3 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem] text-ink">
         {titel}
       </h2>
       {text && <p className="text-body-lg text-ink-muted">{text}</p>}
@@ -172,12 +175,12 @@ export default async function LandingPage() {
               <span className="h-[7px] w-[7px] rounded-full bg-gold shadow-[0_0_0_3px_#f4e4a8]" />
               {t("hero.badge")}
             </span>
-            <h1 className="mb-4 mt-4 font-plex text-[clamp(2.1rem,4.6vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.04em]">
+            <h1 className="mb-4 mt-4 font-plex text-[clamp(2.1rem,4.6vw,3.4rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
               {t("hero.titelVor")}{" "}
               <span className="text-primary">{t("hero.titelHighlight")}</span>{" "}
               {t("hero.titelNach")}
             </h1>
-            <p className="mb-8 max-w-[34ch] text-body-lg text-ink-muted">
+            <p className="mb-8 max-w-[34ch] text-body-lg leading-[1.4] text-ink-soft">
               {t("hero.text")}
             </p>
             <div className="flex flex-wrap items-center gap-3">
@@ -276,7 +279,7 @@ export default async function LandingPage() {
           />
           <div className="grid grid-cols-1 overflow-hidden rounded border border-line md:grid-cols-2">
             <div className="border-b border-line bg-surface p-8 md:border-b-0 md:border-r">
-              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04rem]">
                 {t("problem.linksTitel")}
               </h3>
               <ul className="space-y-3">
@@ -289,7 +292,7 @@ export default async function LandingPage() {
               </ul>
             </div>
             <div className="bg-primary-tint p-8">
-              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04em]">
+              <h3 className="mb-4 font-plex text-body-lg font-bold tracking-[-0.04rem]">
                 {t("problem.rechtsTitel")}
               </h3>
               <ul className="space-y-3">
@@ -320,7 +323,7 @@ export default async function LandingPage() {
                 className="rounded border border-line bg-canvas p-7 transition-colors hover:border-primary"
               >
                 <FeatureIcon d={FEATURE_ICONS[i]} />
-                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04rem]">
                   {feature.titel}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{feature.text}</p>
@@ -343,7 +346,7 @@ export default async function LandingPage() {
                 <p className="mb-2.5 text-label font-semibold uppercase tracking-[0.02em] text-primary">
                   {karte.rolle}
                 </p>
-                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04em]">
+                <h3 className="mb-2 font-plex text-body-lg font-bold tracking-[-0.04rem]">
                   {karte.frage}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{karte.text}</p>
@@ -366,7 +369,7 @@ export default async function LandingPage() {
                 <span className="mb-3.5 flex h-[26px] w-[26px] items-center justify-center rounded-full bg-primary text-body-sm font-medium text-white">
                   {i + 1}
                 </span>
-                <h3 className="mb-1.5 font-plex text-body font-bold tracking-[-0.04em]">
+                <h3 className="mb-1.5 font-plex text-body font-bold tracking-[-0.04rem]">
                   {schritt.titel}
                 </h3>
                 <p className="text-body-sm text-ink-muted">{schritt.text}</p>
@@ -488,7 +491,7 @@ export default async function LandingPage() {
             <div className="flex flex-wrap items-center justify-between gap-8 p-8 md:p-11">
               <div className="max-w-[52ch]">
                 <Eyebrow className="text-gold">{t("checkBand.eyebrow")}</Eyebrow>
-                <h2 className="mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
+                <h2 className="mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
                   {t("checkBand.titel")}
                 </h2>
                 <p className="mt-2.5 text-body-lg text-[#cdd9ec]">
@@ -549,7 +552,7 @@ export default async function LandingPage() {
       <section className="bg-primary py-20 text-center text-white">
         <div className="mx-auto w-full max-w-[1200px] px-6">
           <Eyebrow className="text-[#bfe0d6]">{t("finalCta.eyebrow")}</Eyebrow>
-          <h2 className="mb-4 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04em]">
+          <h2 className="mb-4 mt-2 font-plex text-[clamp(1.7rem,3.2vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.04rem]">
             {t("finalCta.titel")}
           </h2>
           <p className="mx-auto mb-8 max-w-[52ch] text-body-lg text-[#bfe0d6]">
