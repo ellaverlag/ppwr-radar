@@ -5,7 +5,7 @@ import { SearchIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
-import { getAuslegungen } from "@/lib/wissensbasis";
+import { getAuslegungen, type Kategorie } from "@/lib/wissensbasis";
 import { WissenTabsNav } from "../tabs-server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -15,13 +15,27 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const dynamic = "force-dynamic";
 
+const KATEGORIEN: Kategorie[] = [
+  "stoffrecht",
+  "mehrweg",
+  "konformitaet",
+  "kennzeichnung",
+  "rollen_epr",
+  "verbote",
+  "sonstiges",
+];
+
 export default async function AuslegungenPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; kategorie?: string }>;
 }) {
-  const { q } = await searchParams;
-  const auslegungen = await getAuslegungen(q);
+  const { q, kategorie: kategorieParam } = await searchParams;
+  const kategorie = KATEGORIEN.find((wert) => wert === kategorieParam);
+  const alle = await getAuslegungen(q);
+  const auslegungen = kategorie
+    ? alle.filter((a) => a.kategorie === kategorie)
+    : alle;
   const t = await getTranslations("Auslegungen");
   const tWissen = await getTranslations("Wissen");
   const tCommon = await getTranslations("Common");
@@ -36,12 +50,14 @@ export default async function AuslegungenPage({
       />
       <WissenTabsNav />
 
+      <p className="mb-8 max-w-3xl text-body text-ink-muted">{t("intro")}</p>
+
       <form method="get" className="mb-10">
         <label htmlFor="q" className="sr-only">
           {t("suchLabel")}
         </label>
-        <div className="flex max-w-xl gap-3">
-          <div className="relative w-full">
+        <div className="flex max-w-3xl flex-wrap gap-3">
+          <div className="relative w-full max-w-xl">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" />
             <input
               id="q"
@@ -52,6 +68,22 @@ export default async function AuslegungenPage({
               className="w-full rounded border border-line-strong bg-canvas py-3 pl-11 pr-4 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
             />
           </div>
+          <label htmlFor="kategorie" className="sr-only">
+            {t("kategorieLabel")}
+          </label>
+          <select
+            id="kategorie"
+            name="kategorie"
+            defaultValue={kategorie ?? ""}
+            className="rounded border border-line-strong bg-canvas px-3 py-3 text-body text-ink focus:border-ink focus:outline-none"
+          >
+            <option value="">{t("alleKategorien")}</option>
+            {KATEGORIEN.map((wert) => (
+              <option key={wert} value={wert}>
+                {tLabels(`kategorien.${wert}`)}
+              </option>
+            ))}
+          </select>
           <button
             type="submit"
             className="shrink-0 rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"

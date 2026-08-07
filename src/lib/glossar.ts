@@ -16,7 +16,11 @@ import {
  * wissensbasis.ts (Freigabe-Filter, im Preview-Modus Service-Role).
  */
 
-export type GlossarTyp = "begriff" | "anforderung" | "praxisfrage";
+export type GlossarTyp =
+  | "begriff"
+  | "anforderung"
+  | "praxisfrage"
+  | "verpackung_material";
 
 export interface GlossarEintrag {
   id: string;
@@ -57,6 +61,53 @@ function kuerze(text: string, max = 200): string {
 const alsSuchtext = (...teile: (string | null | undefined)[]) =>
   teile.filter(Boolean).join(" ").toLowerCase();
 
+/**
+ * Kommender Bestand „Verpackungen & Materialien“ aus der Tabelle
+ * glossar_lemmata. Die endgültige Struktur liefert Malte nach dem Import –
+ * bis dahin fail-soft: Fehlt die Tabelle oder ist sie leer, liefert der
+ * Loader [] und der Typ-Filter bleibt ausgeblendet. Die Spalten-Zuordnung
+ * ist tolerant gehalten und wird nach dem Import fixiert.
+ */
+async function ladeLemmata(): Promise<GlossarEintrag[]> {
+  try {
+    const supabase = await createSessionClient();
+    const { data, error } = await supabase
+      .from("glossar_lemmata")
+      .select("*")
+      .limit(500);
+    if (error || !data) return [];
+    return data.flatMap((roh) => {
+      const r = roh as Record<string, unknown>;
+      const begriff = (r.begriff ?? r.lemma ?? r.titel ?? r.name) as
+        | string
+        | undefined;
+      if (!begriff) return [];
+      const kurz = (r.definition_kurz ??
+        r.definition ??
+        r.kurztext ??
+        r.beschreibung ??
+        null) as string | null;
+      const quelle = (r.fundstelle ?? r.quelle ?? r.fundstelle_ppwr ?? "Glossar") as string;
+      return [
+        {
+          id: `lemma:${String(r.id ?? begriff)}`,
+          typ: "verpackung_material" as const,
+          begriff,
+          begriff_en: (r.begriff_en as string | null) ?? null,
+          kurztext: kurz ? kuerze(String(kurz)) : null,
+          quelle: String(quelle),
+          href: null,
+          verpackungstypen: [],
+          suchtext: alsSuchtext(begriff, kurz),
+          betrifft_mich: false,
+        },
+      ];
+    });
+  } catch {
+    return [];
+  }
+}
+
 /** Rollen des eingeloggten Nutzers über alle Produktlinien (leer ohne Profil). */
 async function ladeNutzerRollen(): Promise<Set<string>> {
   const rollen = new Set<string>();
@@ -87,13 +138,16 @@ async function ladeNutzerRollen(): Promise<Set<string>> {
 export async function ladeGlossar(): Promise<{
   eintraege: GlossarEintrag[];
   hatProfil: boolean;
+  hatLemmata: boolean;
 }> {
-  const [rollen, anforderungen, auslegungen, nutzerRollen] = await Promise.all([
-    getRollenDefinitionen(),
-    getAnforderungen(),
-    getAuslegungen(),
-    ladeNutzerRollen().catch(() => new Set<string>()),
-  ]);
+  const [rollen, anforderungen, auslegungen, lemmata, nutzerRollen] =
+    await Promise.all([
+      getRollenDefinitionen(),
+      getAnforderungen(),
+      getAuslegungen(),
+      ladeLemmata(),
+      ladeNutzerRollen().catch(() => new Set<string>()),
+    ]);
   const hatProfil = nutzerRollen.size > 0;
 
   const eintraege: GlossarEintrag[] = [];
@@ -160,8 +214,10 @@ export async function ladeGlossar(): Promise<{
     });
   }
 
+  eintraege.push(...lemmata);
+
   eintraege.sort((a, b) => a.begriff.localeCompare(b.begriff, "de"));
-  return { eintraege, hatProfil };
+  return { eintraege, hatProfil, hatLemmata: lemmata.length > 0 };
 }
 
 /** Registerbuchstabe eines Eintrags (Umlaute unter dem Grundbuchstaben). */

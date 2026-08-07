@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const dynamic = "force-dynamic";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-const GLOSSAR_TYPEN: GlossarTyp[] = ["begriff", "anforderung", "praxisfrage"];
+const BASIS_TYPEN: GlossarTyp[] = ["begriff", "anforderung", "praxisfrage"];
 const VERPACKUNGSTYP_KEYS = [
   "verkauf",
   "umverpackung",
@@ -59,7 +59,13 @@ export default async function GlossarPage({
   const tLabels = await getTranslations("Labels");
 
   const q = params.q?.trim() ?? "";
-  const typ = GLOSSAR_TYPEN.find((wert) => wert === params.typ);
+  const { eintraege, hatLemmata } = await ladeGlossar();
+  // „Verpackungen & Materialien“ erscheint erst, wenn glossar_lemmata
+  // Inhalte liefert (fail-soft, Tabelle kommt mit Maltes Import)
+  const glossarTypen: GlossarTyp[] = hatLemmata
+    ? [...BASIS_TYPEN, "verpackung_material"]
+    : BASIS_TYPEN;
+  const typ = glossarTypen.find((wert) => wert === params.typ);
   const art =
     params.art && VERPACKUNGSTYP_KEYS.includes(params.art) ? params.art : "";
   const buchstabe =
@@ -67,7 +73,6 @@ export default async function GlossarPage({
       ? params.b
       : "";
 
-  const { eintraege } = await ladeGlossar();
 
   // Verpackungsart-Optionen aus den tatsächlich vorhandenen Daten
   const artOptionen = VERPACKUNGSTYP_KEYS.filter((wert) =>
@@ -195,7 +200,7 @@ export default async function GlossarPage({
             className="rounded border border-line-strong bg-canvas px-3 py-3 text-body text-ink focus:border-ink focus:outline-none"
           >
             <option value="">{t("alleTypen")}</option>
-            {GLOSSAR_TYPEN.map((wert) => (
+            {glossarTypen.map((wert) => (
               <option key={wert} value={wert}>
                 {t(`typFilter.${wert}`)}
               </option>

@@ -497,14 +497,28 @@
     "spalteStatus": "Status & Rechtsstand",
     "keineAnforderungen": "Aktuell sind keine freigegebenen Anforderungen verfügbar.",
     "rechtsstandChip": "Stand {datum}",
-    "rechtsstandTitle": "Rechtsstand"
+    "rechtsstandTitle": "Rechtsstand",
+    "suchLabel": "Search requirements",
+    "suchPlaceholderAnforderungen": "Search title, legal source or keyword …",
+    "filterKategorieLabel": "Category",
+    "filterStatusLabel": "Application status",
+    "alleKategorien": "All categories",
+    "alleStatus": "All statuses",
+    "sortLabel": "Sort by",
+    "sortNummer": "Number",
+    "sortGiltAb": "Applies from",
+    "sortKategorie": "Category",
+    "keineTrefferAnforderungen": "No requirements match your selection."
   },
   "Auslegungen": {
     "suchLabel": "Auslegungen durchsuchen",
     "suchPlaceholder": "Frage oder Stichwort suchen …",
     "keineTreffer": "Keine Auslegungen zu „{query}“ gefunden.",
     "keineFreigegeben": "Aktuell sind keine freigegebenen Auslegungen verfügbar.",
-    "standZeile": "Stand {datum}"
+    "standZeile": "Stand {datum}",
+    "intro": "Typical practical questions from the packaging world – answered by our editorial team, with exact legal references and legally verified. Not an official FAQ of the EU Commission; their interpretations are included and marked as such.",
+    "kategorieLabel": "Category",
+    "alleKategorien": "All categories"
   },
   "Anforderung": {
     "zurueck": "Zurück zur Übersicht",
@@ -533,12 +547,14 @@
     "typFilter": {
       "begriff": "Begriff/Rolle",
       "anforderung": "Anforderung",
-      "praxisfrage": "Praxisfrage"
+      "praxisfrage": "Praxisfrage",
+      "verpackung_material": "Packaging & materials"
     },
     "typBadge": {
       "begriff": "Begriff",
       "anforderung": "Anforderung",
-      "praxisfrage": "Praxisfrage"
+      "praxisfrage": "Praxisfrage",
+      "verpackung_material": "Packaging & material"
     },
     "artFilterLabel": "Nach Verpackungsart filtern",
     "alleVerpackungsarten": "Alle Verpackungsarten",
