@@ -147,6 +147,73 @@ export function stepKey(step: WizardStep): string {
   return step.art;
 }
 
+/**
+ * Fragenfolge für GENAU EINE Produktlinie (F05 ff., ohne F04) – die Basis
+ * sowohl des Onboardings als auch des Mini-Wizards der Produktlinien-
+ * Verwaltung. Bedingungen sehen Unternehmens- UND Linien-Antworten.
+ */
+export function computeLinienFragen(
+  fragen: WizardFrage[],
+  state: WizardState,
+  linie: number
+): WizardFrage[] {
+  const sortiert = [...fragen].sort((a, b) => a.reihenfolge - b.reihenfolge);
+  const antworten = {
+    ...state.unternehmen,
+    ...(state.linien[String(linie)] ?? {}),
+  };
+  return sortiert.filter(
+    (f) =>
+      f.ebene === "produktlinie" &&
+      f.frage_id !== "F04" &&
+      evalBedingung(f.bedingung_anzeige, antworten)
+  );
+}
+
+/** true, wenn eine Frage für diese Linie beantwortet ist. */
+export function linienFrageBeantwortet(
+  frage: WizardFrage,
+  state: WizardState,
+  linie: number
+): boolean {
+  const antwort =
+    state.linien[String(linie)]?.[frage.ziel_variable.split(";")[0].trim()];
+  if (antwort == null) return false;
+  return Array.isArray(antwort) ? true : antwort !== "";
+}
+
+/** true, wenn alle (aktuell anzuzeigenden) Fragen der Linie beantwortet sind. */
+export function linieVollstaendig(
+  fragen: WizardFrage[],
+  state: WizardState,
+  linie: number
+): boolean {
+  return computeLinienFragen(fragen, state, linie).every((frage) =>
+    linienFrageBeantwortet(frage, state, linie)
+  );
+}
+
+/**
+ * Antwort eines Frage-Schritts aus dem Formular lesen und gegen die
+ * gültigen Options-Schlüssel validieren. null = ungültige Single-Antwort.
+ */
+export function leseAntwort(
+  frage: WizardFrage,
+  formData: FormData
+): Antwort | null {
+  const optionKeys = OPTION_KEYS[frage.frage_id] ?? [];
+  const gueltig = new Set(optionKeys.length ? optionKeys : parseOptionen(frage));
+
+  if (frage.antwort_typ === "multi_select") {
+    return formData
+      .getAll("antwort")
+      .map(String)
+      .filter((w) => gueltig.has(w));
+  }
+  const wert = String(formData.get("antwort") ?? "");
+  return gueltig.has(wert) ? wert : null;
+}
+
 /** Vollständige Schrittfolge aus Fragen + aktuellem Zustand. */
 export function computeSteps(
   fragen: WizardFrage[],
@@ -164,18 +231,9 @@ export function computeSteps(
   const f04 = sortiert.find((f) => f.frage_id === "F04");
   if (f04) steps.push({ art: "frage", frage: f04 });
 
-  const linienFragen = sortiert.filter(
-    (f) => f.ebene === "produktlinie" && f.frage_id !== "F04"
-  );
   state.produktlinien.forEach((_, index) => {
-    const antworten = {
-      ...state.unternehmen,
-      ...(state.linien[String(index)] ?? {}),
-    };
-    for (const frage of linienFragen) {
-      if (evalBedingung(frage.bedingung_anzeige, antworten)) {
-        steps.push({ art: "frage", frage, linie: index });
-      }
+    for (const frage of computeLinienFragen(fragen, state, index)) {
+      steps.push({ art: "frage", frage, linie: index });
     }
   });
 

@@ -6,12 +6,14 @@ import {
   ChatIcon,
   DashboardIcon,
   DocumentIcon,
+  PackageIcon,
   SchoolIcon,
   VideoIcon,
 } from "@/components/icons";
 
 const NAV_ICONS = {
   "/dashboard": DashboardIcon,
+  "/verpackungen": PackageIcon,
   "/dokumente": DocumentIcon,
   "/assistant": ChatIcon,
   "/wissen": SchoolIcon,

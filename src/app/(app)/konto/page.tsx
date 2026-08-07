@@ -197,7 +197,11 @@ export default async function KontoPage({
           </button>
         </form>
         <LegalCardFooter>
-          {t("hinweisOnboardingVor")}{" "}
+          {t("hinweisVerpackungenVor")}{" "}
+          <Link href="/verpackungen" className="underline hover:no-underline">
+            {t("hinweisVerpackungenLink")}
+          </Link>
+          . {t("hinweisOnboardingVor")}{" "}
           <Link href="/onboarding" className="underline hover:no-underline">
             {t("hinweisOnboardingLink")}
           </Link>

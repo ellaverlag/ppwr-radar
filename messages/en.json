@@ -27,7 +27,8 @@
     "auslegungen": "Auslegungen – PPWR Radar",
     "glossar": "Glossar – PPWR Radar",
     "anforderung": "Anforderung – PPWR Radar",
-    "status": "Status analysis"
+    "status": "Status analysis",
+    "verpackungen": "Meine Verpackungen – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -39,6 +40,7 @@
   },
   "Nav": {
     "dashboard": "Dashboard",
+    "verpackungen": "Verpackungen",
     "dokumente": "Meine Dokumente",
     "assistant": "Assistant",
     "wissen": "Wissen",
@@ -490,7 +492,8 @@
     "statusVormerkung": "Noted – applies later",
     "statusAnsehen": "View status list",
     "schritteAlleErledigt": "All applicable requirements are done or in progress – no open step right now.",
-    "schrittZurAnforderung": "View details"
+    "schrittZurAnforderung": "View details",
+    "rollenVerwalten": "Verpackungen verwalten →"
   },
   "Wissen": {
     "titel": "Wissen",
@@ -775,7 +778,7 @@
     "beschreibung": "Your master data, your package and your account settings.",
     "gespeichert": "Master data saved.",
     "speichern": "Save master data",
-    "hinweisOnboardingVor": "To change activities, product lines and packaging, run the",
+    "hinweisOnboardingVor": "Unternehmens-Tätigkeiten ändern Sie über einen erneuten Durchlauf des",
     "hinweisOnboardingLink": "onboarding again",
     "aboTitel": "Your package",
     "aboPaketPpwrReady": "PPWR|ready package",
@@ -793,7 +796,9 @@
     "fehlerBestaetigung": "Please type exactly “LÖSCHEN” to confirm.",
     "fehlerFirmenname": "Please enter your company name.",
     "fehlerLoeschung": "Deletion could not be completed. Please contact support.",
-    "fehlerStripe": "Cancelling the subscription with Stripe failed – the account was not deleted. Please try again."
+    "fehlerStripe": "Cancelling the subscription with Stripe failed – the account was not deleted. Please try again.",
+    "hinweisVerpackungenVor": "Produktlinien und Verpackungen verwalten Sie unter",
+    "hinweisVerpackungenLink": "Meine Verpackungen"
   },
   "Praxisfragen": {
     "editorial": "Questions as they reach us from the packaging industry – answered by the editorial team, with exact legal references, legally verified. Where an answer is based on an interpretation by the EU Commission, this is marked.",
@@ -839,5 +844,65 @@
     "statusLabel": "Processing status for “{titel}”",
     "keineTreffer": "Based on the current data, none of the published requirements apply to your profile.",
     "fussnote": "The mapping follows your roles and packaging types from onboarding. Material-specific requirements are shown as a precaution, since materials are not captured in the profile."
+  },
+  "Verpackungen": {
+    "titel": "Meine Verpackungen",
+    "beschreibung": "Ihre Produktlinien mit erfassten Merkmalen und ermittelten Rollen – hier legen Sie neue an, ändern Angaben und legen Linien still.",
+    "neueLinie": "+ Produktlinie",
+    "keinOnboarding": "Legen Sie zuerst Ihr Profil an – das Onboarding erfasst Ihr Unternehmen und die ersten Produktlinien.",
+    "zumOnboarding": "Zum Onboarding →",
+    "leer": "Noch keine Produktlinien erfasst. Legen Sie Ihre erste Linie an.",
+    "spalteLinie": "Produktlinie",
+    "spalteMerkmale": "Merkmale",
+    "spalteRollen": "Rollen",
+    "spalteStatus": "Status & Aktionen",
+    "lmk": "Lebensmittelkontakt",
+    "materialien": "Materialien: {liste}",
+    "statusAktiv": "Aktiv",
+    "statusStillgelegt": "Stillgelegt",
+    "keineHerleitung": "Noch keine Rollen-Herleitung",
+    "einordnungOffen": "Einordnung offen",
+    "herleitungAnsehen": "Herleitung ansehen →",
+    "bearbeiten": "Angaben bearbeiten",
+    "stilllegen": "Stilllegen",
+    "stilllegenBestaetigung": "Produktlinie „{name}“ stilllegen? Sie verschwindet aus Generator-Auswahl und Status-Analyse; bestehende Dokumente bleiben einsehbar.",
+    "reaktivieren": "Reaktivieren",
+    "loeschen": "Löschen",
+    "loeschenBestaetigung": "Produktlinie „{name}“ endgültig löschen? Die Rollen-Herleitung dieser Linie wird entfernt.",
+    "nichtLoeschbarHinweis": "Linien mit erzeugten Dokumenten lassen sich nur stilllegen – so bleiben die Dokumente nachvollziehbar.",
+    "hinweisStillgelegt": "Stillgelegte Linien erscheinen nicht im Dokumenten-Generator und nicht in der Status-Analyse; ihre Dokumente bleiben einsehbar.",
+    "angefangenText": "„{name}“ ist noch nicht abgeschlossen – die Rollen-Herleitung fehlt.",
+    "fortsetzen": "Fortsetzen →",
+    "verwerfen": "Verwerfen",
+    "verwerfenBestaetigung": "Angefangene Produktlinie „{name}“ verwerfen?",
+    "geloeschtErfolg": "Produktlinie „{name}“ wurde gelöscht.",
+    "fehler": {
+      "dokumente": "Diese Linie hat erzeugte Dokumente und kann nur stillgelegt werden.",
+      "loeschen": "Die Linie konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+      "status": "Der Status konnte nicht geändert werden. Bitte versuchen Sie es erneut.",
+      "limit": "Maximal 20 Produktlinien möglich."
+    },
+    "wizardTitelNeu": "Neue Produktlinie",
+    "wizardTitelBearbeiten": "Produktlinie bearbeiten",
+    "wizardNameLabel": "Name der Produktlinie",
+    "wizardNamePlaceholder": "z. B. Feinkost im Glas",
+    "wizardNameHinweis": "Unternehmensfragen und Stammdaten werden nicht erneut gestellt – es geht nur um diese eine Linie.",
+    "wizardStart": "Fragen beantworten →",
+    "wizardFortschritt": "Frage {aktuell} von {gesamt}",
+    "wizardFehler": {
+      "name": "Bitte geben Sie einen Namen an.",
+      "doppelt": "Eine Produktlinie mit diesem Namen existiert bereits.",
+      "antwort": "Bitte wählen Sie eine Antwort aus.",
+      "engine": "Die Rollen-Auswertung konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support."
+    },
+    "wizardAbschlussTitel": "Alles beisammen",
+    "wizardAbschlussText": "Die Rollen-Engine wertet „{name}“ jetzt regelbasiert aus – mit Herleitung und Fundstellen. Ein bestehendes Ergebnis wird dabei als überholt markiert, nicht gelöscht.",
+    "wizardAbschlussCta": "Rollen jetzt auswerten →",
+    "wizardZurUebersicht": "← Zur Übersicht",
+    "ergebnisTitel": "Rollen für „{name}“",
+    "ergebnisUntertitel": "Basierend auf Ihren Angaben zu dieser Produktlinie.",
+    "ergebnisUpdateHinweis": "Das Rollen-Set dieser Linie hat sich geändert – bestehende Dokumente der Linie tragen jetzt das Update-Flag und können neu erzeugt werden.",
+    "ergebnisZurUebersicht": "Zur Verpackungs-Übersicht",
+    "ergebnisDokument": "Dokument für diese Linie erstellen →"
   }
 }

@@ -106,18 +106,33 @@ export default async function NeuesDokumentPage({
     .select("id")
     .eq("user_id", zugang.user.id)
     .maybeSingle();
+  // Generator-Auswahl: nur aktive Linien (stillgelegte bleiben einsehbar,
+  // bekommen aber keine neuen Dokumente über die Auswahl)
   const { data: verpackungen } = profil
     ? await supabase
         .from("profil_verpackungen")
         .select("id, bezeichnung, produktlinie, verpackungstyp")
         .eq("profil_id", profil.id)
+        .eq("status", "aktiv")
         .order("created_at", { ascending: true })
     : { data: [] };
 
-  const verpackung =
+  let verpackung =
     typ && params.verpackung
       ? (verpackungen ?? []).find((v) => v.id === params.verpackung) ?? null
       : null;
+
+  // Bearbeiten-Modus: das Dokument darf auch zu einer inzwischen
+  // stillgelegten Linie gehören – dann die Verpackung direkt nachladen
+  if (typ && params.verpackung && !verpackung && bearbeitetes && profil) {
+    const { data: einzeln } = await supabase
+      .from("profil_verpackungen")
+      .select("id, bezeichnung, produktlinie, verpackungstyp")
+      .eq("profil_id", profil.id)
+      .eq("id", params.verpackung)
+      .maybeSingle();
+    verpackung = einzeln ?? null;
+  }
 
   // Vorschau rendern (Fehler aus der Erzeugung landen als Query-Param)
   let vorschauHtml: string | null = null;

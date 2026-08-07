@@ -6,20 +6,15 @@ import {
   computeSteps,
   firstOpenStep,
   isAnswered,
-  OPTION_KEYS,
-  parseOptionen,
   parseState,
   stepKey,
   type WizardState,
   type WizardStep,
 } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
-import { ladeBegriffsLemmata } from "@/lib/glossar";
-import {
-  getRollenDefinitionen,
-  getWizardFragen,
-  type WizardFrage,
-} from "@/lib/wissensbasis";
+import { WizardOptionsListe } from "@/components/wizard-optionen";
+import { ladeErklaerungen } from "@/lib/wizard-erklaerungen";
+import { getWizardFragen, type WizardFrage } from "@/lib/wissensbasis";
 import { erforderePaket } from "@/lib/zugang";
 import {
   antwortSpeichern,
@@ -35,72 +30,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export const dynamic = "force-dynamic";
 
 const FEHLER_KEYS = ["produktlinien", "antwort", "firmenname", "engine"] as const;
-
-/**
- * Erklärhilfen je Antwort-Option: Die STRUKTUR (welche Option welchen
- * Begriff erklärt) liegt hier, die TEXTE kommen aus der Datenbank
- * (glossar_lemmata typ=begriff bzw. rollen_definitionen). Optionen ohne
- * Zuordnung bleiben ohne Zweitzeile – nachpflegbar über neue Lemmata.
- */
-const ERKLAERUNGS_QUELLEN: Record<
-  string,
-  Record<string, { art: "lemma"; code: string } | { art: "rolle"; id: string }>
-> = {
-  F05: {
-    verkauf: { art: "lemma", code: "L52" },
-    um: { art: "lemma", code: "L53" },
-    transport: { art: "lemma", code: "L54" },
-    service: { art: "lemma", code: "L51" },
-    ecommerce: { art: "lemma", code: "L61" },
-    primaerproduktion: { art: "lemma", code: "L62" },
-  },
-  F06: {
-    herstellen_lassen: { art: "lemma", code: "L48" },
-    kauft_verpackte_ware: { art: "rolle", id: "vertreiber" },
-    importiert_drittland: { art: "rolle", id: "importeur" },
-    liefert_an_endabnehmer: { art: "rolle", id: "hb_endabnehmer" },
-    lagert_und_versendet_fuer_dritte: {
-      art: "rolle",
-      id: "fulfillment_dienstleister",
-    },
-    liefert_verpackungen_oder_material: { art: "rolle", id: "lieferant" },
-    stellt_verpackung_physisch_her: { art: "lemma", code: "L63" },
-    befuellt_versiegelt: { art: "lemma", code: "L64" },
-    packt_aus: { art: "lemma", code: "L65" },
-  },
-  F07: {
-    eigene: { art: "lemma", code: "L66" },
-    fremde: { art: "lemma", code: "L48" },
-    keine: { art: "lemma", code: "L67" },
-  },
-};
-
-function kuerzeErklaerung(text: string, max = 180): string {
-  const t = text.trim().replace(/\s+/g, " ");
-  if (t.length <= max) return t;
-  const geschnitten = t.slice(0, max);
-  return `${geschnitten.slice(0, geschnitten.lastIndexOf(" "))} …`;
-}
-
-async function ladeErklaerungen(
-  frageId: string
-): Promise<Record<string, string>> {
-  const quellen = ERKLAERUNGS_QUELLEN[frageId];
-  if (!quellen) return {};
-  const [lemmata, rollen] = await Promise.all([
-    ladeBegriffsLemmata(),
-    getRollenDefinitionen().catch(() => []),
-  ]);
-  const ergebnis: Record<string, string> = {};
-  for (const [option, quelle] of Object.entries(quellen)) {
-    const text =
-      quelle.art === "lemma"
-        ? lemmata.find((l) => l.code === quelle.code)?.kurzerklaerung
-        : rollen.find((r) => r.rolle_id === quelle.id)?.definition_kurz;
-    if (text) ergebnis[option] = kuerzeErklaerung(text);
-  }
-  return ergebnis;
-}
 
 type Uebersetzer = Awaited<ReturnType<typeof getTranslations<"Onboarding">>>;
 
@@ -126,54 +55,6 @@ function Fortschritt({
         />
       </div>
     </div>
-  );
-}
-
-function OptionRow({
-  typ,
-  wert,
-  label,
-  checked,
-  erklaerung,
-}: {
-  typ: "radio" | "checkbox";
-  wert: string;
-  label: string;
-  checked: boolean;
-  erklaerung?: string;
-}) {
-  // Fundstellen wie „(Art. 3 Abs. 1 Nr. 5)“ ans Zeilenende in Mono –
-  // der Alltagsbegriff führt, die Fundstelle belegt
-  const m = label.match(/^(.*?)\s*\(((?:Art\.|Nr\.)[^)]*)\)\s*$/);
-  const text = m ? m[1] : label;
-  const fundstelle = m?.[2];
-
-  return (
-    <label className="flex cursor-pointer items-start gap-4 rounded border border-line-strong bg-canvas px-5 py-4 transition-colors hover:border-ink-muted has-[:checked]:border-primary has-[:checked]:bg-primary/5">
-      <input
-        type={typ}
-        name="antwort"
-        value={wert}
-        defaultChecked={checked}
-        required={typ === "radio"}
-        className="mt-1.5 h-4 w-4 accent-[#006950]"
-      />
-      <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
-          <span className="text-body font-semibold text-ink">{text}</span>
-          {fundstelle && (
-            <span className="shrink-0 font-mono text-mono-sm text-ink-muted">
-              {fundstelle}
-            </span>
-          )}
-        </span>
-        {erklaerung && (
-          <span className="mt-1 block text-body-sm leading-snug text-ink-muted">
-            {erklaerung}
-          </span>
-        )}
-      </span>
-    </label>
   );
 }
 
@@ -203,9 +84,6 @@ function FrageSchritt({
       : frage.ebene === "unternehmen"
         ? state.unternehmen[zielVariable]
         : state.linien[String(linie ?? 0)]?.[zielVariable];
-
-  const optionen = parseOptionen(frage);
-  const keys = OPTION_KEYS[frage.frage_id] ?? optionen;
 
   return (
     <form action={antwortSpeichern}>
@@ -251,22 +129,11 @@ function FrageSchritt({
             />
           </>
         ) : (
-          optionen.map((label, i) => {
-            const wert = keys[i] ?? label;
-            const checked = Array.isArray(bisherige)
-              ? bisherige.includes(wert)
-              : bisherige === wert;
-            return (
-              <OptionRow
-                key={wert}
-                typ={frage.antwort_typ === "multi_select" ? "checkbox" : "radio"}
-                wert={wert}
-                label={label}
-                checked={checked}
-                erklaerung={erklaerungen[wert]}
-              />
-            );
-          })
+          <WizardOptionsListe
+            frage={frage}
+            bisherige={Array.isArray(bisherige) || typeof bisherige === "string" ? bisherige : undefined}
+            erklaerungen={erklaerungen}
+          />
         )}
       </div>
 

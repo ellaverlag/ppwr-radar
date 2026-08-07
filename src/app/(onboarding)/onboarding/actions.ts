@@ -2,12 +2,7 @@
 
 import { redirect } from "next/navigation";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
-import {
-  OPTION_KEYS,
-  parseOptionen,
-  parseState,
-  type WizardState,
-} from "@/lib/onboarding";
+import { leseAntwort, parseState, type WizardState } from "@/lib/onboarding";
 import { werteAusUndSpeichere } from "@/lib/rollen-service";
 import { createClient } from "@/lib/supabase/server";
 import { getWizardFragen } from "@/lib/wissensbasis";
@@ -84,21 +79,9 @@ export async function antwortSpeichern(formData: FormData) {
     }
   } else {
     const zielVariable = frage.ziel_variable.split(";")[0].trim();
-    const optionKeys = OPTION_KEYS[frage.frage_id] ?? [];
-    const gueltig = new Set(optionKeys.length ? optionKeys : parseOptionen(frage));
-
-    let antwort: string | string[];
-    if (frage.antwort_typ === "multi_select") {
-      antwort = formData
-        .getAll("antwort")
-        .map(String)
-        .filter((w) => gueltig.has(w));
-    } else {
-      const wert = String(formData.get("antwort") ?? "");
-      if (!gueltig.has(wert)) {
-        redirect(`/onboarding?fehler=antwort`);
-      }
-      antwort = wert;
+    const antwort = leseAntwort(frage, formData);
+    if (antwort == null) {
+      redirect(`/onboarding?fehler=antwort`);
     }
 
     if (frage.ebene === "unternehmen") {

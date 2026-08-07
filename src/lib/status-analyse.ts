@@ -159,7 +159,9 @@ export function sortiereNachDringlichkeit(
 
 export function baueKontext(
   rollenSets: RollenSet[],
-  taetigkeiten: unknown
+  taetigkeiten: unknown,
+  /** Namen der aktiven Produktlinien; undefined = alle berücksichtigen. */
+  aktiveNamen?: Set<string>
 ): ProfilKontext {
   const rollen = new Set<string>();
   for (const set of rollenSets) {
@@ -169,7 +171,9 @@ export function baueKontext(
   const state = parseState(taetigkeiten);
   const verpackungsarten = new Set<string>();
   let lebensmittelkontakt = false;
-  for (const linie of Object.values(state.linien)) {
+  for (const [key, linie] of Object.entries(state.linien)) {
+    const name = state.produktlinien[Number(key)];
+    if (aktiveNamen && (name == null || !aktiveNamen.has(name))) continue;
     const arten: Antwort | undefined = linie.verpackungsart;
     for (const art of Array.isArray(arten) ? arten : arten ? [arten] : []) {
       verpackungsarten.add(art);
@@ -203,22 +207,41 @@ export async function ladeStatusAnalyse(): Promise<StatusAnalyse | null> {
     .maybeSingle();
   if (!profil?.onboarding_abgeschlossen) return null;
 
-  const [{ data: ergebnisse }, { data: statusZeilen }, anforderungen] =
-    await Promise.all([
-      supabase
-        .from("rollen_ergebnisse")
-        .select("rollen_set")
-        .eq("profil_id", profil.id),
-      supabase
-        .from("anforderungs_status")
-        .select("anforderung_nr, status, notiz")
-        .eq("profil_id", profil.id),
-      getAnforderungen(),
-    ]);
+  const [
+    { data: ergebnisse },
+    { data: statusZeilen },
+    { data: verpackungen },
+    anforderungen,
+  ] = await Promise.all([
+    supabase
+      .from("rollen_ergebnisse")
+      .select("produktlinie, rollen_set")
+      .eq("profil_id", profil.id)
+      .eq("aktuell", true),
+    supabase
+      .from("anforderungs_status")
+      .select("anforderung_nr, status, notiz")
+      .eq("profil_id", profil.id),
+    supabase
+      .from("profil_verpackungen")
+      .select("bezeichnung, status")
+      .eq("profil_id", profil.id),
+    getAnforderungen(),
+  ]);
+
+  // Nur aktive Linien speisen die Analyse; stillgelegte fallen heraus.
+  const aktiveNamen = new Set(
+    (verpackungen ?? [])
+      .filter((zeile) => zeile.status !== "stillgelegt")
+      .map((zeile) => zeile.bezeichnung as string)
+  );
 
   const kontext = baueKontext(
-    (ergebnisse ?? []).map((zeile) => zeile.rollen_set as RollenSet),
-    profil.taetigkeiten
+    (ergebnisse ?? [])
+      .filter((zeile) => aktiveNamen.has(zeile.produktlinie as string))
+      .map((zeile) => zeile.rollen_set as RollenSet),
+    profil.taetigkeiten,
+    aktiveNamen
   );
 
   const statusNachNr = new Map<number, { status: Bearbeitungsstatus; notiz: string | null }>(

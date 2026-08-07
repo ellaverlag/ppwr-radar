@@ -72,12 +72,28 @@ export default async function DashboardPage({
 
   let ergebnisse: ErgebnisZeile[] = [];
   if (profil?.onboarding_abgeschlossen) {
-    const { data } = await supabase
-      .from("rollen_ergebnisse")
-      .select("id, produktlinie, rollen_set")
-      .eq("profil_id", profil.id)
-      .order("erstellt_am", { ascending: true });
-    ergebnisse = (data ?? []) as ErgebnisZeile[];
+    // Rollen-Karte zeigt alle AKTIVEN Linien (aktuelle Ergebnisse);
+    // stillgelegte Linien fallen heraus.
+    const [{ data }, { data: verpackungen }] = await Promise.all([
+      supabase
+        .from("rollen_ergebnisse")
+        .select("id, produktlinie, rollen_set")
+        .eq("profil_id", profil.id)
+        .eq("aktuell", true)
+        .order("erstellt_am", { ascending: true }),
+      supabase
+        .from("profil_verpackungen")
+        .select("bezeichnung, status")
+        .eq("profil_id", profil.id),
+    ]);
+    const aktiveNamen = new Set(
+      (verpackungen ?? [])
+        .filter((zeile) => zeile.status !== "stillgelegt")
+        .map((zeile) => zeile.bezeichnung as string)
+    );
+    ergebnisse = ((data ?? []) as ErgebnisZeile[]).filter((zeile) =>
+      aktiveNamen.has(zeile.produktlinie)
+    );
   }
   const onboardingFertig = Boolean(profil?.onboarding_abgeschlossen);
   const analyse = onboardingFertig ? await ladeStatusAnalyse() : null;
@@ -288,12 +304,20 @@ export default async function DashboardPage({
                     </div>
                   </div>
                 ))}
-                <Link
-                  href="/onboarding/ergebnis"
-                  className="inline-block text-body-sm font-medium text-legal hover:underline"
-                >
-                  {t("herleitungAnsehen")}
-                </Link>
+                <p className="flex flex-wrap gap-x-5 gap-y-1">
+                  <Link
+                    href="/onboarding/ergebnis"
+                    className="inline-block text-body-sm font-medium text-legal hover:underline"
+                  >
+                    {t("herleitungAnsehen")}
+                  </Link>
+                  <Link
+                    href="/verpackungen"
+                    className="inline-block text-body-sm font-medium text-legal hover:underline"
+                  >
+                    {t("rollenVerwalten")}
+                  </Link>
+                </p>
               </div>
             )}
           </div>

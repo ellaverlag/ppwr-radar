@@ -59,6 +59,7 @@ export default async function AppLayout({
 
   const navItems: NavItem[] = [
     { href: "/dashboard", label: tNav("dashboard") },
+    { href: "/verpackungen", label: tNav("verpackungen") },
     { href: "/dokumente", label: tNav("dokumente") },
     { href: "/assistant", label: tNav("assistant") },
     { href: "/wissen", label: tNav("wissen") },

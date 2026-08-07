@@ -149,6 +149,65 @@ export function linienAusState(state: WizardState): LinienKontext[] {
 // Auswerten + Persistieren
 // ---------------------------------------------------------------------------
 
+function ermittleRechtsstand(regeln: RegelRow[]): string {
+  return (
+    regeln
+      .map((r) => r.rechtsstand)
+      .filter(Boolean)
+      .sort()
+      .at(-1) ?? new Date().toISOString().slice(0, 10)
+  );
+}
+
+function erfordereSchreibClient(): SupabaseClient {
+  const schreibClient = privilegierterClient();
+  if (!schreibClient) {
+    throw new Error(
+      "Rollen-Ergebnisse können ohne SUPABASE_SERVICE_ROLE_KEY nicht gespeichert werden."
+    );
+  }
+  return schreibClient;
+}
+
+/**
+ * Ergebnisse schreiben mit Versionierung: alte Zeilen der betroffenen
+ * Produktlinien werden nicht gelöscht, sondern als überholt markiert
+ * (aktuell = false) – bestehende Dokumente behalten ihren Erstellungs-Bezug.
+ */
+async function speichereErgebnisse(
+  schreibClient: SupabaseClient,
+  profilId: string,
+  ergebnisse: LinienErgebnis[],
+  rechtsstand: string
+): Promise<void> {
+  const namen = ergebnisse.map((e) => e.produktlinie);
+  const { error: updError } = await schreibClient
+    .from("rollen_ergebnisse")
+    .update({ aktuell: false })
+    .eq("profil_id", profilId)
+    .in("produktlinie", namen)
+    .eq("aktuell", true);
+  if (updError) {
+    throw new Error(
+      `Alte Rollen-Ergebnisse nicht markierbar: ${updError.message}`
+    );
+  }
+
+  const { error: insError } = await schreibClient.from("rollen_ergebnisse").insert(
+    ergebnisse.map((e) => ({
+      profil_id: profilId,
+      produktlinie: e.produktlinie,
+      rollen_set: e.rollen_set,
+      herleitung: e.herleitung,
+      rechtsstand,
+      engine_version: ENGINE_VERSION,
+    }))
+  );
+  if (insError) {
+    throw new Error(`Rollen-Ergebnisse nicht speicherbar: ${insError.message}`);
+  }
+}
+
 export async function werteAusUndSpeichere(
   profilId: string,
   state: WizardState
@@ -166,41 +225,89 @@ export async function werteAusUndSpeichere(
     linienAusState(state)
   );
 
-  const rechtsstand =
-    regeln
-      .map((r) => r.rechtsstand)
-      .filter(Boolean)
-      .sort()
-      .at(-1) ?? new Date().toISOString().slice(0, 10);
+  const schreibClient = erfordereSchreibClient();
 
-  const schreibClient = privilegierterClient();
-  if (!schreibClient) {
+  // Vollständiger Durchlauf: auch Ergebnisse entfallener Linien überholen
+  const { error: altError } = await schreibClient
+    .from("rollen_ergebnisse")
+    .update({ aktuell: false })
+    .eq("profil_id", profilId)
+    .eq("aktuell", true);
+  if (altError) {
     throw new Error(
-      "Rollen-Ergebnisse können ohne SUPABASE_SERVICE_ROLE_KEY nicht gespeichert werden."
+      `Alte Rollen-Ergebnisse nicht markierbar: ${altError.message}`
     );
   }
 
-  const { error: delError } = await schreibClient
+  await speichereErgebnisse(
+    schreibClient,
+    profilId,
+    ergebnisse,
+    ermittleRechtsstand(regeln)
+  );
+  return ergebnisse;
+}
+
+/**
+ * Engine-Lauf für GENAU EINE Produktlinie (Mini-Wizard der Verpackungs-
+ * Verwaltung). Liefert zusätzlich das vorherige Rollen-Set der Linie,
+ * damit der Aufrufer betroffene Dokumente mit dem Update-Flag versehen
+ * kann. Gleiche Engine, gleiche Kontext-Ableitung wie das Onboarding.
+ */
+export async function werteLinieAusUndSpeichere(
+  profilId: string,
+  state: WizardState,
+  linie: number
+): Promise<{ ergebnis: LinienErgebnis; vorherigeRollen: string[] | null }> {
+  const regeln = await ladeRegeln();
+  if (regeln.length === 0) {
+    throw new Error(
+      "Keine Rollen-Regeln verfügbar (Service-Role-Key fehlt oder Regeln nicht freigegeben)."
+    );
+  }
+
+  const kontext = linienAusState(state)[linie];
+  if (!kontext) {
+    throw new Error(`Produktlinie ${linie} existiert nicht im Profil.`);
+  }
+
+  const [ergebnis] = evaluiereAlle(regeln, unternehmenAusState(state), [
+    kontext,
+  ]);
+
+  const schreibClient = erfordereSchreibClient();
+  const { data: vorher } = await schreibClient
+    .from("rollen_ergebnisse")
+    .select("rollen_set")
+    .eq("profil_id", profilId)
+    .eq("produktlinie", kontext.name)
+    .eq("aktuell", true)
+    .maybeSingle();
+  const vorherigeRollen = vorher
+    ? ((vorher.rollen_set as { rollen?: string[] })?.rollen ?? [])
+    : null;
+
+  await speichereErgebnisse(
+    schreibClient,
+    profilId,
+    [ergebnis],
+    ermittleRechtsstand(regeln)
+  );
+  return { ergebnis, vorherigeRollen };
+}
+
+/** Harte Löschung der Ergebnisse einer Linie (nur für Linien ohne Dokumente). */
+export async function loescheLinienErgebnisse(
+  profilId: string,
+  produktlinie: string
+): Promise<void> {
+  const schreibClient = erfordereSchreibClient();
+  const { error } = await schreibClient
     .from("rollen_ergebnisse")
     .delete()
-    .eq("profil_id", profilId);
-  if (delError) {
-    throw new Error(`Alte Rollen-Ergebnisse nicht löschbar: ${delError.message}`);
+    .eq("profil_id", profilId)
+    .eq("produktlinie", produktlinie);
+  if (error) {
+    throw new Error(`Rollen-Ergebnisse nicht löschbar: ${error.message}`);
   }
-
-  const { error: insError } = await schreibClient.from("rollen_ergebnisse").insert(
-    ergebnisse.map((e) => ({
-      profil_id: profilId,
-      produktlinie: e.produktlinie,
-      rollen_set: e.rollen_set,
-      herleitung: e.herleitung,
-      rechtsstand,
-      engine_version: ENGINE_VERSION,
-    }))
-  );
-  if (insError) {
-    throw new Error(`Rollen-Ergebnisse nicht speicherbar: ${insError.message}`);
-  }
-
-  return ergebnisse;
 }
