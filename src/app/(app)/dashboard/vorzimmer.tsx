@@ -68,11 +68,7 @@ export async function Vorzimmer({
 
   return (
     <>
-      <header className="mb-8">
-        <h1 className="text-display-sm text-ink lg:text-display">
-          {t("titel")}
-        </h1>
-      </header>
+      <h1 className="sr-only">{t("titel")}</h1>
 
       {zeigeGesperrtHinweis && (
         <p className="mb-6 flex items-center gap-2 rounded border border-line-strong bg-surface px-4 py-3 text-body-sm text-ink-muted">

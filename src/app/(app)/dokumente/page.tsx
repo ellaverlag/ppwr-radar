@@ -29,7 +29,7 @@ export default async function DokumentePage() {
 
   return (
     <>
-      <PageHeader title={t("titel")} description={t("beschreibung")} />
+      <PageHeader title={t("titel")} description={t("beschreibung")} titelVersteckt />
 
       <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex gap-8 border-b border-line">

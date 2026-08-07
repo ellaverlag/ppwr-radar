@@ -164,6 +164,7 @@ export default async function GlossarPage({
       <PageHeader
         title={tWissen("titel")}
         description={tWissen("beschreibungGlossar")}
+        titelVersteckt
       />
       <WissenTabsNav />
 

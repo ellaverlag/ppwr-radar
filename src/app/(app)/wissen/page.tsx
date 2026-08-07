@@ -31,6 +31,7 @@ export default async function WissenPage() {
       <PageHeader
         title={t("titel")}
         description={t("beschreibungAnforderungen")}
+        titelVersteckt
       />
       <WissenTabsNav />
 

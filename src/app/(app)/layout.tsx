@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { BrandLink } from "@/components/brand";
 import { LogoutIcon, PersonIcon } from "@/components/icons";
 import { NavLinks, type NavItem } from "@/components/nav-links";
+import { TopbarTitel } from "@/components/topbar-titel";
 import { isPreviewMode } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
 
@@ -78,7 +79,7 @@ export default async function AppLayout({
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Topbar (Desktop) */}
           <header className="hidden h-16 items-center justify-between border-b border-line bg-surface px-6 md:flex">
-            <span className="text-headline text-ink">{t("topbarTitel")}</span>
+            <TopbarTitel items={navItems} className="text-headline text-ink" />
             <div className="flex items-center gap-4">
               <span
                 className="hidden max-w-64 truncate rounded border border-line-strong px-3 py-1 text-body-sm text-ink-muted lg:inline-block"
@@ -95,7 +96,13 @@ export default async function AppLayout({
           {/* Topbar + Navigation (Mobil) */}
           <header className="border-b border-line bg-surface md:hidden">
             <div className="flex items-center justify-between px-4 py-3">
-              <BrandLink href="/dashboard" width={129} byline={false} priority />
+              <span className="flex min-w-0 items-center gap-3">
+                <BrandLink href="/dashboard" width={129} byline={false} priority />
+                <TopbarTitel
+                  items={navItems}
+                  className="truncate text-body-sm font-semibold text-ink-muted"
+                />
+              </span>
               <SignoutButton label={tCommon("abmelden")} />
             </div>
             <div className="overflow-x-auto px-2 pb-1">

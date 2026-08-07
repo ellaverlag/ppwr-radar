@@ -14,7 +14,7 @@ export default async function WebinarePage() {
 
   return (
     <>
-      <PageHeader title={t("titel")} description={t("beschreibung")} />
+      <PageHeader title={t("titel")} description={t("beschreibung")} titelVersteckt />
       <LegalCard>
         <div className="flex min-h-64 flex-col items-center justify-center gap-4 p-10 text-center">
           <VideoIcon className="h-8 w-8 text-ink-muted" />

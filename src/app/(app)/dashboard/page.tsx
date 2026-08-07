@@ -96,10 +96,8 @@ export default async function DashboardPage({
 
   return (
     <>
-      <header className="mb-12">
-        <h1 className="mb-4 text-display-sm text-ink lg:text-display">
-          {t("titel")}
-        </h1>
+      <header className="mb-10">
+        <h1 className="sr-only">{t("titel")}</h1>
         <div className="flex flex-wrap gap-4">
           {!onboardingFertig ? (
             <>

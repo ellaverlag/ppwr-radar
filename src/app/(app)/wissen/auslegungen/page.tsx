@@ -32,6 +32,7 @@ export default async function AuslegungenPage({
       <PageHeader
         title={tWissen("titel")}
         description={tWissen("beschreibungAuslegungen")}
+        titelVersteckt
       />
       <WissenTabsNav />
 
