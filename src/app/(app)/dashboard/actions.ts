@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getStripe } from "@/lib/stripe";
-import { SITE_URL } from "@/lib/site";
+import { basisUrl } from "@/lib/site-url";
 import { pruefeZugang } from "@/lib/zugang";
 
 /** Checkout für das PPWR|ready-Paket: 290 €/Jahr + 200 € Launch-Zusatz. */
@@ -18,6 +18,7 @@ export async function checkoutStarten() {
     redirect("/dashboard?checkout=fehler");
   }
 
+  const basis = await basisUrl();
   let url: string | null = null;
   try {
     const stripe = getStripe();
@@ -39,8 +40,8 @@ export async function checkoutStarten() {
       // Hinweis: statement_descriptor_suffix unterstützt Stripe nur im
       // mode=payment (payment_intent_data) – im Subscription-Modus steuert
       // das die Rechnungs-/Kontoeinstellung im Stripe-Dashboard.
-      success_url: `${SITE_URL}/onboarding?willkommen=1`,
-      cancel_url: `${SITE_URL}/dashboard`,
+      success_url: `${basis}/onboarding?willkommen=1`,
+      cancel_url: `${basis}/dashboard`,
       locale: "de",
     });
     url = session.url;

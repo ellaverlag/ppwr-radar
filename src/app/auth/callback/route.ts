@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { EmailOtpType } from "@supabase/supabase-js";
+import { basisUrl } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -16,7 +17,10 @@ function sicheresZiel(next: string | null): string {
 }
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  // Nicht request.url verwenden: hinter dem Railway-Proxy zeigt die auf
+  // localhost:{PORT} – die Basis-URL kommt zentral aus lib/site-url.
+  const origin = await basisUrl();
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;

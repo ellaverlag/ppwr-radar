@@ -1,8 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { SITE_URL } from "@/lib/site";
+import { basisUrl } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
 
 /** Nur relative Pfade als Login-Ziel zulassen; "dashboard" → "/dashboard". */
@@ -22,8 +21,7 @@ export async function loginWithMagicLink(formData: FormData) {
     redirect("/login?error=missing_email");
   }
 
-  const headerList = await headers();
-  const origin = headerList.get("origin") ?? SITE_URL;
+  const origin = await basisUrl();
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
