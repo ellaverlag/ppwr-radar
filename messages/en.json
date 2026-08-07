@@ -620,7 +620,7 @@
     "neuTitel": "New document",
     "schrittTyp": "1. Choose document type",
     "schrittVerpackung": "2. Choose packaging / product line",
-    "schrittVorschau": "3. Review preview",
+    "schrittVorschau": "4. Check preview and generate",
     "keineVorlagen": "No approved templates are available yet.",
     "keineVorlagenAdmin": "As an admin you can import the template masters (v0.1, draft) into the database now:",
     "importCta": "Import templates",
@@ -637,7 +637,18 @@
     "erstellenLaeuft": "Generating documents …",
     "fehlerRender": "The template could not be filled: {detail}",
     "fehlerErzeugung": "The document could not be created. Please try again.",
-    "zurueck": "← Back"
+    "zurueck": "← Back",
+    "schrittAngaben": "3. Complete your details",
+    "angabenHinweis": "All fields are optional – empty fields remain as visible gaps in the document and can be completed later in Word. Signature lines intentionally stay blank.",
+    "vorschauAktualisieren": "Update preview",
+    "neuErzeugen": "Regenerate {nr}",
+    "bearbeitenHinweis": "You are editing {nr} (currently version {version}) – regenerating keeps the number, increments the version and replaces the files.",
+    "bearbeiten": "Edit details",
+    "loeschen": "Delete",
+    "loeschenBestaetigung": "Permanently delete document {nr}? The Word and PDF files will be removed; the number will not be reissued.",
+    "aktualisiertErfolg": "{nr} has been regenerated (version {version}).",
+    "geloeschtErfolg": "Document {nr} has been deleted.",
+    "fehlerLoeschen": "The document could not be deleted. Please try again."
   },
   "Webinare": {
     "titel": "Webinare",

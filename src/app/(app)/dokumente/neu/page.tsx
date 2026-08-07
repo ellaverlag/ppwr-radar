@@ -7,15 +7,24 @@ import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import {
+  NUTZER_FELDER,
+  type NutzerEingaben,
+} from "@/lib/dokumente/nutzer-felder";
+import {
   ladeVerfuegbareTemplates,
   rendereVorschau,
   TEMPLATE_TYPEN,
   type TemplateKey,
+  type VorschauDaten,
 } from "@/lib/dokumente/service";
 import { RendererFehler } from "@/lib/dokumente/renderer";
 import { createClient } from "@/lib/supabase/server";
 import { erforderePaket, istAdmin } from "@/lib/zugang";
-import { dokumentErstellen, templatesImportieren } from "../actions";
+import {
+  dokumentErstellen,
+  templatesImportieren,
+  vorschauAktualisieren,
+} from "../actions";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Dokumente");
@@ -44,27 +53,54 @@ function markiere(html: string): string {
 export default async function NeuesDokumentPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    typ?: string;
-    verpackung?: string;
-    fehler?: string;
-    detail?: string;
-    importiert?: string;
-  }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const zugang = await erforderePaket();
-  const params = await searchParams;
+  const roh = await searchParams;
+  const params = Object.fromEntries(
+    Object.entries(roh).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
+  ) as Record<string, string | undefined>;
   const t = await getTranslations("Dokumente");
 
   const templates = await ladeVerfuegbareTemplates();
   const admin = istAdmin(zugang.user.email);
+
+  const supabase = await createClient();
+
+  // Bearbeiten-Modus: Typ/Verpackung/Eingaben kommen aus dem Dokument
+  const { data: bearbeitetes } = params.dokument
+    ? await supabase
+        .from("dokumente")
+        .select("id, typ, verpackung_id, doc_nummer, nutzer_eingaben, version")
+        .eq("id", params.dokument)
+        .eq("user_id", zugang.user.id)
+        .maybeSingle()
+    : { data: null };
+  if (bearbeitetes) {
+    const key = (Object.entries(TEMPLATE_TYPEN).find(
+      ([, wert]) => wert.dbTyp === bearbeitetes.typ
+    )?.[0] ?? null) as TemplateKey | null;
+    if (key) {
+      params.typ = key;
+      params.verpackung = bearbeitetes.verpackung_id as string;
+    }
+  }
 
   const typ =
     params.typ && params.typ in TEMPLATE_TYPEN && templates[params.typ as TemplateKey]
       ? (params.typ as TemplateKey)
       : null;
 
-  const supabase = await createClient();
+  // Eingaben: gespeicherte Werte des Dokuments, überschrieben durch f_*-Params
+  const eingaben: NutzerEingaben = {};
+  if (typ) {
+    const gespeichert =
+      (bearbeitetes?.nutzer_eingaben as NutzerEingaben | null) ?? {};
+    for (const feld of NUTZER_FELDER[typ]) {
+      const wert = params[`f_${feld.key}`] ?? gespeichert[feld.key];
+      if (wert && wert.trim()) eingaben[feld.key] = wert.trim();
+    }
+  }
   const { data: profil } = await supabase
     .from("profile")
     .select("id")
@@ -88,10 +124,17 @@ export default async function NeuesDokumentPage({
   let vorschauHinweis: string | null = null;
   let vorschauStatus: { version: string; rechtsstand: string; entwurf: boolean } | null =
     null;
+  let formularFelder: VorschauDaten["formularFelder"] = [];
   let renderFehler: string | null = null;
   if (typ && verpackung) {
     try {
-      const vorschau = await rendereVorschau(zugang.user.id, typ, verpackung.id);
+      const vorschau = await rendereVorschau(
+        zugang.user.id,
+        typ,
+        verpackung.id,
+        eingaben,
+        bearbeitetes?.doc_nummer ?? undefined
+      );
       if (vorschau) {
         vorschauHtml = markiere(await marked.parse(vorschau.markdown));
         vorschauHinweis = vorschau.hinweis;
@@ -100,6 +143,7 @@ export default async function NeuesDokumentPage({
           rechtsstand: vorschau.templateRechtsstand,
           entwurf: vorschau.reviewStatus !== "cattwyk_freigegeben",
         };
+        formularFelder = vorschau.formularFelder;
       }
     } catch (e) {
       renderFehler =
@@ -117,6 +161,15 @@ export default async function NeuesDokumentPage({
   return (
     <>
       <PageHeader title={t("neuTitel")} description={t("beschreibung")} />
+
+      {bearbeitetes && (
+        <p className="mb-6 rounded border border-legal-tint bg-legal-tint/50 px-4 py-3 text-body-sm text-ink">
+          {t("bearbeitenHinweis", {
+            nr: bearbeitetes.doc_nummer ?? "",
+            version: bearbeitetes.version ?? 1,
+          })}
+        </p>
+      )}
 
       {params.importiert === "1" && (
         <p className="mb-6 rounded border border-primary bg-primary/5 px-4 py-3 text-body-sm text-ink">
@@ -223,9 +276,65 @@ export default async function NeuesDokumentPage({
         </section>
       )}
 
-      {/* Schritt 3: Vorschau + Erstellen */}
+      {/* Schritt 3+4: Angaben vervollständigen, Vorschau, Erstellen */}
       {typ && verpackung && (
-        <section>
+        <form action={dokumentErstellen}>
+          <input type="hidden" name="typ" value={typ} />
+          <input type="hidden" name="verpackung" value={verpackung.id} />
+          {bearbeitetes && (
+            <input type="hidden" name="dokument" value={bearbeitetes.id} />
+          )}
+
+          {formularFelder.length > 0 && (
+            <section className="mb-10">
+              <h2 className="mb-2 text-label uppercase text-ink-muted">
+                {t("schrittAngaben")}
+              </h2>
+              <p className="mb-4 text-body-sm text-ink-muted">
+                {t("angabenHinweis")}
+              </p>
+              <div className="grid grid-cols-1 gap-5 rounded border border-line bg-canvas p-6 md:grid-cols-2">
+                {formularFelder.map((feld) => (
+                  <div
+                    key={feld.key}
+                    className={feld.art === "mehrzeilig" ? "md:col-span-2" : ""}
+                  >
+                    <label
+                      htmlFor={`f_${feld.key}`}
+                      className="block text-label uppercase text-ink-muted"
+                    >
+                      {feld.label}
+                    </label>
+                    {feld.art === "mehrzeilig" ? (
+                      <textarea
+                        id={`f_${feld.key}`}
+                        name={`f_${feld.key}`}
+                        rows={3}
+                        defaultValue={eingaben[feld.key] ?? ""}
+                        className="mt-1.5 w-full rounded border border-line-strong bg-canvas px-3 py-2.5 text-body text-ink focus:border-ink focus:outline-none"
+                      />
+                    ) : (
+                      <input
+                        id={`f_${feld.key}`}
+                        name={`f_${feld.key}`}
+                        type={feld.art === "datum" ? "date" : "text"}
+                        defaultValue={eingaben[feld.key] ?? ""}
+                        className="mt-1.5 w-full rounded border border-line-strong bg-canvas px-3 py-2.5 text-body text-ink focus:border-ink focus:outline-none"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                formAction={vorschauAktualisieren}
+                className="mt-4 rounded border border-ink px-5 py-2.5 text-label uppercase tracking-widest text-ink transition-colors hover:bg-surface"
+              >
+                {t("vorschauAktualisieren")}
+              </button>
+            </section>
+          )}
+
+          <section>
           <h2 className="mb-4 text-label uppercase text-ink-muted">
             {t("schrittVorschau")}
           </h2>
@@ -272,14 +381,14 @@ export default async function NeuesDokumentPage({
                 </LegalCardFooter>
               </LegalCard>
 
-              <form action={dokumentErstellen} className="mt-6 flex items-center gap-4">
-                <input type="hidden" name="typ" value={typ} />
-                <input type="hidden" name="verpackung" value={verpackung.id} />
+              <div className="mt-6 flex items-center gap-4">
                 <button
                   type="submit"
                   className="rounded bg-primary px-8 py-4 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
                 >
-                  {t("erstellen")}
+                  {bearbeitetes
+                    ? t("neuErzeugen", { nr: bearbeitetes.doc_nummer ?? "" })
+                    : t("erstellen")}
                 </button>
                 <Link
                   href="/dokumente"
@@ -287,10 +396,11 @@ export default async function NeuesDokumentPage({
                 >
                   {t("zurueck")}
                 </Link>
-              </form>
+              </div>
             </>
           ) : null}
-        </section>
+          </section>
+        </form>
       )}
     </>
   );

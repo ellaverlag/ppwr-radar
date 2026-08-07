@@ -9,6 +9,8 @@ import { formatDate } from "@/lib/labels";
 import { TEMPLATE_TYPEN, type TemplateKey } from "@/lib/dokumente/service";
 import { createClient } from "@/lib/supabase/server";
 import { erforderePaket } from "@/lib/zugang";
+import { dokumentLoeschen } from "./actions";
+import { LoeschenButton } from "./loeschen-button";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -27,6 +29,7 @@ interface DokumentZeile {
   typ: string;
   doc_nummer: string | null;
   status: string;
+  version: number | null;
   rechtsstand_bei_erstellung: string;
   created_at: string;
   verpackung: { bezeichnung: string } | null;
@@ -35,7 +38,13 @@ interface DokumentZeile {
 export default async function DokumentePage({
   searchParams,
 }: {
-  searchParams: Promise<{ erstellt?: string }>;
+  searchParams: Promise<{
+    erstellt?: string;
+    aktualisiert?: string;
+    version?: string;
+    geloescht?: string;
+    fehler?: string;
+  }>;
 }) {
   const zugang = await erforderePaket();
   const params = await searchParams;
@@ -45,7 +54,7 @@ export default async function DokumentePage({
   const { data } = await supabase
     .from("dokumente")
     .select(
-      "id, typ, doc_nummer, status, rechtsstand_bei_erstellung, created_at, verpackung:profil_verpackungen(bezeichnung)"
+      "id, typ, doc_nummer, status, version, rechtsstand_bei_erstellung, created_at, verpackung:profil_verpackungen(bezeichnung)"
     )
     .eq("user_id", zugang.user.id)
     .order("created_at", { ascending: false });
@@ -62,6 +71,24 @@ export default async function DokumentePage({
       {params.erstellt && (
         <p className="mb-6 rounded border border-primary bg-primary/5 px-4 py-3 text-body-sm text-ink">
           {t("erstelltErfolg", { nr: params.erstellt })}
+        </p>
+      )}
+      {params.aktualisiert && (
+        <p className="mb-6 rounded border border-primary bg-primary/5 px-4 py-3 text-body-sm text-ink">
+          {t("aktualisiertErfolg", {
+            nr: params.aktualisiert,
+            version: params.version ?? "2",
+          })}
+        </p>
+      )}
+      {params.geloescht && (
+        <p className="mb-6 rounded border border-line-strong bg-surface px-4 py-3 text-body-sm text-ink">
+          {t("geloeschtErfolg", { nr: params.geloescht })}
+        </p>
+      )}
+      {params.fehler === "loeschen" && (
+        <p className="mb-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
+          {t("fehlerLoeschen")}
         </p>
       )}
 
@@ -110,6 +137,11 @@ export default async function DokumentePage({
                             {dok.doc_nummer}
                           </span>
                         )}
+                        {(dok.version ?? 1) > 1 && (
+                          <span className="font-mono text-mono-sm text-ink-muted">
+                            v{dok.version}
+                          </span>
+                        )}
                         {dok.status === "update_verfuegbar" && (
                           <Badge variant="gold">{t("updateFlag")}</Badge>
                         )}
@@ -124,19 +156,38 @@ export default async function DokumentePage({
                       {formatDate(dok.rechtsstand_bei_erstellung)}
                     </Badge>
                   </div>
-                  <div className="flex gap-2 md:col-span-2">
+                  <div className="flex flex-wrap items-center gap-2 md:col-span-2">
+                    {/* Signierte URL entsteht erst beim Klick (Route-Handler) */}
                     <a
                       href={`/dokumente/download/${dok.id}?format=docx`}
+                      target="_blank"
+                      rel="noopener"
                       className="rounded border border-ink px-3 py-1.5 text-label uppercase tracking-widest text-ink transition-colors hover:bg-surface"
                     >
                       {t("downloadDocx")}
                     </a>
                     <a
                       href={`/dokumente/download/${dok.id}?format=pdf`}
+                      target="_blank"
+                      rel="noopener"
                       className="rounded border border-ink px-3 py-1.5 text-label uppercase tracking-widest text-ink transition-colors hover:bg-surface"
                     >
                       {t("downloadPdf")}
                     </a>
+                    <Link
+                      href={`/dokumente/neu?dokument=${dok.id}`}
+                      className="rounded border border-line-strong px-3 py-1.5 text-label uppercase tracking-widest text-ink-muted transition-colors hover:border-ink hover:text-ink"
+                    >
+                      {t("bearbeiten")}
+                    </Link>
+                    <LoeschenButton
+                      dokumentId={dok.id}
+                      bestaetigung={t("loeschenBestaetigung", {
+                        nr: dok.doc_nummer ?? "—",
+                      })}
+                      label={t("loeschen")}
+                      action={dokumentLoeschen}
+                    />
                   </div>
                 </li>
               );

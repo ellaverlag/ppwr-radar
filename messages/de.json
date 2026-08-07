@@ -620,7 +620,7 @@
     "neuTitel": "Neues Dokument",
     "schrittTyp": "1. Dokumenttyp wählen",
     "schrittVerpackung": "2. Verpackung / Produktlinie wählen",
-    "schrittVorschau": "3. Vorschau prüfen",
+    "schrittVorschau": "4. Vorschau prüfen und erzeugen",
     "keineVorlagen": "Es sind noch keine freigegebenen Vorlagen verfügbar.",
     "keineVorlagenAdmin": "Als Admin können Sie die Vorlagen-Master (v0.1, Entwurf) jetzt in die Datenbank importieren:",
     "importCta": "Vorlagen importieren",
@@ -637,7 +637,18 @@
     "erstellenLaeuft": "Dokumente werden erzeugt …",
     "fehlerRender": "Die Vorlage konnte nicht befüllt werden: {detail}",
     "fehlerErzeugung": "Das Dokument konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
-    "zurueck": "← Zurück"
+    "zurueck": "← Zurück",
+    "schrittAngaben": "3. Angaben vervollständigen",
+    "angabenHinweis": "Alle Felder sind optional – leere Angaben bleiben als Ausfülllücke im Dokument und können später in Word ergänzt werden. Unterschriftszeilen bleiben bewusst frei.",
+    "vorschauAktualisieren": "Vorschau aktualisieren",
+    "neuErzeugen": "{nr} neu erzeugen",
+    "bearbeitenHinweis": "Sie bearbeiten {nr} (aktuell Version {version}) – beim Neu-Erzeugen bleibt die Nummer erhalten, die Version zählt hoch und die Dateien werden ersetzt.",
+    "bearbeiten": "Angaben bearbeiten",
+    "loeschen": "Löschen",
+    "loeschenBestaetigung": "Dokument {nr} endgültig löschen? Die Word- und PDF-Datei werden entfernt; die Nummer wird nicht neu vergeben.",
+    "aktualisiertErfolg": "{nr} wurde neu erzeugt (Version {version}).",
+    "geloeschtErfolg": "Dokument {nr} wurde gelöscht.",
+    "fehlerLoeschen": "Das Dokument konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
   },
   "Webinare": {
     "titel": "Webinare",
