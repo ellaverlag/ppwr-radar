@@ -113,7 +113,25 @@ const FEATURE_ICONS = [
 // Seite
 // ---------------------------------------------------------------------------
 
-export default async function LandingPage() {
+export default async function LandingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string; token_hash?: string; type?: string }>;
+}) {
+  // Callback-Fix: Leitet Supabase den Magic-Link auf die Site-URL statt auf
+  // /auth/callback (z. B. Site-URL-Fallback bei nicht gelisteter
+  // Redirect-URL), kommt der ?code= hier an – dann an den Callback
+  // durchreichen, statt den Nutzer uneingeloggt auf der Landing zu lassen.
+  const params = await searchParams;
+  if (params.code || params.token_hash) {
+    const weiter = new URLSearchParams();
+    if (params.code) weiter.set("code", params.code);
+    if (params.token_hash) weiter.set("token_hash", params.token_hash);
+    if (params.type) weiter.set("type", params.type);
+    weiter.set("next", "/dashboard");
+    redirect(`/auth/callback?${weiter.toString()}`);
+  }
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -444,9 +462,9 @@ export default async function LandingPage() {
                   </li>
                 ))}
               </ul>
-              {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
+              {/* Erst Konto anlegen, dann Zahlung – Checkout sitzt im Dashboard-Vorzimmer */}
               <Link
-                href="/login"
+                href="/login?next=dashboard"
                 data-stripe="paket"
                 className={`${BTN_PRIMARY} ${BTN_LG} w-full`}
               >
@@ -471,9 +489,8 @@ export default async function LandingPage() {
                 <p className="mb-4 mt-2 text-body-sm text-ink-muted">
                   {t("preise.teamText")}
                 </p>
-                {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
                 <Link
-                  href="/login"
+                  href="/login?next=dashboard"
                   data-stripe="team"
                   className={`${BTN_GHOST} ${BTN_MD} w-full`}
                 >
@@ -497,7 +514,6 @@ export default async function LandingPage() {
                 <p className="mb-4 mt-2 text-body-sm text-ink-muted">
                   {t("preise.verlaengerungText")}
                 </p>
-                {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
                 <span
                   data-stripe="verlaengerung"
                   className="inline-block rounded border border-line-strong bg-surface px-2.5 py-1 text-label font-medium text-ink-muted"

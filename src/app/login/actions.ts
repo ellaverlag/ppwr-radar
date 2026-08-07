@@ -5,8 +5,18 @@ import { redirect } from "next/navigation";
 import { SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
+/** Nur relative Pfade als Login-Ziel zulassen; "dashboard" → "/dashboard". */
+function sicheresZiel(roh: string): string {
+  const next = roh.startsWith("/") ? roh : `/${roh}`;
+  if (roh === "" || next.startsWith("//") || !/^\/[\w/-]*$/.test(next)) {
+    return "/dashboard";
+  }
+  return next;
+}
+
 export async function loginWithMagicLink(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
+  const next = sicheresZiel(String(formData.get("next") ?? ""));
 
   if (!email) {
     redirect("/login?error=missing_email");
@@ -19,7 +29,10 @@ export async function loginWithMagicLink(formData: FormData) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
+      // next explizit in den Callback-Link einbetten: Landet der Link doch
+      // auf der Site-URL statt im Callback (Supabase-Fallback), reicht die
+      // Landingpage code+next an /auth/callback weiter.
+      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
     },
   });
 

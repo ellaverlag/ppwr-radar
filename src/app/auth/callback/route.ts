@@ -5,14 +5,22 @@ import { createClient } from "@/lib/supabase/server";
 /**
  * Auth-Callback für Magic Links.
  * Unterstützt beide Supabase-Varianten: PKCE (`?code=`) und
- * OTP-Links (`?token_hash=&type=`).
+ * OTP-Links (`?token_hash=&type=`). Ziel nach Login ist immer ein
+ * relativer `next`-Pfad (Default /dashboard) – nie eine fremde URL.
  */
+function sicheresZiel(next: string | null): string {
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    return next;
+  }
+  return "/dashboard";
+}
+
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const next = searchParams.get("next") ?? "/dashboard";
+  const next = sicheresZiel(searchParams.get("next"));
 
   const supabase = await createClient();
 

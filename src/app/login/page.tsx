@@ -13,7 +13,12 @@ const ERROR_KEYS = ["missing_email", "send_failed", "auth_failed"] as const;
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sent?: string; email?: string; error?: string }>;
+  searchParams: Promise<{
+    sent?: string;
+    email?: string;
+    error?: string;
+    next?: string;
+  }>;
 }) {
   const params = await searchParams;
   const t = await getTranslations("Login");
@@ -55,6 +60,9 @@ export default async function LoginPage({
               )}
 
               <form action={loginWithMagicLink} className="mt-8 space-y-6">
+                {params.next && (
+                  <input type="hidden" name="next" value={params.next} />
+                )}
                 <div>
                   <label
                     htmlFor="email"
