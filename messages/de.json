@@ -386,7 +386,8 @@
     "nein": "Nein",
     "abschlussTitel": "Alles beisammen",
     "abschlussText": "Sie haben {anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst: <linien></linien>. Die Rollen-Engine wertet Ihre Angaben jetzt regelbasiert aus – je Produktlinie, mit Herleitung und Fundstellen.",
-    "abschlussCta": "Rollen jetzt auswerten →"
+    "abschlussCta": "Rollen jetzt auswerten →",
+    "willkommen": "Zahlung erfolgreich – willkommen bei PPWR Radar! Legen Sie jetzt Ihr Compliance-Profil an; Ihre Freischaltung wird im Hintergrund bestätigt."
   },
   "OnboardingErgebnis": {
     "titel": "Ihre Rollen nach PPWR",
@@ -663,5 +664,18 @@
       "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
       "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
     }
+  },
+  "Vorzimmer": {
+    "badge": "Launch-Angebot",
+    "titel": "PPWR|ready Paket freischalten",
+    "preis": "490 € im ersten Jahr",
+    "konditionen": "danach automatische Verlängerung 290 €/Jahr · jederzeit zum Laufzeitende kündbar",
+    "checkoutCta": "Jetzt freischalten – 490 €",
+    "zahlungVerwalten": "Zahlung verwalten",
+    "stripeFooter": "Zahlungsabwicklung über Stripe · Rechnung per E-Mail",
+    "gesperrtHinweis": "Dieser Bereich wird mit dem Paket freigeschaltet.",
+    "checkoutFehler": "Der Checkout konnte nicht gestartet werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+    "vorschau": "Vorschau",
+    "radarTeaserHinweis": "Volltexte und Betroffenheits-Abgleich sind Teil des Pakets."
   }
 }

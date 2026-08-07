@@ -15,6 +15,7 @@ import {
 } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
 import { getWizardFragen, type WizardFrage } from "@/lib/wissensbasis";
+import { erforderePaket } from "@/lib/zugang";
 import {
   antwortSpeichern,
   onboardingAbschliessen,
@@ -230,9 +231,21 @@ function Eingabe({
 export default async function OnboardingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ step?: string; fehler?: string; zurueck?: string }>;
+  searchParams: Promise<{
+    step?: string;
+    fehler?: string;
+    zurueck?: string;
+    willkommen?: string;
+  }>;
 }) {
   const params = await searchParams;
+
+  // Gate: Onboarding gehört zum Paket. Ausnahme willkommen=1 – die Rückkehr
+  // aus dem Stripe-Checkout, bei der der Webhook die Freischaltung ggf.
+  // noch nicht verbucht hat.
+  if (params.willkommen !== "1") {
+    await erforderePaket();
+  }
   const supabase = await createClient();
   const {
     data: { user },
@@ -280,6 +293,12 @@ export default async function OnboardingPage({
 
   return (
     <>
+      {params.willkommen === "1" && (
+        <p className="mb-6 rounded border border-primary bg-primary/5 px-4 py-3 text-body-sm text-ink">
+          {t("willkommen")}
+        </p>
+      )}
+
       <Fortschritt aktuell={aktivIndex + 1} gesamt={steps.length} t={t} />
 
       {fehlerText && (

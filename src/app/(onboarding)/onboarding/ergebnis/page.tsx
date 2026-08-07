@@ -7,6 +7,7 @@ import { formatDate } from "@/lib/labels";
 import type { HerleitungsEintrag, RollenSet } from "@/lib/rollen-engine";
 import { ladeAppConfig, ladeRollenBegriffe } from "@/lib/rollen-service";
 import { createClient } from "@/lib/supabase/server";
+import { erforderePaket } from "@/lib/zugang";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -25,6 +26,7 @@ interface ErgebnisRow {
 }
 
 export default async function ErgebnisPage() {
+  await erforderePaket();
   const supabase = await createClient();
   const {
     data: { user },

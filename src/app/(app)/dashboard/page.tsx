@@ -12,6 +12,8 @@ import {
 } from "@/components/ui";
 import type { RollenSet } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
+import { pruefeZugang } from "@/lib/zugang";
+import { Vorzimmer } from "./vorzimmer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -26,7 +28,26 @@ interface ErgebnisZeile {
   rollen_set: RollenSet;
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ gesperrt?: string; checkout?: string }>;
+}) {
+  const params = await searchParams;
+
+  // Vorzimmer: ohne aktives Paket (und ohne Admin-Bypass) zeigt das
+  // Dashboard die gesperrte Variante mit Freischalten-Karte.
+  const zugang = await pruefeZugang();
+  if (zugang && !zugang.freigeschaltet) {
+    return (
+      <Vorzimmer
+        hatStripeKunde={Boolean(zugang.stripeCustomerId)}
+        zeigeGesperrtHinweis={params.gesperrt === "1"}
+        zeigeCheckoutFehler={params.checkout === "fehler"}
+      />
+    );
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
+import { erforderePaket } from "@/lib/zugang";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -10,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function AssistantPage() {
+  await erforderePaket();
   const t = await getTranslations("Assistant");
   const erklaertiefen = t.raw("erklaertiefen") as string[];
 

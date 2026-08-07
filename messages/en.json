@@ -386,7 +386,8 @@
     "nein": "Nein",
     "abschlussTitel": "Alles beisammen",
     "abschlussText": "Sie haben {anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst: <linien></linien>. Die Rollen-Engine wertet Ihre Angaben jetzt regelbasiert aus – je Produktlinie, mit Herleitung und Fundstellen.",
-    "abschlussCta": "Rollen jetzt auswerten →"
+    "abschlussCta": "Rollen jetzt auswerten →",
+    "willkommen": "Payment successful – welcome to PPWR Radar! Set up your compliance profile now; your unlock is being confirmed in the background."
   },
   "OnboardingErgebnis": {
     "titel": "Ihre Rollen nach PPWR",
@@ -663,5 +664,18 @@
       "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
       "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
     }
+  },
+  "Vorzimmer": {
+    "badge": "Launch offer",
+    "titel": "Unlock the PPWR|ready package",
+    "preis": "€490 for the first year",
+    "konditionen": "then automatic renewal at €290/year · cancel any time at the end of the term",
+    "checkoutCta": "Unlock now – €490",
+    "zahlungVerwalten": "Manage billing",
+    "stripeFooter": "Payments processed by Stripe · invoice by email",
+    "gesperrtHinweis": "This area is unlocked with the package.",
+    "checkoutFehler": "Checkout could not be started. Please try again or contact support.",
+    "vorschau": "Preview",
+    "radarTeaserHinweis": "Full texts and impact matching are part of the package."
   }
 }

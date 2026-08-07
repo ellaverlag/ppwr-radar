@@ -4,6 +4,7 @@ import { Badge } from "@/components/badge";
 import { DocumentIcon, PlusIcon, SearchIcon, WarningIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
+import { erforderePaket } from "@/lib/zugang";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -13,6 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const BEISPIEL_STATUS = ["update", "gueltig", "archiviert"] as const;
 
 export default async function DokumentePage() {
+  await erforderePaket();
   const t = await getTranslations("Dokumente");
 
   const tabs = t.raw("tabs") as string[];
