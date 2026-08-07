@@ -573,43 +573,50 @@
   },
   "Dokumente": {
     "titel": "Meine Dokumente",
-    "beschreibung": "Zentrales Archiv für alle Compliance-Nachweise, Zertifikate und regulatorischen Dokumente gemäß PPWR-Anforderungen.",
-    "tabs": [
-      "Alle",
-      "Gültig",
-      "Entwürfe",
-      "Archiv"
-    ],
-    "suchPlaceholder": "Dokument suchen …",
+    "beschreibung": "Ihre erzeugten Compliance-Dokumente – aus den juristisch geprüften Vorlagen, vorbefüllt mit Ihrem Profil.",
     "neuesDokument": "Neues Dokument",
-    "spalteTitel": "Dokumententitel",
-    "spalteVersion": "Version",
+    "leer": "Noch keine Dokumente erstellt. Wählen Sie „Neues Dokument“, um mit einer Vorlage zu starten.",
+    "spalteDokument": "Dokument",
+    "spalteVerpackung": "Verpackung",
     "spalteRechtsstand": "Rechtsstand",
-    "spalteStatus": "Status",
-    "beispiele": [
-      {
-        "titel": "Konformitätserklärung PET-Flaschen",
-        "quelle": "Richtlinie 94/62/EG",
-        "version": "v1.2",
-        "rechtsstand": "12.08.2026"
-      },
-      {
-        "titel": "Recycling-Nachweis Transportverpackung",
-        "quelle": "DIN EN 13430",
-        "version": "v2.0",
-        "rechtsstand": "05.11.2026"
-      },
-      {
-        "titel": "Materialspezifikation Folien",
-        "quelle": "Internes Dokument",
-        "version": "v1.0",
-        "rechtsstand": "14.02.2026"
-      }
-    ],
-    "statusUpdate": "Update verfügbar",
-    "statusGueltig": "Gültig",
-    "statusArchiviert": "Archiviert",
-    "footer": "Beispieldaten · Der Dokumenten-Generator folgt in einem späteren Paket"
+    "spalteAktionen": "Download",
+    "updateFlag": "Update verfügbar",
+    "downloadDocx": "Word",
+    "downloadPdf": "PDF",
+    "erstelltErfolg": "Dokument {nr} wurde erstellt.",
+    "typen": {
+      "konformitaetserklaerung": "EU-Konformitätserklärung",
+      "techdoku": "Technische Dokumentation (Gerüst)",
+      "pflichtenuebersicht": "Pflichtenübersicht je Produktlinie",
+      "lieferantenanfragen": "Muster-Lieferantenanfragen"
+    },
+    "typenKurz": {
+      "konformitaetserklaerung": "Anhang VIII i. V. m. Art. 39 PPWR – je Verpackung eine Erklärung.",
+      "techdoku": "Anhang VII, Modul A – Struktur zum Befüllen mit Ihren Nachweisen.",
+      "pflichtenuebersicht": "Internes Briefing: Rollen, Pflichten und Fundstellen Ihrer Produktlinie.",
+      "lieferantenanfragen": "Vorformulierte Anfragen für Stoffkonformität und Nachweise."
+    },
+    "neuTitel": "Neues Dokument",
+    "schrittTyp": "1. Dokumenttyp wählen",
+    "schrittVerpackung": "2. Verpackung / Produktlinie wählen",
+    "schrittVorschau": "3. Vorschau prüfen",
+    "keineVorlagen": "Es sind noch keine freigegebenen Vorlagen verfügbar.",
+    "keineVorlagenAdmin": "Als Admin können Sie die Vorlagen-Master (v0.1, Entwurf) jetzt in die Datenbank importieren:",
+    "importCta": "Vorlagen importieren",
+    "importErfolg": "Vorlagen importiert.",
+    "keineVerpackungen": "Noch keine Verpackungen im Profil – legen Sie sie im Onboarding an.",
+    "zumOnboarding": "Zum Onboarding",
+    "entwurfHinweis": "Diese Vorlage ist ein Entwurf (v0.1) und noch nicht juristisch freigegeben.",
+    "markerLegende": "Markierungen in der Vorschau:",
+    "markerVorbefuellt": "VORBEFÜLLT = automatisch aus Ihrem Profil gesetzt – bitte prüfen",
+    "markerPflicht": "NUTZER-PFLICHT = müssen Sie im Dokument selbst ergänzen und verantworten",
+    "markerSystem": "SYSTEM = feststehender Rechtstext",
+    "hinweisVorAusfuellen": "Hinweis vor dem Ausfüllen",
+    "erstellen": "Erstellen (Word + PDF)",
+    "erstellenLaeuft": "Dokumente werden erzeugt …",
+    "fehlerRender": "Die Vorlage konnte nicht befüllt werden: {detail}",
+    "fehlerErzeugung": "Das Dokument konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "zurueck": "← Zurück"
   },
   "Webinare": {
     "titel": "Webinare",

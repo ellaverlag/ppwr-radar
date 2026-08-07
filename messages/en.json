@@ -572,44 +572,51 @@
     "quelleFallback": "Auslegung"
   },
   "Dokumente": {
-    "titel": "Meine Dokumente",
-    "beschreibung": "Zentrales Archiv für alle Compliance-Nachweise, Zertifikate und regulatorischen Dokumente gemäß PPWR-Anforderungen.",
-    "tabs": [
-      "Alle",
-      "Gültig",
-      "Entwürfe",
-      "Archiv"
-    ],
-    "suchPlaceholder": "Dokument suchen …",
-    "neuesDokument": "Neues Dokument",
-    "spalteTitel": "Dokumententitel",
-    "spalteVersion": "Version",
-    "spalteRechtsstand": "Rechtsstand",
-    "spalteStatus": "Status",
-    "beispiele": [
-      {
-        "titel": "Konformitätserklärung PET-Flaschen",
-        "quelle": "Richtlinie 94/62/EG",
-        "version": "v1.2",
-        "rechtsstand": "12.08.2026"
-      },
-      {
-        "titel": "Recycling-Nachweis Transportverpackung",
-        "quelle": "DIN EN 13430",
-        "version": "v2.0",
-        "rechtsstand": "05.11.2026"
-      },
-      {
-        "titel": "Materialspezifikation Folien",
-        "quelle": "Internes Dokument",
-        "version": "v1.0",
-        "rechtsstand": "14.02.2026"
-      }
-    ],
-    "statusUpdate": "Update verfügbar",
-    "statusGueltig": "Gültig",
-    "statusArchiviert": "Archiviert",
-    "footer": "Beispieldaten · Der Dokumenten-Generator folgt in einem späteren Paket"
+    "titel": "My documents",
+    "beschreibung": "Your generated compliance documents – based on the legally reviewed templates, pre-filled from your profile.",
+    "neuesDokument": "New document",
+    "leer": "No documents yet. Choose “New document” to start from a template.",
+    "spalteDokument": "Document",
+    "spalteVerpackung": "Packaging",
+    "spalteRechtsstand": "Legal status",
+    "spalteAktionen": "Download",
+    "updateFlag": "Update available",
+    "downloadDocx": "Word",
+    "downloadPdf": "PDF",
+    "erstelltErfolg": "Document {nr} has been created.",
+    "typen": {
+      "konformitaetserklaerung": "EU declaration of conformity",
+      "techdoku": "Technical documentation (skeleton)",
+      "pflichtenuebersicht": "Obligations overview per product line",
+      "lieferantenanfragen": "Supplier request templates"
+    },
+    "typenKurz": {
+      "konformitaetserklaerung": "Annex VIII in conjunction with Art. 39 PPWR – one declaration per packaging.",
+      "techdoku": "Annex VII, Module A – structure to fill with your evidence.",
+      "pflichtenuebersicht": "Internal briefing: roles, obligations and references of your product line.",
+      "lieferantenanfragen": "Pre-drafted requests for substance conformity and evidence."
+    },
+    "neuTitel": "New document",
+    "schrittTyp": "1. Choose document type",
+    "schrittVerpackung": "2. Choose packaging / product line",
+    "schrittVorschau": "3. Review preview",
+    "keineVorlagen": "No approved templates are available yet.",
+    "keineVorlagenAdmin": "As an admin you can import the template masters (v0.1, draft) into the database now:",
+    "importCta": "Import templates",
+    "importErfolg": "Templates imported.",
+    "keineVerpackungen": "No packaging in your profile yet – create it in onboarding.",
+    "zumOnboarding": "Go to onboarding",
+    "entwurfHinweis": "This template is a draft (v0.1) and not yet legally approved.",
+    "markerLegende": "Markers in the preview:",
+    "markerVorbefuellt": "VORBEFÜLLT = set automatically from your profile – please verify",
+    "markerPflicht": "NUTZER-PFLICHT = you must complete and take responsibility for this yourself",
+    "markerSystem": "SYSTEM = fixed legal text",
+    "hinweisVorAusfuellen": "Note before completing",
+    "erstellen": "Create (Word + PDF)",
+    "erstellenLaeuft": "Generating documents …",
+    "fehlerRender": "The template could not be filled: {detail}",
+    "fehlerErzeugung": "The document could not be created. Please try again.",
+    "zurueck": "← Back"
   },
   "Webinare": {
     "titel": "Webinare",

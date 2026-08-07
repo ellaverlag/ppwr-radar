@@ -62,6 +62,29 @@ Schema-bedingte Abweichungen: `rollen_definitionen` nutzt `aktiv` statt `ausspie
 
 SQL-Migrationsdateien liegen in `supabase/migrations/`. Sie werden manuell bzw. über die Supabase-CLI eingespielt; das Verzeichnis ist hier die versionierte Ablage.
 
+## Dokumenten-Generator (Säule B)
+
+Vorlagen sind Daten, kein Code: Die vier Generator-Master aus `content/templates/`
+werden nach `generator_templates` importiert (Single Source of Law – live liest der
+Renderer nur `cattwyk_freigegeben` + `aktiv`, im Preview-Modus auch Entwürfe).
+
+- **Import:** `npm run import:templates` (braucht `SUPABASE_SERVICE_ROLE_KEY`),
+  alternativ der Admin-Button unter `/dokumente/neu`, solange keine Vorlagen
+  vorhanden sind. Upsert auf `key`+`version` – idempotent.
+- **Renderer:** `src/lib/dokumente/renderer.ts` – Mustache-Subset
+  (`{{feld}}`, `{{#wenn (nicht) …}}`), unaufgelöste Pflicht-Platzhalter sind ein
+  Fehler; fehlende `cattwyk.*`-Konfigwerte lassen die Zeile entfallen.
+- **Bibliothekswahl:** `.docx` über `html-to-docx` (reines JS, saubere Tabellen
+  und Umlaute, keine nativen Abhängigkeiten); PDF über `pdfmake@0.2`
+  (stabile API, eingebettete Roboto, kein Headless-Browser auf Railway nötig) –
+  das Markdown wird per `marked`-Lexer in eine pdfmake-Definition übersetzt
+  (`src/lib/dokumente/konvertierung.ts`). Bewusst kein Puppeteer: ~300 MB
+  Chromium im Container für gelegentliche PDF-Erzeugung wären unverhältnismäßig.
+- **Ablage:** privater Storage-Bucket `dokumente` ohne Object-Policies –
+  Zugriff ausschließlich über Service-Role; Ownership über die
+  `dokumente`-Tabelle (Own-Row-RLS) und User-Pfadpräfix, Downloads über
+  kurzlebige signierte URLs. `doc_nummer` nach Muster `KE-2026-0001` je Typ.
+
 ## Deployment (Railway)
 
 Railway baut direkt aus diesem Repo:

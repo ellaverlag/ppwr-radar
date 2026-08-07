@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
-import { DocumentIcon, PlusIcon, SearchIcon, WarningIcon } from "@/components/icons";
+import { DocumentIcon, PlusIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
+import { formatDate } from "@/lib/labels";
+import { TEMPLATE_TYPEN, type TemplateKey } from "@/lib/dokumente/service";
+import { createClient } from "@/lib/supabase/server";
 import { erforderePaket } from "@/lib/zugang";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -11,113 +15,138 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("dokumente") };
 }
 
-const BEISPIEL_STATUS = ["update", "gueltig", "archiviert"] as const;
+export const dynamic = "force-dynamic";
 
-export default async function DokumentePage() {
-  await erforderePaket();
+/** dokument_typ (DB) → Template-Key für Labels. */
+const DB_TYP_ZU_KEY: Record<string, TemplateKey> = Object.fromEntries(
+  Object.entries(TEMPLATE_TYPEN).map(([key, wert]) => [wert.dbTyp, key])
+) as Record<string, TemplateKey>;
+
+interface DokumentZeile {
+  id: string;
+  typ: string;
+  doc_nummer: string | null;
+  status: string;
+  rechtsstand_bei_erstellung: string;
+  created_at: string;
+  verpackung: { bezeichnung: string } | null;
+}
+
+export default async function DokumentePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ erstellt?: string }>;
+}) {
+  const zugang = await erforderePaket();
+  const params = await searchParams;
   const t = await getTranslations("Dokumente");
 
-  const tabs = t.raw("tabs") as string[];
-  const beispiele = (
-    t.raw("beispiele") as {
-      titel: string;
-      quelle: string;
-      version: string;
-      rechtsstand: string;
-    }[]
-  ).map((dok, i) => ({ ...dok, status: BEISPIEL_STATUS[i] }));
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("dokumente")
+    .select(
+      "id, typ, doc_nummer, status, rechtsstand_bei_erstellung, created_at, verpackung:profil_verpackungen(bezeichnung)"
+    )
+    .eq("user_id", zugang.user.id)
+    .order("created_at", { ascending: false });
+  const dokumente = (data ?? []) as unknown as DokumentZeile[];
 
   return (
     <>
-      <PageHeader title={t("titel")} description={t("beschreibung")} titelVersteckt />
+      <PageHeader
+        title={t("titel")}
+        description={t("beschreibung")}
+        titelVersteckt
+      />
 
-      <div className="mb-8 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex gap-8 border-b border-line">
-          {tabs.map((tab, i) => (
-            <span
-              key={tab}
-              className={`-mb-px border-b-2 pb-3 text-body-sm ${
-                i === 0
-                  ? "border-primary font-bold text-primary"
-                  : "border-transparent font-semibold text-ink-muted"
-              }`}
-            >
-              {tab}
-            </span>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-3">
-          <div className="relative">
-            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-muted" />
-            <input
-              type="search"
-              disabled
-              placeholder={t("suchPlaceholder")}
-              className="w-64 rounded border border-line-strong bg-canvas py-2.5 pl-11 pr-4 text-body text-ink placeholder:text-ink-muted/60 disabled:bg-surface"
-            />
-          </div>
-          <span className="inline-flex cursor-not-allowed items-center gap-2 rounded bg-primary px-5 py-2.5 text-label uppercase tracking-widest text-white opacity-60">
-            <PlusIcon className="h-4 w-4" />
-            <span>{t("neuesDokument")}</span>
-          </span>
-        </div>
+      {params.erstellt && (
+        <p className="mb-6 rounded border border-primary bg-primary/5 px-4 py-3 text-body-sm text-ink">
+          {t("erstelltErfolg", { nr: params.erstellt })}
+        </p>
+      )}
+
+      <div className="mb-8 flex justify-end">
+        <Link
+          href="/dokumente/neu"
+          className="inline-flex items-center gap-2 rounded bg-primary px-5 py-2.5 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+        >
+          <PlusIcon className="h-4 w-4" />
+          <span>{t("neuesDokument")}</span>
+        </Link>
       </div>
 
-      <LegalCard>
-        <div className="hidden grid-cols-12 gap-4 rounded-t bg-surface px-6 py-3 text-label uppercase text-ink-muted md:grid">
-          <span className="col-span-6">{t("spalteTitel")}</span>
-          <span className="col-span-2">{t("spalteVersion")}</span>
-          <span className="col-span-2">{t("spalteRechtsstand")}</span>
-          <span className="col-span-2">{t("spalteStatus")}</span>
-        </div>
-        <ul className="divide-y divide-line">
-          {beispiele.map((dok) => (
-            <li
-              key={dok.titel}
-              className="grid grid-cols-1 gap-3 px-6 py-5 md:grid-cols-12 md:items-center md:gap-4"
-            >
-              <div className="flex items-start gap-3 md:col-span-6">
-                <DocumentIcon className="mt-1 h-5 w-5 text-ink-muted" />
-                <div>
-                  <p
-                    className={`text-body-lg font-bold ${
-                      dok.status === "archiviert" ? "text-ink-muted" : "text-ink"
-                    }`}
-                  >
-                    {dok.titel}
-                  </p>
-                  <p className="mt-0.5 text-body-sm text-ink-muted">
-                    {dok.quelle}
-                  </p>
-                </div>
-              </div>
-              <div className="md:col-span-2">
-                <span className="rounded bg-surface px-2 py-1 font-mono text-mono-sm text-ink">
-                  {dok.version}
-                </span>
-              </div>
-              <div className="text-body-sm text-ink-muted md:col-span-2">
-                {dok.rechtsstand}
-              </div>
-              <div className="md:col-span-2">
-                {dok.status === "update" && (
-                  <Badge variant="gold">
-                    <WarningIcon className="mr-1 h-3 w-3" />
-                    {t("statusUpdate")}
-                  </Badge>
-                )}
-                {dok.status === "gueltig" && (
-                  <Badge variant="green">{t("statusGueltig")}</Badge>
-                )}
-                {dok.status === "archiviert" && (
-                  <Badge variant="neutral">{t("statusArchiviert")}</Badge>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-        <LegalCardFooter>{t("footer")}</LegalCardFooter>
-      </LegalCard>
+      {dokumente.length === 0 ? (
+        <LegalCard>
+          <div className="flex min-h-48 flex-col items-center justify-center gap-3 p-10 text-center">
+            <DocumentIcon className="h-8 w-8 text-ink-muted" />
+            <p className="max-w-md text-body text-ink-muted">{t("leer")}</p>
+          </div>
+        </LegalCard>
+      ) : (
+        <LegalCard>
+          <div className="hidden grid-cols-12 gap-4 rounded-t bg-surface px-6 py-3 text-label uppercase text-ink-muted md:grid">
+            <span className="col-span-5">{t("spalteDokument")}</span>
+            <span className="col-span-3">{t("spalteVerpackung")}</span>
+            <span className="col-span-2">{t("spalteRechtsstand")}</span>
+            <span className="col-span-2">{t("spalteAktionen")}</span>
+          </div>
+          <ul className="divide-y divide-line">
+            {dokumente.map((dok) => {
+              const key = DB_TYP_ZU_KEY[dok.typ];
+              return (
+                <li
+                  key={dok.id}
+                  className="grid grid-cols-1 gap-3 px-6 py-5 md:grid-cols-12 md:items-center md:gap-4"
+                >
+                  <div className="flex items-start gap-3 md:col-span-5">
+                    <DocumentIcon className="mt-1 h-5 w-5 shrink-0 text-ink-muted" />
+                    <div>
+                      <p className="text-body-lg font-bold text-ink">
+                        {key ? t(`typen.${key}`) : dok.typ}
+                      </p>
+                      <p className="mt-0.5 flex flex-wrap items-center gap-2">
+                        {dok.doc_nummer && (
+                          <span className="rounded bg-surface px-2 py-0.5 font-mono text-mono-sm text-ink">
+                            {dok.doc_nummer}
+                          </span>
+                        )}
+                        {dok.status === "update_verfuegbar" && (
+                          <Badge variant="gold">{t("updateFlag")}</Badge>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-body-sm text-ink-muted md:col-span-3">
+                    {dok.verpackung?.bezeichnung ?? "—"}
+                  </div>
+                  <div className="md:col-span-2">
+                    <Badge variant="neutral">
+                      {formatDate(dok.rechtsstand_bei_erstellung)}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-2 md:col-span-2">
+                    <a
+                      href={`/dokumente/download/${dok.id}?format=docx`}
+                      className="rounded border border-ink px-3 py-1.5 text-label uppercase tracking-widest text-ink transition-colors hover:bg-surface"
+                    >
+                      {t("downloadDocx")}
+                    </a>
+                    <a
+                      href={`/dokumente/download/${dok.id}?format=pdf`}
+                      className="rounded border border-ink px-3 py-1.5 text-label uppercase tracking-widest text-ink transition-colors hover:bg-surface"
+                    >
+                      {t("downloadPdf")}
+                    </a>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          <LegalCardFooter>
+            {t("beschreibung")}
+          </LegalCardFooter>
+        </LegalCard>
+      )}
     </>
   );
 }

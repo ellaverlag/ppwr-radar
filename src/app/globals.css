@@ -94,6 +94,57 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Gerendertes Markdown der Dokument-Vorschau (Preflight neutralisiert
+   Standard-Elemente – hier gezielt zurückgeholt) */
+.prose-dokument h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+.prose-dokument h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 1rem 0 0.4rem;
+}
+.prose-dokument p {
+  margin: 0.4rem 0;
+}
+.prose-dokument ul,
+.prose-dokument ol {
+  margin: 0.4rem 0 0.6rem;
+  padding-left: 1.4rem;
+  list-style: disc;
+}
+.prose-dokument ol {
+  list-style: decimal;
+}
+.prose-dokument table {
+  border-collapse: collapse;
+  margin: 0.6rem 0;
+  font-size: 0.875rem;
+}
+.prose-dokument th,
+.prose-dokument td {
+  border: 1px solid var(--color-line-strong);
+  padding: 0.35rem 0.6rem;
+  text-align: left;
+  vertical-align: top;
+}
+.prose-dokument th {
+  background: var(--color-surface);
+}
+.prose-dokument blockquote {
+  border-left: 3px solid var(--color-line-strong);
+  padding-left: 0.8rem;
+  color: var(--color-ink-muted);
+  margin: 0.6rem 0;
+}
+.prose-dokument hr {
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  margin: 1rem 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
