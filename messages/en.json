@@ -348,10 +348,10 @@
     "rechtsstandZeile": "Basierend auf Verordnung (EU) 2025/40 · Stand {datum}",
     "paywallTitel": "Was heißt das konkret für Ihre Verpackungen?",
     "paywallText": "PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen je Produktlinie, Status-Analyse, persönlichem Fristen-Dashboard und Ihren Dokumenten.",
-    "paywallCta": "Register for free and see your full analysis",
+    "paywallCta": "Register for free and save your result",
     "mehrErfahren": "Mehr über PPWR Radar erfahren",
     "neuStarten": "Check neu starten",
-    "preisNebenzeile": "PPWR|ready package: €490 for the first year – details after signing up."
+    "preisNebenzeile": "Afterwards, unlock the full analysis with your list of obligations and documents via the PPWR|ready package – €490 for the first year."
   },
   "Onboarding": {
     "zumDashboard": "Zum Dashboard",
@@ -677,7 +677,10 @@
     "gesperrtHinweis": "This area is unlocked with the package.",
     "checkoutFehler": "Checkout could not be started. Please try again or contact support.",
     "vorschau": "Preview",
-    "radarTeaserHinweis": "Full texts and impact matching are part of the package."
+    "radarTeaserHinweis": "Full texts and impact matching are part of the package.",
+    "ersteinschaetzungTitel": "Your first assessment from the impact check",
+    "ersteinschaetzungRolleVor": "Your role: presumably",
+    "ersteinschaetzungFooter": "First assessment from {datum} · not legal advice"
   },
   "Radar": {
     "leer": "No legal changes since the application date – your radar is watching.",

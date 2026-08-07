@@ -65,5 +65,12 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Check-Ergebnis-Übernahme: Beim ersten Dashboard-Aufruf nach dem Login
+  // liest die Seite den Check-Cookie noch aus dem Request und sichert die
+  // Einschätzung ins Profil – die Response löscht den Cookie danach.
+  if (user && pathname.startsWith("/dashboard") && request.cookies.has("ppwr_check")) {
+    supabaseResponse.cookies.delete("ppwr_check");
+  }
+
   return supabaseResponse;
 }

@@ -2,6 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { LockIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter, TrafficDot } from "@/components/ui";
+import { uebernehmeCheckErgebnis } from "@/lib/check-uebernahme";
+import { formatDate } from "@/lib/labels";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
 import {
   AenderungslogKarte,
@@ -42,10 +44,12 @@ function GesperrtTitel({ titel }: { titel: string }) {
 }
 
 export async function Vorzimmer({
+  userId,
   hatStripeKunde,
   zeigeGesperrtHinweis,
   zeigeCheckoutFehler,
 }: {
+  userId: string;
   hatStripeKunde: boolean;
   zeigeGesperrtHinweis: boolean;
   zeigeCheckoutFehler: boolean;
@@ -55,11 +59,16 @@ export async function Vorzimmer({
   const tLanding = await getTranslations("Landing");
   const leistungen = tLanding.raw("preise.leistungen") as string[];
   const schritte = t.raw("schritte") as { titel: string; text: string }[];
-  const [memos, news, videos] = await Promise.all([
+  const tCheck = await getTranslations("CheckErgebnis");
+  const tLabels = await getTranslations("Labels");
+  const [memos, news, videos, einschaetzung] = await Promise.all([
     ladeUpdateMemos(),
     ladePpwrNews(),
     ladePpwrVideos(),
+    uebernehmeCheckErgebnis(userId),
   ]);
+  const rollenLabel = (rolle: string) =>
+    tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle;
 
   return (
     <>
@@ -79,6 +88,47 @@ export async function Vorzimmer({
         <p className="mb-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
           {tv("checkoutFehler")}
         </p>
+      )}
+
+      {/* Gesichertes Check-Ergebnis */}
+      {einschaetzung && (
+        <LegalCard className="mb-6">
+          <div className="p-6">
+            <h2 className="text-label uppercase text-ink-muted">
+              {tv("ersteinschaetzungTitel")}
+            </h2>
+            <div className="mt-3 flex items-start gap-3">
+              <span
+                aria-hidden="true"
+                className={`mt-1.5 h-3.5 w-3.5 shrink-0 rounded-full ${
+                  einschaetzung.stufe === "gering" && !einschaetzung.unklar
+                    ? "bg-primary"
+                    : "bg-gold"
+                }`}
+              />
+              <div>
+                <p className="text-body-lg font-bold text-ink">
+                  {einschaetzung.unklar
+                    ? tCheck("einordnungOffen")
+                    : tCheck(`aussage.${einschaetzung.stufe}`)}
+                </p>
+                {einschaetzung.rollen.length > 0 && (
+                  <p className="mt-2 flex flex-wrap items-center gap-2 text-body text-ink">
+                    <span>{tv("ersteinschaetzungRolleVor")}</span>
+                    {einschaetzung.rollen.map((rolle) => (
+                      <Badge key={rolle} variant="blue">
+                        {rollenLabel(rolle)}
+                      </Badge>
+                    ))}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+          <LegalCardFooter>
+            {tv("ersteinschaetzungFooter", { datum: formatDate(einschaetzung.datum) })}
+          </LegalCardFooter>
+        </LegalCard>
       )}
 
       {/* Freischalten-Karte */}

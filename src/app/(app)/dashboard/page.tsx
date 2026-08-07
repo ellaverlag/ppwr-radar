@@ -47,6 +47,7 @@ export default async function DashboardPage({
   if (zugang && !zugang.freigeschaltet) {
     return (
       <Vorzimmer
+        userId={zugang.user.id}
         hatStripeKunde={Boolean(zugang.stripeCustomerId)}
         zeigeGesperrtHinweis={params.gesperrt === "1"}
         zeigeCheckoutFehler={params.checkout === "fehler"}

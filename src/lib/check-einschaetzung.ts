@@ -1,4 +1,8 @@
-import type { LinienErgebnis } from "@/lib/rollen-engine";
+import type {
+  LinienErgebnis,
+  LinienKontext,
+  UnternehmenKontext,
+} from "@/lib/rollen-engine";
 
 /**
  * Ersteinschätzung für den öffentlichen Betroffenheits-Check (pur, testbar).
@@ -14,6 +18,41 @@ export interface Ersteinschaetzung {
 }
 
 const KERNROLLEN = ["erzeuger", "hersteller", "importeur"];
+
+/** Engine-Kontexte aus den fünf Check-Antworten (Cookie-Format). */
+export function kontexteAusCheckAntworten(
+  antworten: Record<string, string | string[]>
+): { unternehmen: UnternehmenKontext; linie: LinienKontext; taetigkeit: string[] } {
+  const sitz = (typeof antworten.sitz === "string" ? antworten.sitz : "DE") as
+    UnternehmenKontext["sitz"];
+  const taetigkeit = Array.isArray(antworten.taetigkeit)
+    ? antworten.taetigkeit
+    : [];
+  return {
+    unternehmen: {
+      sitz,
+      niederlassungDE: sitz === "DE",
+      kleinstunternehmen: false,
+    },
+    linie: {
+      name: "Ihre Angaben",
+      verpackungsart: Array.isArray(antworten.verpackungsart)
+        ? antworten.verpackungsart
+        : [],
+      taetigkeit,
+      marke: null,
+      lieferantSitz: null,
+      ersteBereitstellung: null,
+      vertriebsweg: Array.isArray(antworten.vertriebsweg)
+        ? antworten.vertriebsweg
+        : [],
+      istEndabnehmer: null,
+      dienstleistungen: [],
+      lebensmittelkontakt: antworten.lebensmittelkontakt === "ja",
+    },
+    taetigkeit,
+  };
+}
 
 /**
  * Liefert nur die Einstufung; der zugehörige Aussagetext wird in der UI über

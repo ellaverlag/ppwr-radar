@@ -348,10 +348,10 @@
     "rechtsstandZeile": "Basierend auf Verordnung (EU) 2025/40 · Stand {datum}",
     "paywallTitel": "Was heißt das konkret für Ihre Verpackungen?",
     "paywallText": "PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen je Produktlinie, Status-Analyse, persönlichem Fristen-Dashboard und Ihren Dokumenten.",
-    "paywallCta": "Kostenlos registrieren und vollständige Analyse ansehen",
+    "paywallCta": "Kostenlos registrieren und Ergebnis sichern",
     "mehrErfahren": "Mehr über PPWR Radar erfahren",
     "neuStarten": "Check neu starten",
-    "preisNebenzeile": "PPWR|ready Paket: 490 € im ersten Jahr – Details nach der Anmeldung."
+    "preisNebenzeile": "Die vollständige Analyse mit Pflichtenliste und Dokumenten schalten Sie danach mit dem PPWR|ready Paket frei – 490 € im ersten Jahr."
   },
   "Onboarding": {
     "zumDashboard": "Zum Dashboard",
@@ -677,7 +677,10 @@
     "gesperrtHinweis": "Dieser Bereich wird mit dem Paket freigeschaltet.",
     "checkoutFehler": "Der Checkout konnte nicht gestartet werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
     "vorschau": "Vorschau",
-    "radarTeaserHinweis": "Volltexte und Betroffenheits-Abgleich sind Teil des Pakets."
+    "radarTeaserHinweis": "Volltexte und Betroffenheits-Abgleich sind Teil des Pakets.",
+    "ersteinschaetzungTitel": "Ihre Ersteinschätzung aus dem Betroffenheits-Check",
+    "ersteinschaetzungRolleVor": "Ihre Rolle: voraussichtlich",
+    "ersteinschaetzungFooter": "Ersteinschätzung vom {datum} · keine Rechtsberatung"
   },
   "Radar": {
     "leer": "Keine Rechtsänderungen seit Geltungsbeginn – Ihr Radar beobachtet.",

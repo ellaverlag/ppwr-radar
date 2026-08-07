@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ersteinschaetzung } from "@/lib/check-einschaetzung";
-import { evaluiereLinie, type LinienKontext, type RegelRow, type UnternehmenKontext } from "@/lib/rollen-engine";
+import {
+  ersteinschaetzung,
+  kontexteAusCheckAntworten,
+} from "@/lib/check-einschaetzung";
+import { evaluiereLinie, type RegelRow } from "@/lib/rollen-engine";
 import { ladeAppConfig, ladeRegeln } from "@/lib/rollen-service";
 import { formatDate } from "@/lib/labels";
 import { checkNeuStarten } from "../actions";
@@ -64,26 +67,7 @@ export default async function CheckErgebnisPage() {
     );
   }
 
-  const sitz = (antworten.sitz as string) ?? "DE";
-  const unternehmen: UnternehmenKontext = {
-    sitz: sitz as UnternehmenKontext["sitz"],
-    niederlassungDE: sitz === "DE",
-    kleinstunternehmen: false,
-  };
-  const taetigkeit = Array.isArray(antworten.taetigkeit) ? antworten.taetigkeit : [];
-  const linie: LinienKontext = {
-    name: "Ihre Angaben",
-    verpackungsart: Array.isArray(antworten.verpackungsart) ? antworten.verpackungsart : [],
-    taetigkeit,
-    marke: null,
-    lieferantSitz: null,
-    ersteBereitstellung: null,
-    vertriebsweg: Array.isArray(antworten.vertriebsweg) ? antworten.vertriebsweg : [],
-    istEndabnehmer: null,
-    dienstleistungen: [],
-    lebensmittelkontakt: antworten.lebensmittelkontakt === "ja",
-  };
-
+  const { unternehmen, linie, taetigkeit } = kontexteAusCheckAntworten(antworten);
   const ergebnis = evaluiereLinie(regeln, unternehmen, linie);
   const rollen = ergebnis.rollen_set.rollen;
   const pflichten = ergebnis.rollen_set.pflichten;
