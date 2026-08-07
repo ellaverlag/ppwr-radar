@@ -14,12 +14,15 @@ export function KontoMenue({
   zahlungAction,
   labels,
   kompakt = false,
+  herausgeber,
 }: {
   anzeigename: string;
   /** Server-Action für die Billing-Portal-Session; nur mit Stripe-Kunde gesetzt */
   zahlungAction?: () => Promise<void>;
   labels: { konto: string; zahlung: string; abmelden: string };
   kompakt?: boolean;
+  /** Optionaler Block am Menü-Ende (Herausgeber im Mobile-Menü). */
+  herausgeber?: React.ReactNode;
 }) {
   const [offen, setOffen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -106,6 +109,7 @@ export function KontoMenue({
               </button>
             </form>
           </div>
+          {herausgeber}
         </div>
       )}
     </div>

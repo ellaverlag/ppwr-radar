@@ -49,7 +49,9 @@
     "footerDatenschutz": "Datenschutz",
     "footerKontakt": "Kontakt",
     "menueKonto": "Konto",
-    "menueZahlung": "Zahlung verwalten"
+    "menueZahlung": "Zahlung verwalten",
+    "herausgeberVon": "Ein Angebot von",
+    "herausgeberAria": "packaging journal – zur Website"
   },
   "Landing": {
     "nav": {

@@ -75,14 +75,16 @@ export default async function AppLayout({
 
       <div className="flex flex-1">
         {/* Sidebar (Desktop) */}
-        <aside className="hidden w-64 shrink-0 border-r border-line bg-surface md:flex md:flex-col">
+        <aside className="hidden w-64 shrink-0 border-r border-line bg-surface md:sticky md:top-0 md:flex md:h-screen md:flex-col">
           <div className="px-6 py-6">
             <BrandLink href="/dashboard" priority />
           </div>
-          <div className="flex-1 px-4 pt-6">
+          {/* Bei geringer Viewport-Höhe scrollt die Navigation – die
+              Blöcke darunter bleiben sichtbar */}
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pt-6">
             <NavLinks items={navItems} />
           </div>
-          <div className="space-y-2 border-t border-line px-6 py-4">
+          <div className="mt-auto space-y-2 border-t border-line px-6 py-4">
             <p
               className="truncate text-body-sm text-ink-muted"
               title={user.email ?? undefined}
@@ -90,6 +92,26 @@ export default async function AppLayout({
               {user.email}
             </p>
             <SignoutButton label={tCommon("abmelden")} />
+          </div>
+          {/* Herausgeber-Block: packaging journal in Originalfarben */}
+          <div className="border-t border-line px-6 py-5">
+            <p className="font-mono text-mono-sm font-medium uppercase tracking-[0.08em] text-ink-muted">
+              {t("herausgeberVon")}
+            </p>
+            <a
+              href="https://packaging-journal.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t("herausgeberAria")}
+              className="mt-3 block"
+            >
+              <Image
+                src="/pj-logo.png"
+                alt="packaging journal"
+                width={180}
+                height={37}
+              />
+            </a>
           </div>
         </aside>
 
@@ -127,6 +149,27 @@ export default async function AppLayout({
                   abmelden: tCommon("abmelden"),
                 }}
                 kompakt
+                herausgeber={
+                  <div className="mt-1.5 border-t border-line px-3 pb-1.5 pt-3">
+                    <p className="font-mono text-mono-sm font-medium uppercase tracking-[0.08em] text-ink-muted">
+                      {t("herausgeberVon")}
+                    </p>
+                    <a
+                      href="https://packaging-journal.de"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={t("herausgeberAria")}
+                      className="mt-2.5 block"
+                    >
+                      <Image
+                        src="/pj-logo.png"
+                        alt="packaging journal"
+                        width={150}
+                        height={31}
+                      />
+                    </a>
+                  </div>
+                }
               />
             </div>
             <div className="overflow-x-auto px-2 pb-1">
