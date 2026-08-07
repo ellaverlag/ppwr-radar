@@ -343,14 +343,15 @@
       "registrierung": "Registrierung & Systembeteiligung (ZSVR)",
       "bevollmaechtigter": "Bevollmächtigter für die erweiterte Herstellerverantwortung"
     },
-    "gesperrtBlur": "Vollständige Pflichtenliste, Fristen 2028/2030 und Ihre Dokumente – Konformitätserklärung, technische Dokumentation.",
+    "gesperrtBlur": "Vollständige Pflichtenliste für Ihre Rolle(n), Fristen 2028/2030 und die für Sie passenden Dokumente und Musterschreiben.",
     "gesperrtSr": "Die vollständige Pflichtenliste ist Teil des PPWR|ready-Pakets.",
     "rechtsstandZeile": "Basierend auf Verordnung (EU) 2025/40 · Stand {datum}",
     "paywallTitel": "Was heißt das konkret für Ihre Verpackungen?",
     "paywallText": "PPWR Radar erstellt Ihr vollständiges Compliance-Profil – mit Rollen je Produktlinie, Status-Analyse, persönlichem Fristen-Dashboard und Ihren Dokumenten.",
-    "paywallCta": "Jetzt PPWR|ready werden – 490 € →",
+    "paywallCta": "Kostenlos registrieren und vollständige Analyse ansehen",
     "mehrErfahren": "Mehr über PPWR Radar erfahren",
-    "neuStarten": "Check neu starten"
+    "neuStarten": "Check neu starten",
+    "preisNebenzeile": "PPWR|ready Paket: 490 € im ersten Jahr – Details nach der Anmeldung."
   },
   "Onboarding": {
     "zumDashboard": "Zum Dashboard",

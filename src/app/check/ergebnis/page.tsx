@@ -204,14 +204,16 @@ export default async function CheckErgebnisPage() {
         <p className="mx-auto mt-3 max-w-lg text-body text-ink-muted">
           {t("paywallText")}
         </p>
-        {/* TODO: Stripe-Link – Checkout kommt als eigenes Paket */}
+        {/* Modell B: erst Konto, die Kaufentscheidung fällt im Vorzimmer */}
         <Link
-          href="/login"
-          data-stripe="paket"
+          href="/login?next=dashboard"
           className="mt-8 inline-flex items-center gap-2 rounded bg-primary px-8 py-4 text-body-lg font-semibold text-white transition-colors hover:bg-primary-dark"
         >
-          {t("paywallCta")}
+          {t("paywallCta")} →
         </Link>
+        <p className="mt-3 text-body-sm text-ink-muted">
+          {t("preisNebenzeile")}
+        </p>
         <div className="mt-4">
           <Link
             href="/#preise"
