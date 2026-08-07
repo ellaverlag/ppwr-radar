@@ -10,6 +10,7 @@ import {
   type WizardState,
 } from "@/lib/onboarding";
 import {
+  benenneLinienErgebnisseUm,
   loescheLinienErgebnisse,
   werteLinieAusUndSpeichere,
 } from "@/lib/rollen-service";
@@ -48,27 +49,116 @@ async function stateSpeichern(
   if (error) throw new Error(`Fortschritt nicht speicherbar: ${error.message}`);
 }
 
-/** Neue Produktlinie benennen und in den Mini-Wizard einsteigen. */
-export async function linieAnlegen(formData: FormData) {
+/** Schlüssel der Beschreibung im Linien-Zustand (kein Engine-Ziel-Variable). */
+const BESCHREIBUNG_KEY = "_beschreibung";
+
+/**
+ * Kurzname + Beschreibung einer Linie speichern: legt eine neue Linie an
+ * (ohne ?linie) oder benennt eine bestehende um – inkl. Nachziehen von
+ * Verpackungsprofil und rollen_ergebnisse, damit die Namens-Verknüpfung
+ * hält. Danach geht es in die Fragen des Mini-Wizards.
+ */
+export async function linieBenennen(formData: FormData) {
   const { supabase, profil, state } = await kontext();
 
+  const linieRaw = formData.get("linie");
+  const linie =
+    linieRaw == null || linieRaw === "" ? null : Number(linieRaw);
+  const fehlerUrl = (code: string) =>
+    linie == null
+      ? `/verpackungen/wizard?fehler=${code}`
+      : `/verpackungen/wizard?linie=${linie}&fehler=${code}`;
+
+  // Kurzname: Pflicht, knapp (Etikett für Listen und Dokumente)
   const name = String(formData.get("name") ?? "")
     .trim()
     .replace(/\s+/g, " ")
-    .slice(0, 120);
-  if (!name) redirect("/verpackungen/wizard?fehler=name");
-  if (
-    state.produktlinien.some((n) => n.toLowerCase() === name.toLowerCase())
-  ) {
-    redirect("/verpackungen/wizard?fehler=doppelt");
-  }
-  if (state.produktlinien.length >= 20) {
-    redirect("/verpackungen?fehler=limit");
+    .slice(0, 60);
+  if (!name) redirect(fehlerUrl("name"));
+
+  // Beschreibung: optional, bewusst ohne Limit (KI-Kontext)
+  const beschreibung = String(formData.get("beschreibung") ?? "").trim();
+
+  if (linie == null) {
+    // ----- Neue Linie ----------------------------------------------------
+    if (
+      state.produktlinien.some((n) => n.toLowerCase() === name.toLowerCase())
+    ) {
+      redirect(fehlerUrl("doppelt"));
+    }
+    if (state.produktlinien.length >= 20) {
+      redirect("/verpackungen?fehler=limit");
+    }
+    state.produktlinien.push(name);
+    const key = String(state.produktlinien.length - 1);
+    if (beschreibung) {
+      state.linien[key] = {
+        ...(state.linien[key] ?? {}),
+        [BESCHREIBUNG_KEY]: beschreibung,
+      };
+    }
+    await stateSpeichern(supabase, profil.id, state);
+    redirect(`/verpackungen/wizard?linie=${state.produktlinien.length - 1}&s=0`);
   }
 
-  state.produktlinien.push(name);
+  // ----- Bestehende Linie ------------------------------------------------
+  if (
+    !Number.isInteger(linie) ||
+    linie < 0 ||
+    linie >= state.produktlinien.length
+  ) {
+    redirect("/verpackungen");
+  }
+  const alterName = state.produktlinien[linie];
+  if (
+    name.toLowerCase() !== alterName.toLowerCase() &&
+    state.produktlinien.some(
+      (n, i) => i !== linie && n.toLowerCase() === name.toLowerCase()
+    )
+  ) {
+    redirect(fehlerUrl("doppelt"));
+  }
+
+  state.produktlinien[linie] = name;
+  const key = String(linie);
+  state.linien[key] = {
+    ...(state.linien[key] ?? {}),
+    [BESCHREIBUNG_KEY]: beschreibung,
+  };
   await stateSpeichern(supabase, profil.id, state);
-  redirect(`/verpackungen/wizard?linie=${state.produktlinien.length - 1}`);
+
+  // Verpackungsprofil (falls die Linie schon abgeschlossen wurde) nachziehen
+  const { data: zeile } = await supabase
+    .from("profil_verpackungen")
+    .select("id")
+    .eq("profil_id", profil.id)
+    .eq("bezeichnung", alterName)
+    .maybeSingle();
+  if (zeile) {
+    const { error } = await supabase
+      .from("profil_verpackungen")
+      .update({
+        bezeichnung: name,
+        produktlinie: name,
+        zusatzangaben: beschreibung || null,
+      })
+      .eq("id", zeile.id);
+    if (error) {
+      throw new Error(`Verpackungsprofil nicht speicherbar: ${error.message}`);
+    }
+    if (name !== alterName) {
+      try {
+        await benenneLinienErgebnisseUm(profil.id, alterName, name);
+      } catch (e) {
+        console.error(
+          "Ergebnis-Umbenennung fehlgeschlagen:",
+          e instanceof Error ? e.message : e
+        );
+      }
+    }
+  }
+
+  redirect(`/verpackungen/wizard?linie=${linie}&s=0`);
 }
 
 /** Antwort eines Mini-Wizard-Schritts speichern und weiterblättern. */
@@ -128,12 +218,27 @@ export async function linieAbschliessen(formData: FormData) {
   const arten = Array.isArray(antworten.verpackungsart)
     ? antworten.verpackungsart
     : [];
-  const werte = {
+  const werte: {
+    bezeichnung: string;
+    produktlinie: string;
+    verpackungstyp: string;
+    lebensmittelkontakt: boolean;
+    zusatzangaben?: string | null;
+  } = {
     bezeichnung: name,
     produktlinie: name,
     verpackungstyp: arten.join(", ") || "unbestimmt",
     lebensmittelkontakt: antworten.lebensmittelkontakt === "ja",
   };
+  // Beschreibung nur schreiben, wenn sie im Wizard erfasst wurde – sonst
+  // bleibt ein direkt in der DB vorbelegter Freitext (Migration) erhalten.
+  if (BESCHREIBUNG_KEY in antworten) {
+    const beschreibung =
+      typeof antworten[BESCHREIBUNG_KEY] === "string"
+        ? (antworten[BESCHREIBUNG_KEY] as string).trim()
+        : "";
+    werte.zusatzangaben = beschreibung || null;
+  }
 
   // Verpackungsprofil der Linie anlegen bzw. aktualisieren (Own-Row-RLS)
   const { data: vorhandene } = await supabase

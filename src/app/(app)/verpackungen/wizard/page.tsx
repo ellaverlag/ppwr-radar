@@ -12,7 +12,7 @@ import { createClient } from "@/lib/supabase/server";
 import { ladeErklaerungen } from "@/lib/wizard-erklaerungen";
 import { getWizardFragen } from "@/lib/wissensbasis";
 import { erforderePaket } from "@/lib/zugang";
-import { linieAbschliessen, linieAnlegen, linienAntwortSpeichern } from "../actions";
+import { linieAbschliessen, linieBenennen, linienAntwortSpeichern } from "../actions";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -53,13 +53,39 @@ export default async function VerpackungsWizardPage({
   const fehlerKey = FEHLER_KEYS.find((key) => key === params.fehler);
   const fehlerText = fehlerKey ? t(`wizardFehler.${fehlerKey}`) : null;
 
-  // ----- Namensschritt (neue Linie) --------------------------------------
   const linie = params.linie == null ? null : Number(params.linie);
-  if (linie == null || !Number.isInteger(linie)) {
+  if (linie != null && (!Number.isInteger(linie) || linie < 0 || linie >= state.produktlinien.length)) {
+    redirect("/verpackungen");
+  }
+
+  // ----- Namensschritt: Kurzname + Beschreibung (Anlegen UND Bearbeiten) --
+  // Zwei getrennte Zwecke: bezeichnung ist das knappe Anzeige-Etikett,
+  // zusatzangaben der lange Freitext als Kontext für Assistant und Analyse.
+  if (linie == null || params.s == null) {
+    let nameVorbelegt = "";
+    let beschreibungVorbelegt = "";
+    if (linie != null) {
+      nameVorbelegt = state.produktlinien[linie];
+      const imState = state.linien[String(linie)]?.["_beschreibung"];
+      if (typeof imState === "string") {
+        beschreibungVorbelegt = imState;
+      } else {
+        const { data: zeile } = await supabase
+          .from("profil_verpackungen")
+          .select("zusatzangaben")
+          .eq("profil_id", profil.id)
+          .eq("bezeichnung", nameVorbelegt)
+          .maybeSingle();
+        beschreibungVorbelegt = (zeile?.zusatzangaben as string | null) ?? "";
+      }
+    }
+
     return (
       <div className="mx-auto w-full max-w-[680px]">
         <header className="mb-8">
-          <h1 className="text-display-sm text-ink">{t("wizardTitelNeu")}</h1>
+          <h1 className="text-display-sm text-ink">
+            {linie == null ? t("wizardTitelNeu") : t("wizardTitelBearbeiten")}
+          </h1>
           <p className="mt-3 text-body text-ink-muted">
             {t("wizardNameHinweis")}
           </p>
@@ -72,22 +98,48 @@ export default async function VerpackungsWizardPage({
         )}
 
         <div className="rounded border border-line bg-canvas p-6 md:p-10">
-          <form action={linieAnlegen}>
+          <form action={linieBenennen}>
+            {linie != null && (
+              <input type="hidden" name="linie" value={linie} />
+            )}
+
             <label
               htmlFor="name"
               className="block text-label uppercase text-ink-muted"
             >
-              {t("wizardNameLabel")}
+              {t("kurznameLabel")} *
             </label>
             <input
               id="name"
               name="name"
               type="text"
               required
-              maxLength={120}
-              placeholder={t("wizardNamePlaceholder")}
+              maxLength={60}
+              defaultValue={nameVorbelegt}
+              placeholder={t("kurznamePlaceholder")}
               className="mt-2 w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink placeholder:text-ink-muted/60 focus:border-ink focus:outline-none"
             />
+            <p className="mt-2 text-body-sm text-ink-muted">
+              {t("kurznameHilfe")}
+            </p>
+
+            <label
+              htmlFor="beschreibung"
+              className="mt-8 block text-label uppercase text-ink-muted"
+            >
+              {t("beschreibungLabel")}
+            </label>
+            <textarea
+              id="beschreibung"
+              name="beschreibung"
+              rows={6}
+              defaultValue={beschreibungVorbelegt}
+              className="mt-2 w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink focus:border-ink focus:outline-none"
+            />
+            <p className="mt-2 text-body-sm text-ink-muted">
+              {t("beschreibungHilfe")}
+            </p>
+
             <div className="mt-10 flex items-center justify-between">
               <Link
                 href="/verpackungen"
@@ -109,9 +161,6 @@ export default async function VerpackungsWizardPage({
   }
 
   // ----- Fragen einer bestehenden Linie ----------------------------------
-  if (linie < 0 || linie >= state.produktlinien.length) {
-    redirect("/verpackungen");
-  }
   const name = state.produktlinien[linie];
 
   const fragen = await getWizardFragen();
@@ -220,21 +269,16 @@ export default async function VerpackungsWizardPage({
             </div>
 
             <div className="mt-10 flex items-center justify-between">
-              {aktivIndex > 0 ? (
-                <Link
-                  href={`/verpackungen/wizard?linie=${linie}&s=${aktivIndex - 1}`}
-                  className="text-body-sm font-medium text-ink-muted hover:text-ink"
-                >
-                  {tCommon("zurueck")}
-                </Link>
-              ) : (
-                <Link
-                  href="/verpackungen"
-                  className="text-body-sm font-medium text-ink-muted hover:text-ink"
-                >
-                  {t("wizardZurUebersicht")}
-                </Link>
-              )}
+              <Link
+                href={
+                  aktivIndex > 0
+                    ? `/verpackungen/wizard?linie=${linie}&s=${aktivIndex - 1}`
+                    : `/verpackungen/wizard?linie=${linie}`
+                }
+                className="text-body-sm font-medium text-ink-muted hover:text-ink"
+              >
+                {tCommon("zurueck")}
+              </Link>
               <button
                 type="submit"
                 className="rounded bg-primary px-6 py-3 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"

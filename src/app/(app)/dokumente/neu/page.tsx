@@ -278,11 +278,10 @@ export default async function NeuesDokumentPage({
                   href={`/dokumente/neu?typ=${typ}&verpackung=${v.id}`}
                   className={kartenKlasse(verpackung?.id === v.id)}
                 >
+                  {/* Nur der Kurzname – die lange Beschreibung bleibt der
+                      Detailansicht unter /verpackungen vorbehalten */}
                   <span className="block text-body font-bold text-ink">
                     {v.bezeichnung}
-                  </span>
-                  <span className="mt-0.5 block text-body-sm text-ink-muted">
-                    {v.produktlinie ?? v.verpackungstyp}
                   </span>
                 </Link>
               ))}

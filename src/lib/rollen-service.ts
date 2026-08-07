@@ -296,6 +296,27 @@ export async function werteLinieAusUndSpeichere(
   return { ergebnis, vorherigeRollen };
 }
 
+/**
+ * Umbenennen einer Linie: rollen_ergebnisse hängen am Produktlinien-Namen –
+ * beim Ändern des Kurznamens werden alle Zeilen (auch überholte) nachgezogen,
+ * damit Historie und Anzeige konsistent bleiben.
+ */
+export async function benenneLinienErgebnisseUm(
+  profilId: string,
+  alterName: string,
+  neuerName: string
+): Promise<void> {
+  const schreibClient = erfordereSchreibClient();
+  const { error } = await schreibClient
+    .from("rollen_ergebnisse")
+    .update({ produktlinie: neuerName })
+    .eq("profil_id", profilId)
+    .eq("produktlinie", alterName);
+  if (error) {
+    throw new Error(`Rollen-Ergebnisse nicht umbenennbar: ${error.message}`);
+  }
+}
+
 /** Harte Löschung der Ergebnisse einer Linie (nur für Linien ohne Dokumente). */
 export async function loescheLinienErgebnisse(
   profilId: string,

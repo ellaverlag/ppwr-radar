@@ -884,10 +884,8 @@
     },
     "wizardTitelNeu": "Neue Produktlinie",
     "wizardTitelBearbeiten": "Produktlinie bearbeiten",
-    "wizardNameLabel": "Name der Produktlinie",
-    "wizardNamePlaceholder": "z. B. Feinkost im Glas",
     "wizardNameHinweis": "Unternehmensfragen und Stammdaten werden nicht erneut gestellt – es geht nur um diese eine Linie.",
-    "wizardStart": "Fragen beantworten →",
+    "wizardStart": "Weiter zu den Fragen →",
     "wizardFortschritt": "Frage {aktuell} von {gesamt}",
     "wizardFehler": {
       "name": "Bitte geben Sie einen Namen an.",
@@ -903,6 +901,12 @@
     "ergebnisUntertitel": "Basierend auf Ihren Angaben zu dieser Produktlinie.",
     "ergebnisUpdateHinweis": "Das Rollen-Set dieser Linie hat sich geändert – bestehende Dokumente der Linie tragen jetzt das Update-Flag und können neu erzeugt werden.",
     "ergebnisZurUebersicht": "Zur Verpackungs-Übersicht",
-    "ergebnisDokument": "Dokument für diese Linie erstellen →"
+    "ergebnisDokument": "Dokument für diese Linie erstellen →",
+    "kurznameLabel": "Kurzname dieser Produktlinie",
+    "kurznameHilfe": "Ein knappes Etikett für Listen und Dokumente, z. B. ‚Feinkost im Glas‘ oder ‚Versandkartons B2C‘.",
+    "kurznamePlaceholder": "Feinkost im Glas",
+    "beschreibungLabel": "Beschreibung der Verpackung",
+    "beschreibungHilfe": "Je mehr Sie beschreiben, desto besser können Assistant und Analyse helfen – Aufbau, Materialien, Beschichtung, Verschluss, Füllgut, typische Mengen. Kein Zeichenlimit.",
+    "beschreibungAnzeigen": "Beschreibung"
   }
 }

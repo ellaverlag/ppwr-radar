@@ -34,6 +34,7 @@ interface VerpackungZeile {
   verpackungstyp: string;
   materialien: string[];
   lebensmittelkontakt: boolean;
+  zusatzangaben: string | null;
   status: "aktiv" | "stillgelegt";
 }
 
@@ -79,7 +80,7 @@ export default async function VerpackungenPage({
       supabase
         .from("profil_verpackungen")
         .select(
-          "id, bezeichnung, produktlinie, verpackungstyp, materialien, lebensmittelkontakt, status"
+          "id, bezeichnung, produktlinie, verpackungstyp, materialien, lebensmittelkontakt, zusatzangaben, status"
         )
         .eq("profil_id", profil.id)
         .order("created_at", { ascending: true }),
@@ -234,6 +235,22 @@ export default async function VerpackungenPage({
                     >
                       {zeile.bezeichnung}
                     </p>
+                    {zeile.zusatzangaben && (
+                      <details className="group mt-1">
+                        <summary className="cursor-pointer list-none text-body-sm font-medium text-legal hover:underline [&::-webkit-details-marker]:hidden">
+                          {t("beschreibungAnzeigen")}{" "}
+                          <span
+                            aria-hidden="true"
+                            className="inline-block transition-transform group-open:rotate-180"
+                          >
+                            ▾
+                          </span>
+                        </summary>
+                        <p className="mt-2 whitespace-pre-line border-l-2 border-line-strong pl-3 text-body-sm text-ink-muted">
+                          {zeile.zusatzangaben}
+                        </p>
+                      </details>
+                    )}
                   </div>
                   <div className="md:col-span-3">
                     <p className="text-body-sm text-ink-muted">
