@@ -26,7 +26,8 @@
     "wissen": "Wissen – PPWR Radar",
     "auslegungen": "Auslegungen – PPWR Radar",
     "glossar": "Glossar – PPWR Radar",
-    "anforderung": "Anforderung – PPWR Radar"
+    "anforderung": "Anforderung – PPWR Radar",
+    "status": "Status analysis"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -425,7 +426,7 @@
     "statusOffen": "Offen (Kritisch)",
     "statusInBearbeitung": "In Bearbeitung",
     "statusHinweisOhneOnboarding": "Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen erstellt.",
-    "statusHinweisMitOnboarding": "{anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst – die Status-Analyse folgt im nächsten Paket.",
+    "statusHinweisMitOnboarding": "{anzahl, plural, one {# requirement applies} other {# requirements apply}} to your profile.",
     "statusFooter": "Verordnung (EU) 2025/40 · PPWR",
     "rollenTitel": "Ihre Rollen",
     "rollenLeer": "Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie – etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus dem Betroffenheits-Check im Onboarding.",
@@ -482,7 +483,14 @@
         "chip": "Betrifft Ihre Produktlinien"
       }
     ],
-    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe"
+    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe",
+    "statusZutreffend": "Applicable requirements",
+    "statusErledigt": "Done",
+    "statusKritisch": "Open – already in force",
+    "statusVormerkung": "Noted – applies later",
+    "statusAnsehen": "View status list",
+    "schritteAlleErledigt": "All applicable requirements are done or in progress – no open step right now.",
+    "schrittZurAnforderung": "View details"
   },
   "Wissen": {
     "titel": "Wissen",
@@ -709,6 +717,13 @@
     "entlastungen": {
       "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
       "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
+    },
+    "materialien": {
+      "kunststoff": "Plastic",
+      "glas": "Glass",
+      "metall": "Metal",
+      "papier_karton": "Paper/board",
+      "verbund": "Composite"
     }
   },
   "Vorzimmer": {
@@ -787,5 +802,27 @@
     "keineTreffer": "No practical questions match your selection – adjust the wording or reset the filters.",
     "zurFrage": "See the full answer in the practical questions →",
     "rechtsstandLabel": "Legal status"
+  },
+  "StatusAnalyse": {
+    "titel": "Status analysis",
+    "beschreibung": "All requirements that apply to your profile – with reason, deadline and processing status.",
+    "ohneOnboarding": "The status analysis needs your packaging profile from onboarding.",
+    "onboardingCta": "Start onboarding",
+    "zusammenfassung": "{anzahl, plural, one {# applicable requirement} other {# applicable requirements}}",
+    "zahlErledigt": "{anzahl} done",
+    "zahlInBearbeitung": "{anzahl} in progress",
+    "zahlKritisch": "{anzahl} open – already in force",
+    "zahlVormerkung": "{anzahl} noted – applies later",
+    "grund": "Applies because you are {rollen} and use {typen}.",
+    "grundAlleTypen": "Applies because you are {rollen} – covers all packaging types.",
+    "materialHinweis": "Only applies to {materialien} – please check whether your packaging is affected.",
+    "status": {
+      "offen": "Open",
+      "in_bearbeitung": "In progress",
+      "erledigt": "Done"
+    },
+    "statusLabel": "Processing status for “{titel}”",
+    "keineTreffer": "Based on the current data, none of the published requirements apply to your profile.",
+    "fussnote": "The mapping follows your roles and packaging types from onboarding. Material-specific requirements are shown as a precaution, since materials are not captured in the profile."
   }
 }

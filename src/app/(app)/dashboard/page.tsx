@@ -11,7 +11,9 @@ import {
   TrafficDot,
 } from "@/components/ui";
 import type { RollenSet } from "@/lib/rollen-engine";
+import { formatDate } from "@/lib/labels";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
+import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { createClient } from "@/lib/supabase/server";
 import { pruefeZugang } from "@/lib/zugang";
 import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
@@ -77,6 +79,7 @@ export default async function DashboardPage({
     ergebnisse = (data ?? []) as ErgebnisZeile[];
   }
   const onboardingFertig = Boolean(profil?.onboarding_abgeschlossen);
+  const analyse = onboardingFertig ? await ladeStatusAnalyse() : null;
 
   const rollenLabel = (rolle: string) =>
     tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle;
@@ -87,6 +90,12 @@ export default async function DashboardPage({
     ...schritt,
     erledigt: i < 2 ? onboardingFertig : false,
   }));
+
+  // Nach dem Onboarding speisen sich die nächsten Schritte aus der
+  // Status-Analyse: die drei dringendsten offenen Anforderungen.
+  const offeneSchritte = (analyse?.zutreffend ?? [])
+    .filter((zeile) => zeile.status === "offen")
+    .slice(0, 3);
 
   const [memos, news, videos] = await Promise.all([
     ladeUpdateMemos(),
@@ -129,35 +138,113 @@ export default async function DashboardPage({
         <LegalCard>
           <div className="flex-1 p-6">
             <h2 className="mb-8 text-headline text-ink">{t("statusTitel")}</h2>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between border-b border-line-strong pb-2">
-                <span className="text-body-lg text-ink-muted">
-                  {t("statusVollstaendig")}
-                </span>
-                <span className="flex gap-1">
-                  <TrafficDot color="dim" />
-                  <TrafficDot color="dim" />
-                  <TrafficDot color="dim" />
-                </span>
-              </div>
-              <div className="flex items-center justify-between border-b border-line-strong pb-2">
-                <span className="text-body-lg text-ink-muted">
-                  {t("statusOffen")}
-                </span>
-                <TrafficDot color="dim" />
-              </div>
-              <div className="flex items-center justify-between pb-2">
-                <span className="text-body-lg text-ink-muted">
-                  {t("statusInBearbeitung")}
-                </span>
-                <TrafficDot color="dim" />
-              </div>
-            </div>
-            <p className="mt-6 text-body-sm text-ink-muted">
-              {onboardingFertig
-                ? t("statusHinweisMitOnboarding", { anzahl: ergebnisse.length })
-                : t("statusHinweisOhneOnboarding")}
-            </p>
+            {analyse ? (
+              <>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusZutreffend")}
+                    </span>
+                    <span className="text-body-lg font-bold text-ink">
+                      {analyse.zahlen.gesamt}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusErledigt")}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-body-lg font-bold text-ink">
+                        {analyse.zahlen.erledigt}
+                      </span>
+                      <TrafficDot
+                        color={analyse.zahlen.erledigt > 0 ? "green" : "dim"}
+                      />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusInBearbeitung")}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-body-lg font-bold text-ink">
+                        {analyse.zahlen.inBearbeitung}
+                      </span>
+                      <TrafficDot
+                        color={
+                          analyse.zahlen.inBearbeitung > 0 ? "gold" : "dim"
+                        }
+                      />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusKritisch")}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-body-lg font-bold text-ink">
+                        {analyse.zahlen.kritisch}
+                      </span>
+                      <TrafficDot
+                        color={analyse.zahlen.kritisch > 0 ? "red" : "dim"}
+                      />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusVormerkung")}
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-body-lg font-bold text-ink">
+                        {analyse.zahlen.vormerkung}
+                      </span>
+                      <TrafficDot color="dim" />
+                    </span>
+                  </div>
+                </div>
+                <p className="mt-6 text-body-sm text-ink-muted">
+                  {t("statusHinweisMitOnboarding", {
+                    anzahl: analyse.zahlen.gesamt,
+                  })}
+                </p>
+                <Link
+                  href="/dashboard/status"
+                  className="mt-3 inline-block text-body-sm font-medium text-legal hover:underline"
+                >
+                  {t("statusAnsehen")}
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusVollstaendig")}
+                    </span>
+                    <span className="flex gap-1">
+                      <TrafficDot color="dim" />
+                      <TrafficDot color="dim" />
+                      <TrafficDot color="dim" />
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between border-b border-line-strong pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusOffen")}
+                    </span>
+                    <TrafficDot color="dim" />
+                  </div>
+                  <div className="flex items-center justify-between pb-2">
+                    <span className="text-body-lg text-ink-muted">
+                      {t("statusInBearbeitung")}
+                    </span>
+                    <TrafficDot color="dim" />
+                  </div>
+                </div>
+                <p className="mt-6 text-body-sm text-ink-muted">
+                  {t("statusHinweisOhneOnboarding")}
+                </p>
+              </>
+            )}
           </div>
           <LegalCardFooter>{t("statusFooter")}</LegalCardFooter>
         </LegalCard>
@@ -255,26 +342,74 @@ export default async function DashboardPage({
       <LegalCard className="mt-6">
         <div className="flex-1 p-6">
           <h2 className="mb-8 text-headline text-ink">{t("schritteTitel")}</h2>
-          <ol className="space-y-6 border-l border-line-strong pl-6">
-            {schritte.map((schritt) => (
-              <li key={schritt.nr} className="flex gap-4">
-                <span className="font-mono text-mono-sm text-ink-muted">
-                  {schritt.nr}
-                </span>
-                <div>
-                  <h3 className="flex flex-wrap items-center gap-2 text-label uppercase text-ink">
-                    <span>{schritt.titel}</span>
-                    {schritt.erledigt && (
-                      <Badge variant="green">{t("erledigt")}</Badge>
-                    )}
-                  </h3>
-                  <p className="mt-1 text-body-sm text-ink-muted">
-                    {schritt.text}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
+          {analyse && analyse.zahlen.gesamt > 0 ? (
+            offeneSchritte.length === 0 ? (
+              <p className="text-body text-ink-muted">
+                {t("schritteAlleErledigt")}
+              </p>
+            ) : (
+              <ol className="space-y-6 border-l border-line-strong pl-6">
+                {offeneSchritte.map((zeile, i) => (
+                  <li key={zeile.anforderung.id} className="flex gap-4">
+                    <span className="font-mono text-mono-sm text-ink-muted">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="flex flex-wrap items-center gap-2 text-label uppercase text-ink">
+                        <span>{zeile.anforderung.titel}</span>
+                        <Badge
+                          variant={
+                            zeile.anforderung.gilt_status === "in_kraft"
+                              ? "red"
+                              : "gold"
+                          }
+                        >
+                          {tLabels(
+                            `giltStatus.${zeile.anforderung.gilt_status}`
+                          )}
+                          {zeile.anforderung.gilt_ab
+                            ? ` · ${formatDate(zeile.anforderung.gilt_ab)}`
+                            : ""}
+                        </Badge>
+                      </h3>
+                      {zeile.anforderung.kurzerklaerung && (
+                        <p className="mt-1 text-body-sm text-ink-muted">
+                          {zeile.anforderung.kurzerklaerung}
+                        </p>
+                      )}
+                      <Link
+                        href={`/wissen/anforderungen/${zeile.anforderung.id}`}
+                        className="mt-1 inline-block text-body-sm font-medium text-legal hover:underline"
+                      >
+                        {t("schrittZurAnforderung")}
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )
+          ) : (
+            <ol className="space-y-6 border-l border-line-strong pl-6">
+              {schritte.map((schritt) => (
+                <li key={schritt.nr} className="flex gap-4">
+                  <span className="font-mono text-mono-sm text-ink-muted">
+                    {schritt.nr}
+                  </span>
+                  <div>
+                    <h3 className="flex flex-wrap items-center gap-2 text-label uppercase text-ink">
+                      <span>{schritt.titel}</span>
+                      {schritt.erledigt && (
+                        <Badge variant="green">{t("erledigt")}</Badge>
+                      )}
+                    </h3>
+                    <p className="mt-1 text-body-sm text-ink-muted">
+                      {schritt.text}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
         <LegalCardFooter>{t("schritteFooter")}</LegalCardFooter>
       </LegalCard>

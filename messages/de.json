@@ -26,7 +26,8 @@
     "wissen": "Wissen – PPWR Radar",
     "auslegungen": "Auslegungen – PPWR Radar",
     "glossar": "Glossar – PPWR Radar",
-    "anforderung": "Anforderung – PPWR Radar"
+    "anforderung": "Anforderung – PPWR Radar",
+    "status": "Status-Analyse"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -425,7 +426,7 @@
     "statusOffen": "Offen (Kritisch)",
     "statusInBearbeitung": "In Bearbeitung",
     "statusHinweisOhneOnboarding": "Die Status-Analyse wird nach dem Onboarding für Ihre Verpackungen erstellt.",
-    "statusHinweisMitOnboarding": "{anzahl, plural, one {# Produktlinie} other {# Produktlinien}} erfasst – die Status-Analyse folgt im nächsten Paket.",
+    "statusHinweisMitOnboarding": "{anzahl, plural, one {# Anforderung trifft} other {# Anforderungen treffen}} auf Ihr Profil zu.",
     "statusFooter": "Verordnung (EU) 2025/40 · PPWR",
     "rollenTitel": "Ihre Rollen",
     "rollenLeer": "Noch keine Rollen ermittelt. Ihre Rollen je Produktlinie – etwa Erzeuger, Hersteller oder Importeur – ergeben sich aus dem Betroffenheits-Check im Onboarding.",
@@ -482,7 +483,14 @@
         "chip": "Betrifft Ihre Produktlinien"
       }
     ],
-    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe"
+    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe",
+    "statusZutreffend": "Zutreffende Anforderungen",
+    "statusErledigt": "Erledigt",
+    "statusKritisch": "Offen – gilt bereits",
+    "statusVormerkung": "Vormerkung – gilt später",
+    "statusAnsehen": "Status-Liste ansehen",
+    "schritteAlleErledigt": "Alle zutreffenden Anforderungen sind erledigt oder in Bearbeitung – aktuell kein offener Schritt.",
+    "schrittZurAnforderung": "Details ansehen"
   },
   "Wissen": {
     "titel": "Wissen",
@@ -709,6 +717,13 @@
     "entlastungen": {
       "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
       "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
+    },
+    "materialien": {
+      "kunststoff": "Kunststoff",
+      "glas": "Glas",
+      "metall": "Metall",
+      "papier_karton": "Papier/Karton",
+      "verbund": "Verbundmaterial"
     }
   },
   "Vorzimmer": {
@@ -787,5 +802,27 @@
     "keineTreffer": "Keine Praxisfragen zu Ihrer Auswahl – Formulierung ändern oder Filter zurücksetzen.",
     "zurFrage": "Zur vollständigen Antwort in den Praxisfragen →",
     "rechtsstandLabel": "Rechtsstand"
+  },
+  "StatusAnalyse": {
+    "titel": "Status-Analyse",
+    "beschreibung": "Alle Anforderungen, die auf Ihr Profil zutreffen – mit Grund, Frist und Bearbeitungsstand.",
+    "ohneOnboarding": "Die Status-Analyse braucht Ihr Verpackungsprofil aus dem Onboarding.",
+    "onboardingCta": "Onboarding starten",
+    "zusammenfassung": "{anzahl, plural, one {# zutreffende Anforderung} other {# zutreffende Anforderungen}}",
+    "zahlErledigt": "{anzahl} erledigt",
+    "zahlInBearbeitung": "{anzahl} in Bearbeitung",
+    "zahlKritisch": "{anzahl} offen – gilt bereits",
+    "zahlVormerkung": "{anzahl} vorgemerkt – gilt später",
+    "grund": "Trifft zu, weil Sie {rollen} sind und {typen} einsetzen.",
+    "grundAlleTypen": "Trifft zu, weil Sie {rollen} sind – gilt für alle Verpackungsarten.",
+    "materialHinweis": "Gilt nur für {materialien} – bitte prüfen, ob Ihre Verpackungen betroffen sind.",
+    "status": {
+      "offen": "Offen",
+      "in_bearbeitung": "In Bearbeitung",
+      "erledigt": "Erledigt"
+    },
+    "statusLabel": "Bearbeitungsstatus für „{titel}“",
+    "keineTreffer": "Nach aktuellem Stand trifft keine der ausgespielten Anforderungen auf Ihr Profil zu.",
+    "fussnote": "Die Zuordnung folgt Ihren Rollen und Verpackungsarten aus dem Onboarding. Materialspezifische Anforderungen zeigen wir vorsorglich mit an, da Materialien im Profil nicht erfasst werden."
   }
 }

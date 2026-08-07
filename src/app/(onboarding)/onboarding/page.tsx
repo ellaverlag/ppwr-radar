@@ -51,7 +51,8 @@ const ERKLAERUNGS_QUELLEN: Record<
     um: { art: "lemma", code: "L53" },
     transport: { art: "lemma", code: "L54" },
     service: { art: "lemma", code: "L51" },
-    // ecommerce, primaerproduktion: noch kein Begriffs-Lemma (Lücken-Liste)
+    ecommerce: { art: "lemma", code: "L61" },
+    primaerproduktion: { art: "lemma", code: "L62" },
   },
   F06: {
     herstellen_lassen: { art: "lemma", code: "L48" },
@@ -63,11 +64,14 @@ const ERKLAERUNGS_QUELLEN: Record<
       id: "fulfillment_dienstleister",
     },
     liefert_verpackungen_oder_material: { art: "rolle", id: "lieferant" },
-    // stellt_verpackung_physisch_her, befuellt_versiegelt, packt_aus: Lücke
+    stellt_verpackung_physisch_her: { art: "lemma", code: "L63" },
+    befuellt_versiegelt: { art: "lemma", code: "L64" },
+    packt_aus: { art: "lemma", code: "L65" },
   },
   F07: {
+    eigene: { art: "lemma", code: "L66" },
     fremde: { art: "lemma", code: "L48" },
-    // eigene, keine: Lücke
+    keine: { art: "lemma", code: "L67" },
   },
 };
 
