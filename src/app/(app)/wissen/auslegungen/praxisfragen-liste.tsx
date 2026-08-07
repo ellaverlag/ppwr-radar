@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { SearchIcon } from "@/components/icons";
 import { formatDate } from "@/lib/labels";
+import { anforderungUrl } from "@/lib/wissen-links";
 import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
 
 /**
@@ -255,7 +256,7 @@ export function PraxisfragenListe({
                             {frage.verwandte.map((anforderung) => (
                               <li key={anforderung.id}>
                                 <Link
-                                  href={`/wissen/anforderungen/${anforderung.id}`}
+                                  href={anforderungUrl(anforderung.id)}
                                   className="text-body-sm font-medium text-legal hover:underline"
                                 >
                                   {anforderung.nr != null && (

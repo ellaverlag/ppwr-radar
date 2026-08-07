@@ -201,22 +201,19 @@ export default async function AnforderungDetailPage({
               <dt className="inline font-semibold text-ink">
                 {t("rechtsquelle")}{" "}
               </dt>
-              <dd className="inline">
-                {anforderung.rechtsquelle_link ? (
-                  <a
-                    href={anforderung.rechtsquelle_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-legal underline-offset-2 hover:underline"
-                  >
-                    {anforderung.rechtsquelle}
-                  </a>
-                ) : (
-                  <span className="text-ink-muted">
-                    {anforderung.rechtsquelle}
-                  </span>
-                )}
+              <dd className="inline text-ink-muted">
+                {anforderung.rechtsquelle}
               </dd>
+              {anforderung.rechtsquelle_link && (
+                <a
+                  href={anforderung.rechtsquelle_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 block text-body-sm font-medium text-legal hover:underline"
+                >
+                  {t("amtsblattLink")} &rarr;
+                </a>
+              )}
             </div>
             {anforderung.verpackdg_quelle && (
               <div>

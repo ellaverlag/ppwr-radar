@@ -14,6 +14,7 @@ import type { RollenSet } from "@/lib/rollen-engine";
 import { formatDate } from "@/lib/labels";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
 import { ladeStatusAnalyse } from "@/lib/status-analyse";
+import { anforderungUrl } from "@/lib/wissen-links";
 import { createClient } from "@/lib/supabase/server";
 import { pruefeZugang } from "@/lib/zugang";
 import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
@@ -378,7 +379,7 @@ export default async function DashboardPage({
                         </p>
                       )}
                       <Link
-                        href={`/wissen/anforderungen/${zeile.anforderung.id}`}
+                        href={anforderungUrl(zeile.anforderung.id)}
                         className="mt-1 inline-block text-body-sm font-medium text-legal hover:underline"
                       >
                         {t("schrittZurAnforderung")}

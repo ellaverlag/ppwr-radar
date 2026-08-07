@@ -170,9 +170,16 @@ export async function getAnforderungen(): Promise<Anforderung[]> {
   return (data ?? []) as Anforderung[];
 }
 
-export async function getAnforderung(id: string): Promise<Anforderung | null> {
+/**
+ * Detail-Lookup per UUID oder Nummer. Numerische Referenzen (aus Verweisen
+ * wie „#12“) lösen über anforderungen.nr auf – eine Nummer, die es nicht
+ * gibt, liefert null (→ 404), eine gültige führt immer zur Detailseite.
+ */
+export async function getAnforderung(ref: string): Promise<Anforderung | null> {
   const client = await wissensbasisClient();
-  let query = client.from("anforderungen").select("*").eq("id", id);
+  const alsNr = /^\d{1,4}$/.test(ref) ? Number(ref) : null;
+  let query = client.from("anforderungen").select("*");
+  query = alsNr != null ? query.eq("nr", alsNr) : query.eq("id", ref);
 
   if (!isPreviewMode()) {
     query = query.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);

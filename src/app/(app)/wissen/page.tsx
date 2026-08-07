@@ -11,7 +11,9 @@ import {
   type GiltStatus,
   type Kategorie,
 } from "@/lib/wissensbasis";
+import { ORIGINALTEXTE } from "../../../../content/originaltexte";
 import { WissenTabsNav } from "./tabs-server";
+import { anforderungUrl } from "@/lib/wissen-links";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
@@ -186,7 +188,7 @@ export default async function WissenPage({
             {anforderungen.map((a) => (
               <li key={a.id}>
                 <Link
-                  href={`/wissen/anforderungen/${a.id}`}
+                  href={anforderungUrl(a.id)}
                   className="group grid grid-cols-1 gap-3 px-6 py-5 transition-colors hover:bg-surface md:grid-cols-12 md:items-center md:gap-4"
                 >
                   <div className="md:col-span-6">
@@ -222,6 +224,48 @@ export default async function WissenPage({
           </ul>
         </LegalCard>
       )}
+
+      {/* Originaltexte – nur offizielle Quellen, keine gehosteten Kopien */}
+      <section className="mt-12">
+        <LegalCard>
+          <div className="p-6">
+            <h2 className="text-headline text-ink">
+              {t("originaltexteTitel")}
+            </h2>
+            <p className="mt-2 text-body-sm text-ink-muted">
+              {t("originaltexteBeschreibung")}
+            </p>
+            <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+              {ORIGINALTEXTE.map((quelle) => (
+                <li
+                  key={quelle.titel}
+                  className="rounded border border-line bg-canvas p-5"
+                >
+                  <h3 className="text-body font-bold text-ink">
+                    {quelle.titel}
+                  </h3>
+                  <p className="mt-1 text-body-sm text-ink-muted">
+                    {quelle.beschreibung}
+                  </p>
+                  {quelle.hinweis && (
+                    <p className="mt-1 text-label uppercase text-ink-muted">
+                      {quelle.hinweis}
+                    </p>
+                  )}
+                  <a
+                    href={quelle.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 inline-block text-body-sm font-medium text-legal hover:underline"
+                  >
+                    {t("originaltexteLink")} &rarr;
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </LegalCard>
+      </section>
     </>
   );
 }

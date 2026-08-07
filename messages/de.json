@@ -527,7 +527,10 @@
     "wasZuTun": "Was ist zu tun",
     "tatbestandTitel": "Tatbestand",
     "rechtsfolgenTitel": "Rechtsfolgen je Rolle",
-    "keineErklaerung": "Die redaktionellen Erklärtexte zu dieser Anforderung folgen mit der Inhalts-Freigabe."
+    "keineErklaerung": "Die redaktionellen Erklärtexte zu dieser Anforderung folgen mit der Inhalts-Freigabe.",
+    "originaltexteTitel": "Originaltexte",
+    "originaltexteBeschreibung": "Die maßgeblichen Rechtstexte im Original – wir verlinken ausschließlich auf offizielle Quellen.",
+    "originaltexteLink": "Zur offiziellen Quelle"
   },
   "Auslegungen": {
     "suchLabel": "Auslegungen durchsuchen",
@@ -556,7 +559,8 @@
     "rechtsquelle": "Rechtsquelle:",
     "bezugVerpackg": "Bezug VerpackG:",
     "verweise": "Verweise:",
-    "footerZeile": "{rechtsquelle} · Stand {datum}"
+    "footerZeile": "{rechtsquelle} · Stand {datum}",
+    "amtsblattLink": "Im Amtsblatt lesen"
   },
   "Glossar": {
     "suchLabel": "Glossar durchsuchen",

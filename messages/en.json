@@ -527,7 +527,10 @@
     "wasZuTun": "What to do",
     "tatbestandTitel": "Conditions",
     "rechtsfolgenTitel": "Legal consequences per role",
-    "keineErklaerung": "The editorial explanations for this requirement follow with the content approval."
+    "keineErklaerung": "The editorial explanations for this requirement follow with the content approval.",
+    "originaltexteTitel": "Original texts",
+    "originaltexteBeschreibung": "The authoritative legal texts in the original – we link exclusively to official sources.",
+    "originaltexteLink": "Go to official source"
   },
   "Auslegungen": {
     "suchLabel": "Auslegungen durchsuchen",
@@ -556,7 +559,8 @@
     "rechtsquelle": "Rechtsquelle:",
     "bezugVerpackg": "Bezug VerpackG:",
     "verweise": "Verweise:",
-    "footerZeile": "{rechtsquelle} · Stand {datum}"
+    "footerZeile": "{rechtsquelle} · Stand {datum}",
+    "amtsblattLink": "Read in the Official Journal"
   },
   "Glossar": {
     "suchLabel": "Glossar durchsuchen",

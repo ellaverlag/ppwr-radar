@@ -5,6 +5,11 @@ import {
   type SupabaseClient,
 } from "@supabase/supabase-js";
 import { isPreviewMode } from "@/lib/preview";
+import {
+  anforderungUrl,
+  glossarBegriffUrl,
+  praxisfrageUrl,
+} from "@/lib/wissen-links";
 import { createClient as createSessionClient } from "@/lib/supabase/server";
 import type { RollenSet } from "@/lib/rollen-engine";
 import {
@@ -140,22 +145,23 @@ async function ladeLemmata(
         if (anforderung) {
           chips.push({
             label: `#${String(nr).padStart(2, "0")} ${kuerze(anforderung.titel, 32)}`,
-            href: `/wissen/anforderungen/${anforderung.id}`,
+            href: anforderungUrl(anforderung.id),
           });
         }
       }
       for (const code of lemma.verweis_auslegungen ?? []) {
-        // Sprechendes Label statt internem Code; der Code bleibt nur im Anker
-        chips.push({
-          label: auslegungNachCode.get(code) ?? code,
-          href: `/wissen/auslegungen#${code}`,
-        });
+        // Nur Chips für Codes, die es (in dieser Ausspielung) gibt – sonst
+        // zeigte der Anker ins Leere. Sprechendes Label statt internem Code.
+        const label = auslegungNachCode.get(code);
+        if (label) {
+          chips.push({ label, href: praxisfrageUrl(code) });
+        }
       }
       for (const rolleId of lemma.verweis_rollen ?? []) {
         const begriff = rolleNachId.get(rolleId);
         chips.push({
           label: begriff ?? rolleId,
-          href: `/wissen/glossar?q=${encodeURIComponent(begriff ?? rolleId)}`,
+          href: glossarBegriffUrl(begriff ?? rolleId),
         });
       }
 
@@ -300,7 +306,7 @@ export async function ladeGlossar(): Promise<{
       begriff_en: null,
       kurztext: a.kurzerklaerung ? kuerze(a.kurzerklaerung) : null,
       quelle: a.rechtsquelle,
-      href: `/wissen/anforderungen/${a.id}`,
+      href: anforderungUrl(a.id),
       verpackungstypen: a.betrifft_verpackungstypen,
       suchtext: alsSuchtext(a.titel, a.kurzerklaerung),
       antwort: null,
@@ -323,9 +329,7 @@ export async function ladeGlossar(): Promise<{
       // Interne Codes (A01 …) bleiben aus der Nutzer-Ansicht heraus
       quelle: a.quellen[0] ?? null,
       // Deep-Link in die Praxisfragen (#Code); ohne Code Volltext-Fallback
-      href: a.code
-        ? `/wissen/auslegungen#${a.code}`
-        : `/wissen/auslegungen?q=${encodeURIComponent(a.frage)}`,
+      href: praxisfrageUrl(a.code, a.frage),
       suchtext: alsSuchtext(a.kurztitel, a.frage, a.antwort),
       verpackungstypen: [],
       antwort: a.antwort,

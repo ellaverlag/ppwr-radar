@@ -10,6 +10,7 @@ import {
   type ZutreffendeAnforderung,
 } from "@/lib/status-analyse";
 import { erforderePaket } from "@/lib/zugang";
+import { anforderungUrl } from "@/lib/wissen-links";
 import { statusSetzen } from "./actions";
 import { StatusDropdown } from "./status-dropdown";
 
@@ -132,7 +133,7 @@ export default async function StatusPage() {
                         </span>
                       )}
                       <Link
-                        href={`/wissen/anforderungen/${anforderung.id}`}
+                        href={anforderungUrl(anforderung.id)}
                         className="text-body font-bold text-ink hover:text-primary"
                       >
                         {anforderung.titel}
