@@ -47,7 +47,9 @@
     "footerCopyright": "© 2026 PPWR Radar",
     "footerImpressum": "Impressum",
     "footerDatenschutz": "Datenschutz",
-    "footerKontakt": "Kontakt"
+    "footerKontakt": "Kontakt",
+    "menueKonto": "Account",
+    "menueZahlung": "Manage billing"
   },
   "Landing": {
     "nav": {
@@ -291,7 +293,8 @@
     "checkBandKompakt": {
       "titel": "Still unsure? Take the free check first.",
       "cta": "Start the impact check"
-    }
+    },
+    "abschied": "Your account has been deleted. Thank you for trying PPWR Radar – you are welcome back any time."
   },
   "Login": {
     "fehler": {
@@ -694,5 +697,30 @@
     "keineVideos": "No videos available right now.",
     "quelleFooter": "Source: packaging-journal.de · external content",
     "redaktionKopf": "From the newsroom of"
+  },
+  "Konto": {
+    "titel": "Account",
+    "beschreibung": "Your master data, your package and your account settings.",
+    "gespeichert": "Master data saved.",
+    "speichern": "Save master data",
+    "hinweisOnboardingVor": "To change activities, product lines and packaging, run the",
+    "hinweisOnboardingLink": "onboarding again",
+    "aboTitel": "Your package",
+    "aboPaketPpwrReady": "PPWR|ready package",
+    "aboStatus": "Status",
+    "aboStatusAktiv": "Active",
+    "aboStatusInaktiv": "Inactive",
+    "aboLaufzeit": "Term until",
+    "aboPortalCta": "Manage billing / invoices & cancellation",
+    "aboHinweis": "Cancellation takes effect at the end of the term – everything stays unlocked until then, and your generated documents remain usable afterwards.",
+    "loeschenTitel": "Delete account",
+    "loeschenText": "Permanently deletes your profile, product lines, role results and user account. This cannot be undone.",
+    "loeschenAboWarnung": "You have an active subscription: it will be cancelled at the end of the term; the current year is not refunded on deletion.",
+    "loeschenBestaetigungLabel": "Type “LÖSCHEN” to confirm",
+    "loeschenCta": "Delete account permanently",
+    "fehlerBestaetigung": "Please type exactly “LÖSCHEN” to confirm.",
+    "fehlerFirmenname": "Please enter your company name.",
+    "fehlerLoeschung": "Deletion could not be completed. Please contact support.",
+    "fehlerStripe": "Cancelling the subscription with Stripe failed – the account was not deleted. Please try again."
   }
 }

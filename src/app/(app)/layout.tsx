@@ -2,11 +2,13 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BrandLink } from "@/components/brand";
-import { LogoutIcon, PersonIcon } from "@/components/icons";
+import { LogoutIcon } from "@/components/icons";
+import { KontoMenue } from "@/components/konto-menue";
 import { NavLinks, type NavItem } from "@/components/nav-links";
 import { TopbarTitel } from "@/components/topbar-titel";
 import { isPreviewMode } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
+import { zahlungVerwalten } from "./dashboard/actions";
 
 function SignoutButton({ label }: { label: string }) {
   return (
@@ -35,6 +37,21 @@ export default async function AppLayout({
   if (!user) {
     redirect("/login");
   }
+
+  const [{ data: profil }, { data: abo }] = await Promise.all([
+    supabase
+      .from("profile")
+      .select("firmenname")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+    supabase
+      .from("subscriptions")
+      .select("stripe_customer_id")
+      .eq("user_id", user.id)
+      .maybeSingle(),
+  ]);
+  const anzeigename = profil?.firmenname || user.email || "Konto";
+  const hatStripeKunde = Boolean(abo?.stripe_customer_id);
 
   const t = await getTranslations("AppLayout");
   const tCommon = await getTranslations("Common");
@@ -80,17 +97,15 @@ export default async function AppLayout({
           {/* Topbar (Desktop) */}
           <header className="hidden h-16 items-center justify-between border-b border-line bg-surface px-6 md:flex">
             <TopbarTitel items={navItems} className="text-headline text-ink" />
-            <div className="flex items-center gap-4">
-              <span
-                className="hidden max-w-64 truncate rounded border border-line-strong px-3 py-1 text-body-sm text-ink-muted lg:inline-block"
-                title={user.email ?? undefined}
-              >
-                {user.email}
-              </span>
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-line-strong bg-line-strong text-ink">
-                <PersonIcon className="h-5 w-5" />
-              </span>
-            </div>
+            <KontoMenue
+              anzeigename={anzeigename}
+              zahlungAction={hatStripeKunde ? zahlungVerwalten : undefined}
+              labels={{
+                konto: t("menueKonto"),
+                zahlung: t("menueZahlung"),
+                abmelden: tCommon("abmelden"),
+              }}
+            />
           </header>
 
           {/* Topbar + Navigation (Mobil) */}
@@ -103,7 +118,16 @@ export default async function AppLayout({
                   className="truncate text-body-sm font-semibold text-ink-muted"
                 />
               </span>
-              <SignoutButton label={tCommon("abmelden")} />
+              <KontoMenue
+                anzeigename={anzeigename}
+                zahlungAction={hatStripeKunde ? zahlungVerwalten : undefined}
+                labels={{
+                  konto: t("menueKonto"),
+                  zahlung: t("menueZahlung"),
+                  abmelden: tCommon("abmelden"),
+                }}
+                kompakt
+              />
             </div>
             <div className="overflow-x-auto px-2 pb-1">
               <NavLinks items={navItems} orientation="horizontal" />

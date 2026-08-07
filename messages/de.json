@@ -47,7 +47,9 @@
     "footerCopyright": "© 2026 PPWR Radar",
     "footerImpressum": "Impressum",
     "footerDatenschutz": "Datenschutz",
-    "footerKontakt": "Kontakt"
+    "footerKontakt": "Kontakt",
+    "menueKonto": "Konto",
+    "menueZahlung": "Zahlung verwalten"
   },
   "Landing": {
     "nav": {
@@ -291,7 +293,8 @@
     "checkBandKompakt": {
       "titel": "Noch unsicher? Erst kostenlos prüfen.",
       "cta": "Zum Betroffenheits-Check"
-    }
+    },
+    "abschied": "Ihr Konto wurde gelöscht. Danke, dass Sie PPWR Radar ausprobiert haben – Sie sind jederzeit wieder willkommen."
   },
   "Login": {
     "fehler": {
@@ -694,5 +697,30 @@
     "keineVideos": "Aktuell keine Videos verfügbar.",
     "quelleFooter": "Quelle: packaging-journal.de · externe Inhalte",
     "redaktionKopf": "Aus der Redaktion von"
+  },
+  "Konto": {
+    "titel": "Konto",
+    "beschreibung": "Ihre Stammdaten, Ihr Paket und Ihre Konto-Einstellungen.",
+    "gespeichert": "Stammdaten gespeichert.",
+    "speichern": "Stammdaten speichern",
+    "hinweisOnboardingVor": "Tätigkeiten, Produktlinien und Verpackungen ändern Sie über einen erneuten Durchlauf des",
+    "hinweisOnboardingLink": "Onboardings",
+    "aboTitel": "Ihr Paket",
+    "aboPaketPpwrReady": "PPWR|ready Paket",
+    "aboStatus": "Status",
+    "aboStatusAktiv": "Aktiv",
+    "aboStatusInaktiv": "Inaktiv",
+    "aboLaufzeit": "Laufzeit bis",
+    "aboPortalCta": "Zahlung verwalten / Rechnung & Kündigung",
+    "aboHinweis": "Eine Kündigung wirkt zum Laufzeitende – bis dahin bleibt alles freigeschaltet, und Ihre erstellten Dokumente bleiben auch danach nutzbar.",
+    "loeschenTitel": "Konto löschen",
+    "loeschenText": "Löscht Ihr Profil, Ihre Produktlinien, Rollen-Ergebnisse und Ihr Nutzerkonto endgültig. Dieser Schritt kann nicht rückgängig gemacht werden.",
+    "loeschenAboWarnung": "Sie haben ein aktives Abo: Es wird zum Laufzeitende gekündigt; das laufende Jahr wird bei Löschung nicht erstattet.",
+    "loeschenBestaetigungLabel": "Zur Bestätigung „LÖSCHEN“ eingeben",
+    "loeschenCta": "Konto endgültig löschen",
+    "fehlerBestaetigung": "Bitte geben Sie zur Bestätigung exakt „LÖSCHEN“ ein.",
+    "fehlerFirmenname": "Bitte geben Sie Ihren Firmennamen an.",
+    "fehlerLoeschung": "Die Löschung konnte nicht abgeschlossen werden. Bitte wenden Sie sich an den Support.",
+    "fehlerStripe": "Die Abo-Kündigung bei Stripe ist fehlgeschlagen – das Konto wurde nicht gelöscht. Bitte versuchen Sie es erneut."
   }
 }

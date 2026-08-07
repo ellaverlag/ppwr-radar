@@ -117,7 +117,12 @@ const FEATURE_ICONS = [
 export default async function LandingPage({
   searchParams,
 }: {
-  searchParams: Promise<{ code?: string; token_hash?: string; type?: string }>;
+  searchParams: Promise<{
+    code?: string;
+    token_hash?: string;
+    type?: string;
+    abschied?: string;
+  }>;
 }) {
   // Callback-Fix: Leitet Supabase den Magic-Link auf die Site-URL statt auf
   // /auth/callback (z. B. Site-URL-Fallback bei nicht gelisteter
@@ -163,6 +168,11 @@ export default async function LandingPage({
 
   return (
     <div className={`${landingFontClasses} bg-canvas text-ink`}>
+      {params.abschied === "1" && (
+        <p className="border-b border-line bg-primary-tint px-6 py-3 text-center text-body-sm text-ink">
+          {t("abschied")}
+        </p>
+      )}
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-line bg-white/90 backdrop-blur">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-6">
