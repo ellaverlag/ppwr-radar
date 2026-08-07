@@ -185,9 +185,12 @@ export default async function LandingPage({
             <a href="#check" className={`${BTN_GHOST} px-4 py-2.5 text-body-sm sm:px-5`}>
               {t("nav.kostenlosPruefen")}
             </a>
-            <a href="#preise" className={`${BTN_PRIMARY} px-4 py-2.5 text-body-sm sm:px-5`}>
+            <Link
+              href="/login?next=dashboard"
+              className={`${BTN_PRIMARY} px-4 py-2.5 text-body-sm sm:px-5`}
+            >
               {t("nav.jetztStarten")}
-            </a>
+            </Link>
           </nav>
         </div>
       </header>
@@ -209,9 +212,12 @@ export default async function LandingPage({
               {t("hero.text")}
             </p>
             <div className="flex flex-wrap items-start gap-3">
-              <Link href="/login" className={`${BTN_PRIMARY} ${BTN_LG}`}>
+              {/* Bewusst #preise: Wer den Paket-Namen klickt, will erst
+                  Preis und Leistungen sehen – der Karten-Button führt dann
+                  zum Login (Modell B). */}
+              <a href="#preise" className={`${BTN_PRIMARY} ${BTN_LG}`}>
                 {t("hero.ctaPrimaer")}
-              </Link>
+              </a>
               <span className="flex flex-col gap-1.5">
                 <a href="#check" className={`${BTN_GHOST} ${BTN_LG}`}>
                   {t("hero.ctaSekundaer")}
@@ -605,7 +611,7 @@ export default async function LandingPage({
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
-              href="/login"
+              href="#preise"
               className={`${BTN} ${BTN_LG} border-transparent bg-white text-primary hover:bg-[#eef6f3]`}
             >
               {t("finalCta.ctaPrimaer")}
@@ -670,7 +676,7 @@ export default async function LandingPage({
               <Link href="/login" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">
                 {t("footer.anmelden")}
               </Link>
-              <Link href="/login" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">
+              <Link href="/login?next=dashboard" className="mb-2 block text-body-sm text-ink-muted hover:text-primary">
                 {t("footer.registrieren")}
               </Link>
             </div>
