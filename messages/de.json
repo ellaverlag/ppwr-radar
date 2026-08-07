@@ -489,7 +489,7 @@
     "beschreibungGlossar": "Das Nachschlagewerk zur PPWR: Begriffe, Anforderungen und Praxisfragen von A bis Z – mit Quelle und Link in die Tiefe.",
     "tabs": {
       "anforderungen": "Anforderungen",
-      "auslegungen": "Auslegungen",
+      "auslegungen": "Praxisfragen",
       "glossar": "Glossar"
     },
     "spalteAnforderung": "Anforderung",
@@ -738,5 +738,27 @@
     "fehlerFirmenname": "Bitte geben Sie Ihren Firmennamen an.",
     "fehlerLoeschung": "Die Löschung konnte nicht abgeschlossen werden. Bitte wenden Sie sich an den Support.",
     "fehlerStripe": "Die Abo-Kündigung bei Stripe ist fehlgeschlagen – das Konto wurde nicht gelöscht. Bitte versuchen Sie es erneut."
+  },
+  "Praxisfragen": {
+    "editorial": "Fragen, wie sie uns aus der Verpackungsbranche erreichen – beantwortet von der Redaktion, mit exakter Fundstelle, juristisch verifiziert. Wo eine Antwort auf einer Auslegung der EU-Kommission beruht, ist das gekennzeichnet.",
+    "frageFehlt": "Ihre Frage fehlt?",
+    "assistantLink": "Stellen Sie sie dem Assistant.",
+    "zaehler": "{anzahl} Fragen",
+    "meistgelesen": "Meistgelesen",
+    "suchPlaceholder": "Frage oder Stichwort eingeben – filtert sofort …",
+    "alleChip": "Alle",
+    "kategorien": {
+      "rollen_epr": "Rollen & Registrierung",
+      "stoffrecht": "Stoffe",
+      "mehrweg": "Mehrweg",
+      "kennzeichnung": "Kennzeichnung",
+      "konformitaet": "Konformität",
+      "verbote": "Verbote",
+      "sonstiges": "Sonstiges"
+    },
+    "fundstellen": "Fundstellen",
+    "verwandte": "Verwandte Anforderungen",
+    "keineTreffer": "Keine Praxisfragen zu Ihrer Auswahl – Formulierung ändern oder Filter zurücksetzen.",
+    "zurFrage": "Zur vollständigen Antwort in den Praxisfragen →"
   }
 }

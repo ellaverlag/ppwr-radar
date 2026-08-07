@@ -39,6 +39,10 @@ export interface GlossarEintrag {
   verpackungstypen: string[];
   /** Volltext-Suchanker (inkl. Alt-Begriffen und Verwechslungsfällen). */
   suchtext: string;
+  /** Nur Praxisfragen: vollständige Antwort für die Accordion-Darstellung. */
+  antwort: string | null;
+  /** Nur Praxisfragen: Code für den Deep-Link (#A01) in die Praxisfragen. */
+  code: string | null;
   /** Profil vorhanden und Matching greift. */
   betrifft_mich: boolean;
 }
@@ -99,6 +103,8 @@ async function ladeLemmata(): Promise<GlossarEintrag[]> {
           href: null,
           verpackungstypen: [],
           suchtext: alsSuchtext(begriff, kurz),
+          antwort: null,
+          code: null,
           betrifft_mich: false,
         },
       ];
@@ -172,6 +178,8 @@ export async function ladeGlossar(): Promise<{
         r.alt_bedeutung_verpackg,
         r.verwechslungsfaelle
       ),
+      antwort: null,
+      code: null,
       betrifft_mich: hatProfil && nutzerRollen.has(r.rolle_id),
     });
   }
@@ -192,6 +200,8 @@ export async function ladeGlossar(): Promise<{
       href: `/wissen/anforderungen/${a.id}`,
       verpackungstypen: a.betrifft_verpackungstypen,
       suchtext: alsSuchtext(a.titel, a.kurzerklaerung),
+      antwort: null,
+      code: null,
       betrifft_mich: betrifft,
     });
   }
@@ -207,9 +217,14 @@ export async function ladeGlossar(): Promise<{
       kurztext: kuerze(a.antwort),
       // Sprachneutral: fehlt eine Quelle, trägt der Chip den Auslegungs-Code.
       quelle: a.quellen[0] ?? a.code ?? "—",
-      href: `/wissen/auslegungen?q=${encodeURIComponent(a.frage)}`,
-      suchtext: alsSuchtext(a.frage),
+      // Deep-Link in die Praxisfragen (#Code); ohne Code Volltext-Fallback
+      href: a.code
+        ? `/wissen/auslegungen#${a.code}`
+        : `/wissen/auslegungen?q=${encodeURIComponent(a.frage)}`,
+      suchtext: alsSuchtext(a.frage, a.antwort),
       verpackungstypen: [],
+      antwort: a.antwort,
+      code: a.code,
       betrifft_mich: betrifft,
     });
   }

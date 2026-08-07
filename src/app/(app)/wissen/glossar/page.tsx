@@ -55,6 +55,7 @@ export default async function GlossarPage({
   const params = await searchParams;
   const t = await getTranslations("Glossar");
   const tWissen = await getTranslations("Wissen");
+  const tPraxis = await getTranslations("Praxisfragen");
   const tCommon = await getTranslations("Common");
   const tLabels = await getTranslations("Labels");
 
@@ -311,7 +312,49 @@ export default async function GlossarPage({
               <LegalCard>
                 <ul className="divide-y divide-line">
                   {gruppe.eintraege.map((eintrag) =>
-                    eintrag.href ? (
+                    eintrag.typ === "praxisfrage" && eintrag.antwort ? (
+                      /* Gleiche Accordion-Anatomie wie die Praxisfragen-
+                         Liste: Frage-Zeile aufklappbar, Antwort mit
+                         Fundstelle und Deep-Link (#Code) im Panel */
+                      <li key={eintrag.id}>
+                        <details className="group/frage">
+                          <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-6 py-5 transition-colors hover:bg-surface [&::-webkit-details-marker]:hidden">
+                            <span className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
+                              <Badge variant="neutral">
+                                {t(`typBadge.${eintrag.typ}`)}
+                              </Badge>
+                              <span className="text-body-lg font-bold text-ink">
+                                {eintrag.begriff}
+                              </span>
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              className="mt-1 shrink-0 text-ink-muted transition-transform group-open/frage:rotate-180"
+                            >
+                              ▾
+                            </span>
+                          </summary>
+                          <div className="border-t border-line-strong bg-surface px-6 py-5">
+                            <p className="max-w-[80ch] whitespace-pre-line text-body text-ink">
+                              {eintrag.antwort}
+                            </p>
+                            <p className="mt-4 flex flex-wrap items-center gap-3">
+                              <span className="rounded border border-legal-tint bg-legal-tint px-2 py-0.5 font-mono text-label font-medium text-legal">
+                                {eintrag.quelle}
+                              </span>
+                              {eintrag.href && (
+                                <Link
+                                  href={eintrag.href}
+                                  className="text-body-sm font-medium text-legal hover:underline"
+                                >
+                                  {tPraxis("zurFrage")}
+                                </Link>
+                              )}
+                            </p>
+                          </div>
+                        </details>
+                      </li>
+                    ) : eintrag.href ? (
                       <li key={eintrag.id}>
                         <Link
                           href={eintrag.href}

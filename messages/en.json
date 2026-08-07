@@ -489,7 +489,7 @@
     "beschreibungGlossar": "Das Nachschlagewerk zur PPWR: Begriffe, Anforderungen und Praxisfragen von A bis Z – mit Quelle und Link in die Tiefe.",
     "tabs": {
       "anforderungen": "Anforderungen",
-      "auslegungen": "Auslegungen",
+      "auslegungen": "Practical questions",
       "glossar": "Glossar"
     },
     "spalteAnforderung": "Anforderung",
@@ -738,5 +738,27 @@
     "fehlerFirmenname": "Please enter your company name.",
     "fehlerLoeschung": "Deletion could not be completed. Please contact support.",
     "fehlerStripe": "Cancelling the subscription with Stripe failed – the account was not deleted. Please try again."
+  },
+  "Praxisfragen": {
+    "editorial": "Questions as they reach us from the packaging industry – answered by the editorial team, with exact legal references, legally verified. Where an answer is based on an interpretation by the EU Commission, this is marked.",
+    "frageFehlt": "Your question is missing?",
+    "assistantLink": "Ask the Assistant.",
+    "zaehler": "{anzahl} questions",
+    "meistgelesen": "Most read",
+    "suchPlaceholder": "Type a question or keyword – filters instantly …",
+    "alleChip": "All",
+    "kategorien": {
+      "rollen_epr": "Roles & registration",
+      "stoffrecht": "Substances",
+      "mehrweg": "Reuse",
+      "kennzeichnung": "Labelling",
+      "konformitaet": "Conformity",
+      "verbote": "Bans",
+      "sonstiges": "Other"
+    },
+    "fundstellen": "References",
+    "verwandte": "Related requirements",
+    "keineTreffer": "No practical questions match your selection – adjust the wording or reset the filters.",
+    "zurFrage": "See the full answer in the practical questions →"
   }
 }
