@@ -14,11 +14,7 @@ import type { RollenSet } from "@/lib/rollen-engine";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
 import { createClient } from "@/lib/supabase/server";
 import { pruefeZugang } from "@/lib/zugang";
-import {
-  AenderungslogKarte,
-  PjNewsKarte,
-  PjVideosKarte,
-} from "./radar-module";
+import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
 import { Vorzimmer } from "./vorzimmer";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -287,10 +283,7 @@ export default async function DashboardPage({
 
       {/* Radar-Änderungslog + PJ-Inhalte */}
       <AenderungslogKarte memos={memos} gesperrt={false} />
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PjNewsKarte news={news} />
-        <PjVideosKarte videos={videos} />
-      </div>
+      <AktuellesBereich news={news} videos={videos} />
     </>
   );
 }

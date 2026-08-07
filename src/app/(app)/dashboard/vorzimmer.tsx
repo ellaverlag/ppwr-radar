@@ -5,11 +5,7 @@ import { LegalCard, LegalCardFooter, TrafficDot } from "@/components/ui";
 import { uebernehmeCheckErgebnis } from "@/lib/check-uebernahme";
 import { formatDate } from "@/lib/labels";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
-import {
-  AenderungslogKarte,
-  PjNewsKarte,
-  PjVideosKarte,
-} from "./radar-module";
+import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
 import { checkoutStarten, zahlungVerwalten } from "./actions";
 
 /**
@@ -308,10 +304,7 @@ export async function Vorzimmer({
 
       {/* Radar-Änderungslog (nur Titel) + öffentliche PJ-Inhalte */}
       <AenderungslogKarte memos={memos} gesperrt />
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PjNewsKarte news={news} />
-        <PjVideosKarte videos={videos} />
-      </div>
+      <AktuellesBereich news={news} videos={videos} />
     </>
   );
 }

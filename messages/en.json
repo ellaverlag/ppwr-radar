@@ -45,7 +45,7 @@
   },
   "AppLayout": {
     "topbarTitel": "PPWR Radar",
-    "footerCopyright": "© 2026 PPWR Radar · by packaging journal",
+    "footerCopyright": "© 2026 PPWR Radar",
     "footerImpressum": "Impressum",
     "footerDatenschutz": "Datenschutz",
     "footerKontakt": "Kontakt"
@@ -273,7 +273,7 @@
       "ctaSekundaer": "Erst kostenlos prüfen"
     },
     "footer": {
-      "beschreibung": "PPWR Radar ist ein Produkt des packaging journal. Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft.",
+      "beschreibung": "Legal partner: Cattwyk Rechtsanwaltsgesellschaft.",
       "produkt": "Produkt",
       "funktionen": "Funktionen",
       "preise": "Preise",
@@ -286,7 +286,8 @@
       "konto": "Konto",
       "anmelden": "Anmelden",
       "registrieren": "Registrieren",
-      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal",
+      "produktVon": "A product of"
     },
     "checkBandKompakt": {
       "titel": "Still unsure? Take the free check first.",
@@ -692,6 +693,7 @@
     "alleVideos": "All videos in the media library →",
     "keineNews": "No articles available right now.",
     "keineVideos": "No videos available right now.",
-    "quelleFooter": "Source: packaging-journal.de · external content"
+    "quelleFooter": "Source: packaging-journal.de · external content",
+    "redaktionKopf": "From the newsroom of"
   }
 }

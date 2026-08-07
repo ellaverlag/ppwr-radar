@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
@@ -288,9 +289,21 @@ export default async function LandingPage({
       {/* Trust-Leiste */}
       <div className="border-b border-line bg-surface">
         <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-center gap-x-10 gap-y-2 px-6 py-4 text-body-sm text-ink-muted">
-          <span>
-            {t("trust.herausgeberVor")}{" "}
-            <b className="text-ink">{t("trust.herausgeber")}</b>
+          <span className="flex items-center gap-2">
+            {t("trust.herausgeberVor")}
+            <a
+              href="https://packaging-journal.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center"
+            >
+              <Image
+                src="/pj-logo.png"
+                alt={t("trust.herausgeber")}
+                width={116}
+                height={24}
+              />
+            </a>
           </span>
           <span className="hidden h-4 w-px bg-line sm:block" />
           <span>
@@ -633,7 +646,18 @@ export default async function LandingPage({
             <div className="mb-3.5">
               <BrandLink href="/" />
             </div>
-            <p className="text-body-sm text-ink-muted">
+            <p className="flex items-center gap-2 text-body-sm text-ink-muted">
+              {t("footer.produktVon")}
+              <a
+                href="https://packaging-journal.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center"
+              >
+                <Image src="/pj-logo.png" alt="packaging journal" width={97} height={20} />
+              </a>
+            </p>
+            <p className="mt-2 text-body-sm text-ink-muted">
               {t("footer.beschreibung")}
             </p>
           </div>

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
@@ -71,35 +72,81 @@ export async function AenderungslogKarte({
   );
 }
 
-export async function PjNewsKarte({ news }: { news: PjNews[] }) {
+/** Kopfzeile „Aus der Redaktion von [PJ-Logo]“ + News- und Video-Karten. */
+export async function AktuellesBereich({
+  news,
+  videos,
+}: {
+  news: PjNews[];
+  videos: PjVideo[];
+}) {
+  const tr = await getTranslations("Radar");
+
+  return (
+    <section className="mt-10">
+      <h2 className="mb-6 flex flex-wrap items-center gap-3 text-headline text-ink">
+        <span>{tr("redaktionKopf")}</span>
+        <a
+          href="https://packaging-journal.de"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center"
+        >
+          <Image
+            src="/pj-logo.png"
+            alt="packaging journal"
+            width={116}
+            height={24}
+          />
+        </a>
+      </h2>
+
+      <PjNewsKarte news={news} />
+      <div className="mt-6">
+        <PjVideosKarte videos={videos} />
+      </div>
+    </section>
+  );
+}
+
+async function PjNewsKarte({ news }: { news: PjNews[] }) {
   const tr = await getTranslations("Radar");
 
   return (
     <LegalCard>
       <div className="flex-1 p-6">
-        <h2 className="mb-2 text-headline text-ink">{tr("newsTitel")}</h2>
-        <p className="mb-6 text-label uppercase text-ink-muted">{tr("vonPj")}</p>
+        <h3 className="mb-6 text-headline text-ink">{tr("newsTitel")}</h3>
         {news.length === 0 ? (
           <p className="text-body text-ink-muted">{tr("keineNews")}</p>
         ) : (
-          <ul className="space-y-5">
+          <ul className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-2">
             {news.map((beitrag) => (
               <li key={beitrag.link}>
                 <a
                   href={beitrag.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block"
+                  className="group flex items-start gap-4"
                 >
-                  <span className="font-mono text-mono-sm text-ink-muted">
-                    {formatDate(beitrag.datum)}
-                  </span>
-                  <span className="mt-0.5 flex items-start gap-2 text-body font-bold text-ink group-hover:text-primary">
-                    <span>{beitrag.titel}</span>
-                    <OpenInNewIcon className="mt-1 h-3.5 w-3.5 shrink-0 text-ink-muted" />
-                  </span>
-                  <span className="mt-0.5 line-clamp-2 block text-body-sm text-ink-muted">
-                    {beitrag.auszug}
+                  {beitrag.thumbnail && (
+                    <img
+                      src={beitrag.thumbnail}
+                      alt=""
+                      loading="lazy"
+                      className="h-16 w-28 shrink-0 rounded border border-line object-cover"
+                    />
+                  )}
+                  <span className="min-w-0">
+                    <span className="font-mono text-mono-sm text-ink-muted">
+                      {formatDate(beitrag.datum)}
+                    </span>
+                    <span className="mt-0.5 flex items-start gap-2 text-body font-bold text-ink group-hover:text-primary">
+                      <span>{beitrag.titel}</span>
+                      <OpenInNewIcon className="mt-1 h-3.5 w-3.5 shrink-0 text-ink-muted" />
+                    </span>
+                    <span className="mt-0.5 line-clamp-2 block text-body-sm text-ink-muted">
+                      {beitrag.auszug}
+                    </span>
                   </span>
                 </a>
               </li>
@@ -120,45 +167,42 @@ export async function PjNewsKarte({ news }: { news: PjNews[] }) {
   );
 }
 
-export async function PjVideosKarte({ videos }: { videos: PjVideo[] }) {
+async function PjVideosKarte({ videos }: { videos: PjVideo[] }) {
   const tr = await getTranslations("Radar");
 
   return (
     <LegalCard>
       <div className="flex-1 p-6">
-        <h2 className="mb-2 text-headline text-ink">{tr("videosTitel")}</h2>
-        <p className="mb-6 text-label uppercase text-ink-muted">{tr("vonPj")}</p>
+        <h3 className="mb-6 text-headline text-ink">{tr("videosTitel")}</h3>
         {videos.length === 0 ? (
           <p className="text-body text-ink-muted">{tr("keineVideos")}</p>
         ) : (
-          <ul className="space-y-5">
+          <ul className="grid grid-cols-1 gap-x-8 gap-y-6 md:grid-cols-3">
             {videos.map((video) => (
               <li key={video.link}>
                 <a
                   href={video.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-start gap-4"
+                  className="group block"
                 >
                   {video.thumbnail ? (
                     <img
                       src={video.thumbnail}
                       alt=""
                       loading="lazy"
-                      className="h-16 w-28 shrink-0 rounded border border-line object-cover"
+                      className="aspect-video w-full rounded border border-line object-cover"
                     />
                   ) : (
-                    <span className="flex h-16 w-28 shrink-0 items-center justify-center rounded border border-line bg-surface">
-                      <VideoIcon className="h-6 w-6 text-ink-muted" />
+                    <span className="flex aspect-video w-full items-center justify-center rounded border border-line bg-surface">
+                      <VideoIcon className="h-8 w-8 text-ink-muted" />
                     </span>
                   )}
-                  <span>
-                    <span className="font-mono text-mono-sm text-ink-muted">
-                      {formatDate(video.datum)}
-                    </span>
-                    <span className="mt-0.5 block text-body font-bold text-ink group-hover:text-primary">
-                      {video.titel}
-                    </span>
+                  <span className="mt-2 block font-mono text-mono-sm text-ink-muted">
+                    {formatDate(video.datum)}
+                  </span>
+                  <span className="mt-0.5 block text-body font-bold text-ink group-hover:text-primary">
+                    {video.titel}
                   </span>
                 </a>
               </li>

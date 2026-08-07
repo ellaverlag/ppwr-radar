@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BrandLink } from "@/components/brand";
@@ -107,8 +108,17 @@ export default async function AppLayout({
           </main>
 
           <footer className="flex flex-col items-start justify-between gap-2 border-t border-line bg-footer px-6 py-4 sm:flex-row sm:items-center">
-            <p className="text-label font-bold uppercase text-ink-muted">
-              {t("footerCopyright")}
+            <p className="flex items-center gap-2 text-label font-bold uppercase text-ink-muted">
+              <span>{t("footerCopyright")}</span>
+              <span aria-hidden="true">·</span>
+              <a
+                href="https://packaging-journal.de"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center"
+              >
+                <Image src="/pj-logo.png" alt="packaging journal" width={78} height={16} />
+              </a>
             </p>
             <ul className="flex gap-6 text-label uppercase">
               <li>

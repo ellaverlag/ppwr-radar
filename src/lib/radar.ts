@@ -71,6 +71,7 @@ export interface PjNews {
   link: string;
   datum: string;
   auszug: string;
+  thumbnail: string | null;
 }
 
 export interface PjVideo {
@@ -89,6 +90,27 @@ function entHtml(roh: string): string {
     .replace(/&#8230;|&hellip;/g, "…")
     .replace(/&nbsp;/g, " ")
     .trim();
+}
+
+interface WpEmbedded {
+  "wp:featuredmedia"?: {
+    source_url?: string;
+    media_details?: {
+      sizes?: Record<string, { source_url?: string }>;
+    };
+  }[];
+}
+
+/** Beitragsbild aus _embedded, bevorzugt in Größe medium. */
+function thumbnailAus(embedded: WpEmbedded | undefined): string | null {
+  const medium = embedded?.["wp:featuredmedia"]?.[0];
+  const sizes = medium?.media_details?.sizes ?? {};
+  return (
+    sizes.medium?.source_url ??
+    sizes.full?.source_url ??
+    medium?.source_url ??
+    null
+  );
 }
 
 async function pjFetch(pfad: string, revalidate: number): Promise<unknown> {
@@ -114,19 +136,21 @@ export async function ladePpwrNews(limit = 4): Promise<PjNews[]> {
     const tagId = await termId("tags", NEWS_TAG_SLUG);
     if (!tagId) return [];
     const posts = (await pjFetch(
-      `/posts?tags=${tagId}&per_page=${limit}&_fields=title,link,date,excerpt`,
+      `/posts?tags=${tagId}&per_page=${limit}&_fields=title,link,date,excerpt,_links&_embed=wp:featuredmedia`,
       1800
     )) as {
       title: { rendered: string };
       link: string;
       date: string;
       excerpt: { rendered: string };
+      _embedded?: WpEmbedded;
     }[];
     return posts.map((p) => ({
       titel: entHtml(p.title.rendered),
       link: p.link,
       datum: p.date,
       auszug: entHtml(p.excerpt.rendered),
+      thumbnail: thumbnailAus(p._embedded),
     }));
   } catch (e) {
     console.error("PPWR-News nicht ladbar:", e instanceof Error ? e.message : e);
@@ -141,7 +165,7 @@ export async function ladePpwrNews(limit = 4): Promise<PjNews[]> {
  * (Filter-Parameter `?vimeo-videos={id}`). Der im Konzept skizzierte
  * RSS-Fallback war daher nicht nötig.
  */
-export async function ladePpwrVideos(limit = 3): Promise<PjVideo[]> {
+export async function ladePpwrVideos(limit = 6): Promise<PjVideo[]> {
   try {
     const catId = await termId("vimeo-videos", VIDEO_TAX_SLUG);
     if (!catId) return [];
@@ -152,29 +176,14 @@ export async function ladePpwrVideos(limit = 3): Promise<PjVideo[]> {
       title: { rendered: string };
       link: string;
       date: string;
-      _embedded?: {
-        "wp:featuredmedia"?: {
-          source_url?: string;
-          media_details?: {
-            sizes?: Record<string, { source_url?: string }>;
-          };
-        }[];
-      };
+      _embedded?: WpEmbedded;
     }[];
-    return videos.map((v) => {
-      const medium = v._embedded?.["wp:featuredmedia"]?.[0];
-      const sizes = medium?.media_details?.sizes ?? {};
-      return {
-        titel: entHtml(v.title.rendered),
-        link: v.link,
-        datum: v.date,
-        thumbnail:
-          sizes.medium?.source_url ??
-          sizes.full?.source_url ??
-          medium?.source_url ??
-          null,
-      };
-    });
+    return videos.map((v) => ({
+      titel: entHtml(v.title.rendered),
+      link: v.link,
+      datum: v.date,
+      thumbnail: thumbnailAus(v._embedded),
+    }));
   } catch (e) {
     console.error("PPWR-Videos nicht ladbar:", e instanceof Error ? e.message : e);
     return [];
