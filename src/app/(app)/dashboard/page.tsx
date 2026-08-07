@@ -11,8 +11,14 @@ import {
   TrafficDot,
 } from "@/components/ui";
 import type { RollenSet } from "@/lib/rollen-engine";
+import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
 import { createClient } from "@/lib/supabase/server";
 import { pruefeZugang } from "@/lib/zugang";
+import {
+  AenderungslogKarte,
+  PjNewsKarte,
+  PjVideosKarte,
+} from "./radar-module";
 import { Vorzimmer } from "./vorzimmer";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -85,12 +91,11 @@ export default async function DashboardPage({
     erledigt: i < 2 ? onboardingFertig : false,
   }));
 
-  const radarBeispiele = t.raw("radarBeispiele") as {
-    datum: string;
-    titel: string;
-    text: string;
-    chip: string;
-  }[];
+  const [memos, news, videos] = await Promise.all([
+    ladeUpdateMemos(),
+    ladePpwrNews(),
+    ladePpwrVideos(),
+  ]);
 
   return (
     <>
@@ -279,38 +284,12 @@ export default async function DashboardPage({
         <LegalCardFooter>{t("schritteFooter")}</LegalCardFooter>
       </LegalCard>
 
-      {/* Radar-Feed */}
-      <LegalCard className="mt-6">
-        <div className="flex-1 p-6">
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <h2 className="text-headline text-ink">{t("radarTitel")}</h2>
-            <Badge variant="neutral">{t("beispieldaten")}</Badge>
-          </div>
-          <div className="grid grid-cols-1 gap-6 border-l border-line-strong pl-4 md:grid-cols-3">
-            {radarBeispiele.map((memo, i) => (
-              <div key={memo.datum} className="relative pl-4">
-                <span
-                  aria-hidden="true"
-                  className={`absolute -left-[22px] top-1.5 h-2 w-2 rounded-full ${
-                    i === 0 ? "bg-ink" : "bg-dim"
-                  }`}
-                />
-                <div className="mb-1 font-mono text-mono-sm text-ink-muted">
-                  {memo.datum}
-                </div>
-                <h3 className="mb-2 text-body-lg font-bold text-ink">
-                  {memo.titel}
-                </h3>
-                <p className="mb-4 text-body-sm text-ink-muted">{memo.text}</p>
-                <Badge variant={i === 1 ? "neutral" : "green"}>
-                  {memo.chip}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        </div>
-        <LegalCardFooter>{t("radarFooter")}</LegalCardFooter>
-      </LegalCard>
+      {/* Radar-Änderungslog + PJ-Inhalte */}
+      <AenderungslogKarte memos={memos} gesperrt={false} />
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <PjNewsKarte news={news} />
+        <PjVideosKarte videos={videos} />
+      </div>
     </>
   );
 }

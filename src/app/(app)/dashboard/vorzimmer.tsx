@@ -2,6 +2,12 @@ import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { LockIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter, TrafficDot } from "@/components/ui";
+import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
+import {
+  AenderungslogKarte,
+  PjNewsKarte,
+  PjVideosKarte,
+} from "./radar-module";
 import { checkoutStarten, zahlungVerwalten } from "./actions";
 
 /**
@@ -49,11 +55,11 @@ export async function Vorzimmer({
   const tLanding = await getTranslations("Landing");
   const leistungen = tLanding.raw("preise.leistungen") as string[];
   const schritte = t.raw("schritte") as { titel: string; text: string }[];
-  const radarBeispiele = t.raw("radarBeispiele") as {
-    datum: string;
-    titel: string;
-    text: string;
-  }[];
+  const [memos, news, videos] = await Promise.all([
+    ladeUpdateMemos(),
+    ladePpwrNews(),
+    ladePpwrVideos(),
+  ]);
 
   return (
     <>
@@ -76,7 +82,10 @@ export async function Vorzimmer({
       )}
 
       {/* Freischalten-Karte */}
-      <div className="relative mb-6 rounded border-2 border-primary bg-canvas">
+      <div
+        id="freischalten"
+        className="relative mb-6 scroll-mt-24 rounded border-2 border-primary bg-canvas"
+      >
         <span className="absolute -top-3 left-6 rounded bg-primary px-2.5 py-1 font-mono text-[0.68rem] uppercase tracking-[0.06em] text-white">
           {tv("badge")}
         </span>
@@ -247,46 +256,12 @@ export async function Vorzimmer({
         <LegalCardFooter>{t("schritteFooter")}</LegalCardFooter>
       </LegalCard>
 
-      {/* Radar-Feed: Titel-Teaser sichtbar, Inhalte gesperrt */}
-      <LegalCard className="mt-6">
-        <div className="flex-1 p-6">
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <h2 className="flex items-center gap-2 text-headline text-ink">
-              <LockIcon className="h-5 w-5 text-ink-muted" />
-              <span>{t("radarTitel")}</span>
-            </h2>
-            <Badge variant="neutral">{tv("vorschau")}</Badge>
-          </div>
-          <div className="grid grid-cols-1 gap-6 border-l border-line-strong pl-4 md:grid-cols-3">
-            {radarBeispiele.map((memo, i) => (
-              <div key={memo.datum} className="relative pl-4">
-                <span
-                  aria-hidden="true"
-                  className={`absolute -left-[22px] top-1.5 h-2 w-2 rounded-full ${
-                    i === 0 ? "bg-ink" : "bg-dim"
-                  }`}
-                />
-                <div className="mb-1 font-mono text-mono-sm text-ink-muted">
-                  {memo.datum}
-                </div>
-                <h3 className="mb-2 text-body-lg font-bold text-ink">
-                  {memo.titel}
-                </h3>
-                <p
-                  aria-hidden="true"
-                  className="pointer-events-none select-none text-body-sm text-ink-muted opacity-60 blur-[3px]"
-                >
-                  {memo.text}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 text-body-sm text-ink-muted">
-            {tv("radarTeaserHinweis")}
-          </p>
-        </div>
-        <LegalCardFooter>{t("radarFooter")}</LegalCardFooter>
-      </LegalCard>
+      {/* Radar-Änderungslog (nur Titel) + öffentliche PJ-Inhalte */}
+      <AenderungslogKarte memos={memos} gesperrt />
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <PjNewsKarte news={news} />
+        <PjVideosKarte videos={videos} />
+      </div>
     </>
   );
 }

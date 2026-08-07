@@ -678,5 +678,17 @@
     "checkoutFehler": "Checkout could not be started. Please try again or contact support.",
     "vorschau": "Preview",
     "radarTeaserHinweis": "Full texts and impact matching are part of the package."
+  },
+  "Radar": {
+    "leer": "No legal changes since the application date – your radar is watching.",
+    "detailsGesperrt": "See details with the package →",
+    "newsTitel": "PPWR news",
+    "videosTitel": "PPWR videos",
+    "vonPj": "from packaging-journal.de",
+    "alleNews": "All PPWR news on packaging-journal.de →",
+    "alleVideos": "All videos in the media library →",
+    "keineNews": "No articles available right now.",
+    "keineVideos": "No videos available right now.",
+    "quelleFooter": "Source: packaging-journal.de · external content"
   }
 }

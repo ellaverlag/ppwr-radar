@@ -678,5 +678,17 @@
     "checkoutFehler": "Der Checkout konnte nicht gestartet werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
     "vorschau": "Vorschau",
     "radarTeaserHinweis": "Volltexte und Betroffenheits-Abgleich sind Teil des Pakets."
+  },
+  "Radar": {
+    "leer": "Keine Rechtsänderungen seit Geltungsbeginn – Ihr Radar beobachtet.",
+    "detailsGesperrt": "Details mit dem Paket ansehen →",
+    "newsTitel": "PPWR-News",
+    "videosTitel": "PPWR-Videos",
+    "vonPj": "von packaging-journal.de",
+    "alleNews": "Alle PPWR-News auf packaging-journal.de →",
+    "alleVideos": "Alle Videos in der Mediathek →",
+    "keineNews": "Aktuell keine Beiträge verfügbar.",
+    "keineVideos": "Aktuell keine Videos verfügbar.",
+    "quelleFooter": "Quelle: packaging-journal.de · externe Inhalte"
   }
 }
