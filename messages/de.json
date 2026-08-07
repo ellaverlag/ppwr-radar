@@ -636,7 +636,9 @@
     "playHinweis": "Zum Abspielen klicken – erst dann wird der Player von StreamYard geladen.",
     "dauerLabel": "Dauer",
     "gesperrt": "Die Aufzeichnungen schalten Sie mit dem PPWR|ready Paket frei.",
-    "gesperrtCta": "Zur Freischaltung →"
+    "gesperrtCta": "Zur Freischaltung →",
+    "abspielen": "Aufzeichnung abspielen",
+    "schliessen": "Schließen"
   },
   "Assistant": {
     "titel": "Wie kann ich Ihnen helfen?",

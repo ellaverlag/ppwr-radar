@@ -22,6 +22,8 @@ export interface Webinar {
   badge: string;
   /** Einordnender Hinweis unter dem Titel (z. B. Rechtsstand der Aufnahme). */
   hinweis?: string;
+  /** Optionales eigenes Standbild (Pfad unter /public, z. B. eine Folie). */
+  thumbnail?: string;
 }
 
 export const NAECHSTE_WEBINARE: Webinar[] = [

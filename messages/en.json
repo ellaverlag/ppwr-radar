@@ -636,7 +636,9 @@
     "playHinweis": "Click to play – only then is the StreamYard player loaded.",
     "dauerLabel": "Duration",
     "gesperrt": "Recordings are unlocked with the PPWR|ready package.",
-    "gesperrtCta": "Unlock now →"
+    "gesperrtCta": "Unlock now →",
+    "abspielen": "Play recording",
+    "schliessen": "Close"
   },
   "Assistant": {
     "titel": "Wie kann ich Ihnen helfen?",

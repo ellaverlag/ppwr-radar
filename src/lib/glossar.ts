@@ -191,6 +191,32 @@ async function ladeLemmata(
   }
 }
 
+/**
+ * Begriffs-Lemmata (typ=begriff) für Erklärhilfen im Onboarding-Wizard –
+ * gleicher Lesepfad/Freigabefilter wie das Glossar, fail-soft.
+ */
+export async function ladeBegriffsLemmata(): Promise<
+  { code: string | null; lemma: string; kurzerklaerung: string | null }[]
+> {
+  try {
+    const client = await lemmataClient();
+    let query = client
+      .from("glossar_lemmata")
+      .select("code, lemma, kurzerklaerung")
+      .eq("typ", "begriff");
+    if (!isPreviewMode()) {
+      query = query
+        .eq("review_status", "cattwyk_freigegeben")
+        .eq("ausspielen", true);
+    }
+    const { data, error } = await query;
+    if (error || !data) return [];
+    return data;
+  } catch {
+    return [];
+  }
+}
+
 /** Rollen des eingeloggten Nutzers über alle Produktlinien (leer ohne Profil). */
 async function ladeNutzerRollen(): Promise<Set<string>> {
   const rollen = new Set<string>();

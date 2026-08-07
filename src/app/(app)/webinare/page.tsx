@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { AUFZEICHNUNGEN, NAECHSTE_WEBINARE } from "../../../../content/webinare";
 import { Badge } from "@/components/badge";
-import { LockIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
-import { LegalCard, LegalCardFooter } from "@/components/ui";
-import { WebinarPlayer } from "@/components/webinar-player";
+import { LegalCard } from "@/components/ui";
+import { WebinarKarte } from "@/components/webinar-karte";
 import { formatDate } from "@/lib/labels";
 import { pruefeZugang } from "@/lib/zugang";
 
@@ -76,59 +74,29 @@ export default async function WebinarePage() {
         </div>
       </section>
 
-      {/* Aufzeichnungen */}
+      {/* Aufzeichnungen – Mediathek-Grid, Player im Modal */}
       <section>
         <h2 className="mb-4 text-headline text-ink">
           {t("aufzeichnungenTitel")}
         </h2>
-        <div className="space-y-6">
-          {AUFZEICHNUNGEN.map((webinar) => (
-            <LegalCard key={webinar.titel}>
-              <div className="p-6">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h3 className="text-body-lg font-bold text-ink">
-                    {webinar.titel}
-                  </h3>
-                  <Badge variant="green">{webinar.badge}</Badge>
-                </div>
-                {webinar.hinweis && (
-                  <p className="mt-2 max-w-3xl text-body-sm text-ink-muted">
-                    {webinar.hinweis}
-                  </p>
-                )}
-
-                <div className="mt-5">
-                  {freigeschaltet && webinar.embed_url ? (
-                    <WebinarPlayer
-                      embedUrl={webinar.embed_url}
-                      titel={webinar.titel}
-                      playHinweis={t("playHinweis")}
-                    />
-                  ) : (
-                    /* Teaser für Nicht-Freigeschaltete: Titel sichtbar,
-                       Player gesperrt */
-                    <div className="relative w-full overflow-hidden rounded border border-line bg-surface pt-[56.25%]">
-                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center">
-                        <LockIcon className="h-8 w-8 text-ink-muted" />
-                        <p className="max-w-md text-body text-ink-muted">
-                          {t("gesperrt")}
-                        </p>
-                        <Link
-                          href="/dashboard#freischalten"
-                          className="text-body-sm font-medium text-legal hover:underline"
-                        >
-                          {t("gesperrtCta")}
-                        </Link>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <LegalCardFooter>
-                {webinar.datum ? `${formatDate(webinar.datum)} · ` : ""}
-                PPWR Radar · by packaging journal
-              </LegalCardFooter>
-            </LegalCard>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {AUFZEICHNUNGEN.filter((w) => w.embed_url).map((webinar) => (
+            <WebinarKarte
+              key={webinar.titel}
+              titel={webinar.titel}
+              badge={webinar.badge}
+              beschreibung={webinar.beschreibung}
+              hinweis={webinar.hinweis}
+              embedUrl={webinar.embed_url!}
+              thumbnail={webinar.thumbnail}
+              gesperrt={!freigeschaltet}
+              labels={{
+                abspielen: t("abspielen"),
+                schliessen: t("schliessen"),
+                gesperrt: t("gesperrt"),
+                gesperrtCta: t("gesperrtCta"),
+              }}
+            />
           ))}
         </div>
       </section>
