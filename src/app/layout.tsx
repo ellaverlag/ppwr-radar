@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { getLocale, getTranslations } from "next-intl/server";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -17,6 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
   return {
+    metadataBase: new URL(SITE_URL),
     title: t("root.title"),
     description: t("root.description"),
     icons: {
