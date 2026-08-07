@@ -621,7 +621,13 @@
   "Webinare": {
     "titel": "Webinare",
     "beschreibung": "Aufzeichnungen und Termine unserer Compliance-Webinare zur EU-Verpackungsverordnung.",
-    "platzhalter": "Der Webinar-Bereich wird in einem späteren Arbeitspaket umgesetzt. Hier erscheinen künftig Termine und Aufzeichnungen."
+    "platzhalter": "Der Webinar-Bereich wird in einem späteren Arbeitspaket umgesetzt. Hier erscheinen künftig Termine und Aufzeichnungen.",
+    "kommendeTitel": "Nächste Webinare",
+    "aufzeichnungenTitel": "Aufzeichnungen",
+    "playHinweis": "Zum Abspielen klicken – erst dann wird der Player von StreamYard geladen.",
+    "dauerLabel": "Dauer",
+    "gesperrt": "Die Aufzeichnungen schalten Sie mit dem PPWR|ready Paket frei.",
+    "gesperrtCta": "Zur Freischaltung →"
   },
   "Assistant": {
     "titel": "Wie kann ich Ihnen helfen?",
