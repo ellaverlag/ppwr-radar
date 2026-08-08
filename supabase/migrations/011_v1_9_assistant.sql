@@ -21,27 +21,26 @@
 --    alles – exakt der Datenpfad der Wissensbasis.
 
 -- ---------- 1. frage_kandidaten -------------------------------------------
+-- Hinweis: In der Live-DB existierte die Tabelle bereits (Redaktions-Anlage)
+-- mit eigenem Status-Vokabular (neu/in_bearbeitung/veroeffentlicht/abgelehnt),
+-- Spalte veroeffentlicht_als und einer INSERT-Policy für authenticated –
+-- create if not exists lässt sie unangetastet; es gilt deren Vokabular.
 
 create table if not exists frage_kandidaten (
   id uuid primary key default gen_random_uuid(),
   frage_text text not null,
   kontext jsonb,
-  quelle text not null default 'assistant',
-  status text not null default 'neu',
+  quelle text not null default 'assistant'
+    check (quelle in ('assistant', 'formular', 'redaktion')),
+  status text not null default 'neu'
+    check (status in ('neu', 'in_bearbeitung', 'veroeffentlicht', 'abgelehnt')),
+  veroeffentlicht_als text,
   created_at timestamptz not null default now()
 );
 
-do $$ begin
-  if not exists (
-    select 1 from pg_constraint where conname = 'chk_frage_kandidat_status'
-  ) then
-    alter table frage_kandidaten add constraint chk_frage_kandidat_status
-      check (status in ('neu', 'uebernommen', 'verworfen'));
-  end if;
-end $$;
-
 alter table frage_kandidaten enable row level security;
--- keine Policies: Lesen/Schreiben nur über Service Role (Redaktions-Workflow)
+-- Schreiben aus dem Assistant läuft über die Service Role; die bestehende
+-- INSERT-Policy für authenticated bleibt für das Redaktions-Formular.
 
 -- ---------- 2. assistant_nutzung ------------------------------------------
 

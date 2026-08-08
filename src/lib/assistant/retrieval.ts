@@ -54,6 +54,17 @@ const kuerze = (text: string): string =>
 const anforderungCode = (a: Anforderung): string =>
   a.nr != null ? `#${String(a.nr).padStart(2, "0")}` : a.id.slice(0, 8);
 
+/**
+ * Fallback für generische Fragen („Was muss ich bis wann tun?“), bei denen
+ * die Textsuche leer bleibt: die zutreffenden Anforderungen des Profils
+ * (Status-Analyse, nach Dringlichkeit sortiert) als Kontext-Chunks.
+ */
+export function anforderungenAlsChunks(
+  anforderungen: Anforderung[]
+): KontextChunk[] {
+  return anforderungen.slice(0, MAX_CHUNKS).map(anforderungChunk);
+}
+
 function anforderungChunk(a: Anforderung): KontextChunk {
   const teile: string[] = [];
   if (a.kurzerklaerung) teile.push(a.kurzerklaerung);

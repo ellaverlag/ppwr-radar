@@ -14,9 +14,14 @@ import {
   GRENZE_MARKER,
   type Erklaertiefe,
 } from "@/lib/assistant/prompt";
-import { ladeKontextChunks, type KontextChunk } from "@/lib/assistant/retrieval";
+import {
+  anforderungenAlsChunks,
+  ladeKontextChunks,
+  type KontextChunk,
+} from "@/lib/assistant/retrieval";
 import { isPreviewMode } from "@/lib/preview";
 import { ladeAppConfig } from "@/lib/rollen-service";
+import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { pruefeZugang } from "@/lib/zugang";
 import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
 
@@ -102,11 +107,24 @@ export async function stelleAssistantFrage(input: {
   await zaehleFrage(zugang.user.id);
 
   try {
-    const [{ chunks, rechtsstand }, profil, eskalation] = await Promise.all([
-      ladeKontextChunks(frage),
-      ladeProfilKontext(zugang.user.id),
-      ladeAppConfig("cattwyk_erstgespraech_hinweis"),
-    ]);
+    const [{ chunks: suchChunks, rechtsstand }, profil, eskalation] =
+      await Promise.all([
+        ladeKontextChunks(frage),
+        ladeProfilKontext(zugang.user.id),
+        ladeAppConfig("cattwyk_erstgespraech_hinweis"),
+      ]);
+
+    // Generische Frage ohne Suchtreffer („Was muss ich bis wann tun?“):
+    // die zutreffenden Anforderungen des Profils als Kontext heranziehen.
+    let chunks = suchChunks;
+    if (chunks.length === 0) {
+      const analyse = await ladeStatusAnalyse().catch(() => null);
+      if (analyse && analyse.zutreffend.length > 0) {
+        chunks = anforderungenAlsChunks(
+          analyse.zutreffend.map((zeile) => zeile.anforderung)
+        );
+      }
+    }
 
     const systemPrompt = baueSystemPrompt({
       chunks,
