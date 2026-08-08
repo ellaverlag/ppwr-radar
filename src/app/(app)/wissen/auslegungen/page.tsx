@@ -18,7 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const dynamic = "force-dynamic";
 
-/** „Meistgelesen“-Platzhalter – vorerst statisch kuratierte Codes. */
+/**
+ * Kuratierte Einstiegsfragen – vorerst statische Codes. Sobald genug
+ * aufrufe-Daten da sind, genügt hier ein Einzeiler: die Top-3 nach
+ * auslegungen.aufrufe laden statt der festen Liste.
+ */
 const KURATIERTE_CODES = ["A01", "A11", "B01"];
 
 export default async function PraxisfragenPage() {
@@ -40,6 +44,7 @@ export default async function PraxisfragenPage() {
     code: a.code,
     rechtsstand: a.rechtsstand,
     frage: a.frage,
+    kurztitel: a.kurztitel,
     antwort: a.antwort,
     kategorie: a.kategorie,
     quellen: a.quellen,
@@ -52,7 +57,7 @@ export default async function PraxisfragenPage() {
 
   const labels: PraxisLabels = {
     rechtsstand: t("rechtsstandLabel"),
-    meistgelesen: t("meistgelesen"),
+    einstiegsfragen: t("einstiegsfragen"),
     suchPlaceholder: t("suchPlaceholder"),
     suchLabel: tCommon("suchen"),
     alleChip: t("alleChip"),

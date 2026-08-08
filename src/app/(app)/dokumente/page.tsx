@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { FileText } from "lucide-react";
 import { Badge } from "@/components/badge";
 import { DocumentIcon, PlusIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
@@ -104,8 +105,12 @@ export default async function DokumentePage({
 
       {dokumente.length === 0 ? (
         <LegalCard>
-          <div className="flex min-h-48 flex-col items-center justify-center gap-3 p-10 text-center">
-            <DocumentIcon className="h-8 w-8 text-ink-muted" />
+          <div className="flex min-h-48 flex-col items-center justify-center gap-5 p-10 text-center">
+            <FileText
+              strokeWidth={1.5}
+              aria-hidden="true"
+              className="h-14 w-14 text-ink-muted/50"
+            />
             <p className="max-w-md text-body text-ink-muted">{t("leer")}</p>
           </div>
         </LegalCard>

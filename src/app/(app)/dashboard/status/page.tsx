@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
+import { BearbeitungIcon, GiltStatusIcon } from "@/components/kategorie-icons";
 import { PageHeader } from "@/components/page-header";
 import { TrafficDot } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
@@ -147,6 +148,7 @@ export default async function StatusPage() {
                             : "gold"
                         }
                       >
+                        <GiltStatusIcon status={anforderung.gilt_status} />
                         {tLabels(`giltStatus.${anforderung.gilt_status}`)}
                         {anforderung.gilt_ab
                           ? ` · ${formatDate(anforderung.gilt_ab)}`
@@ -169,16 +171,18 @@ export default async function StatusPage() {
                     )}
                   </div>
                   <div className="flex shrink-0 items-center gap-3">
-                    <TrafficDot
-                      color={
+                    {/* Bearbeitungs-Ampel als Icon: Punkt/Uhr/Haken */}
+                    <BearbeitungIcon
+                      status={zeile.status}
+                      className={`h-4 w-4 shrink-0 ${
                         zeile.status === "erledigt"
-                          ? "green"
+                          ? "text-primary"
                           : zeile.status === "in_bearbeitung"
-                            ? "gold"
+                            ? "text-gold-ink"
                             : kritisch
-                              ? "red"
-                              : "dim"
-                      }
+                              ? "text-danger"
+                              : "text-ink-muted"
+                      }`}
                     />
                     <StatusDropdown
                       anforderungNr={anforderung.nr!}

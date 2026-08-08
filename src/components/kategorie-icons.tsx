@@ -1,12 +1,16 @@
 import {
   Ban,
+  BookOpen,
   Check,
   Circle,
   Clock,
   FlaskConical,
   Hourglass,
   Info,
+  MessageCircleQuestion,
+  Package,
   Recycle,
+  ScrollText,
   ShieldCheck,
   Tag,
   Users,
@@ -42,6 +46,14 @@ export const BEARBEITUNG_ICON: Record<string, LucideIcon> = {
   offen: Circle,
   in_bearbeitung: Clock,
   erledigt: Check,
+};
+
+/** Typ-Chips des Glossars (begriff/anforderung/praxisfrage/verpackung). */
+export const GLOSSAR_TYP_ICON: Record<string, LucideIcon> = {
+  begriff: BookOpen,
+  anforderung: ScrollText,
+  praxisfrage: MessageCircleQuestion,
+  verpackung_material: Package,
 };
 
 const CHIP_ICON_KLASSE = "h-3.5 w-3.5 shrink-0";
@@ -80,6 +92,19 @@ export function BearbeitungIcon({
   className?: string;
 }) {
   const IconKomponente = BEARBEITUNG_ICON[status] ?? Circle;
+  return (
+    <IconKomponente strokeWidth={2} aria-hidden="true" className={className} />
+  );
+}
+
+export function GlossarTypIcon({
+  typ,
+  className = CHIP_ICON_KLASSE,
+}: {
+  typ: string;
+  className?: string;
+}) {
+  const IconKomponente = GLOSSAR_TYP_ICON[typ] ?? Info;
   return (
     <IconKomponente strokeWidth={2} aria-hidden="true" className={className} />
   );

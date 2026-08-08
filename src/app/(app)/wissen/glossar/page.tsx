@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { SearchX } from "lucide-react";
 import { SearchIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard } from "@/components/ui";
@@ -243,8 +244,13 @@ export default async function GlossarPage({
 
       {sichtbar.length === 0 ? (
         <LegalCard>
-          <div className="p-6">
-            <p className="text-body text-ink-muted">
+          <div className="flex flex-col items-center p-10 text-center">
+            <SearchX
+              strokeWidth={1.5}
+              aria-hidden="true"
+              className="h-14 w-14 text-ink-muted/50"
+            />
+            <p className="mt-5 max-w-md text-body text-ink-muted">
               {q ? t("keinEintragZu", { query: q }) : t("keinEintragAuswahl")}
             </p>
             {filterAktiv && (

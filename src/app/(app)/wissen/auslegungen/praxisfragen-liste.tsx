@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
 import { SearchIcon } from "@/components/icons";
+import { KategorieIcon } from "@/components/kategorie-icons";
 import { formatDate } from "@/lib/labels";
 import { anforderungUrl } from "@/lib/wissen-links";
 import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
+import { zaehleAuslegungAufruf } from "./actions";
 
 /**
  * Praxisfragen als verdichtete Accordion-Liste: nur die Fragen sichtbar,
@@ -20,6 +22,7 @@ export interface PraxisFrage {
   code: string | null;
   rechtsstand: string;
   frage: string;
+  kurztitel: string | null;
   antwort: string;
   kategorie: Kategorie;
   quellen: string[];
@@ -29,7 +32,7 @@ export interface PraxisFrage {
 
 export interface PraxisLabels {
   rechtsstand: string;
-  meistgelesen: string;
+  einstiegsfragen: string;
   suchPlaceholder: string;
   suchLabel: string;
   alleChip: string;
@@ -59,7 +62,7 @@ export function PraxisfragenListe({
   labels,
 }: {
   fragen: PraxisFrage[];
-  /** Codes der kuratierten Einstiege („Meistgelesen“-Platzhalter). */
+  /** Codes der kuratierten Einstiegsfragen. */
   kuratiert: string[];
   labels: PraxisLabels;
 }) {
@@ -67,13 +70,23 @@ export function PraxisfragenListe({
   const [kategorie, setKategorie] = useState<Kategorie | null>(null);
   const [offen, setOffen] = useState<string | null>(null);
   const listeRef = useRef<HTMLDivElement>(null);
+  // Je Besuch nur einmal pro Frage zählen (fire-and-forget, kein Personenbezug)
+  const gezaehlt = useRef<Set<string>>(new Set());
+
+  const zaehle = (frage: PraxisFrage) => {
+    if (gezaehlt.current.has(frage.id)) return;
+    gezaehlt.current.add(frage.id);
+    void zaehleAuslegungAufruf(frage.id);
+  };
 
   // Deep-Link beim Laden: #A01 öffnet und scrollt zur Frage
   useEffect(() => {
     const code = decodeURIComponent(window.location.hash.slice(1));
-    if (!code || !fragen.some((f) => anker(f) === code)) return;
+    const frage = fragen.find((f) => anker(f) === code);
+    if (!code || !frage) return;
     const frame = requestAnimationFrame(() => {
       setOffen(code);
+      zaehle(frage);
       document.getElementById(code)?.scrollIntoView({ block: "start" });
     });
     return () => cancelAnimationFrame(frame);
@@ -83,6 +96,7 @@ export function PraxisfragenListe({
     const ziel = anker(frage);
     const neu = offen === ziel ? null : ziel;
     setOffen(neu);
+    if (neu) zaehle(frage);
     history.replaceState(null, "", neu ? `#${ziel}` : window.location.pathname);
   };
 
@@ -90,6 +104,7 @@ export function PraxisfragenListe({
     setSuche("");
     setKategorie(null);
     setOffen(anker(frage));
+    zaehle(frage);
     history.replaceState(null, "", `#${anker(frage)}`);
     requestAnimationFrame(() => {
       document.getElementById(anker(frage))?.scrollIntoView({ block: "start" });
@@ -122,11 +137,11 @@ export function PraxisfragenListe({
 
   return (
     <div ref={listeRef}>
-      {/* Kuratierte Einstiege */}
+      {/* Kuratierte Einstiegsfragen – Karten zeigen den Kurztitel */}
       {kuratierteFragen.length > 0 && (
         <div className="mb-8">
           <p className="mb-3 text-label uppercase text-ink-muted">
-            {labels.meistgelesen}
+            {labels.einstiegsfragen}
           </p>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             {kuratierteFragen.map((frage) => (
@@ -136,7 +151,7 @@ export function PraxisfragenListe({
                 onClick={() => springeZu(frage)}
                 className="rounded border border-line bg-canvas p-4 text-left text-body-sm font-semibold text-ink transition-colors hover:border-primary hover:text-primary"
               >
-                {frage.frage}
+                {frage.kurztitel ?? frage.frage}
               </button>
             ))}
           </div>
@@ -199,6 +214,7 @@ export function PraxisfragenListe({
                   >
                     <span className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
                       <Badge variant="green">
+                        <KategorieIcon kategorie={frage.kategorie} />
                         {labels.kategorien[frage.kategorie] ?? frage.kategorie}
                       </Badge>
                       <span className="text-body font-semibold text-ink">

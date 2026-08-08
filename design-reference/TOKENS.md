@@ -126,6 +126,45 @@ Regeln der öffentlichen Strecke (Fonts laden nur dort, via `src/app/landing-fon
   Quellen in der Rechtsquellen-Fußzeile.
 - **Login-Karte:** legal-card zentriert auf `--color-surface`, Logo oben, Primär-Button.
 
+## Icon-System (Lucide)
+
+Funktions-Icons in Chips und Status-Anzeigen kommen aus **lucide-react**: 14 px
+(`h-3.5 w-3.5`), `strokeWidth 2`, Farbe erbt vom Chip (`currentColor`).
+Umsetzung zentral in [`src/components/kategorie-icons.tsx`](../src/components/kategorie-icons.tsx) –
+neue Zuordnungen nur dort UND in dieser Tabelle ergänzen. **Keine dekorativen
+Icons darüber hinaus.** Große Leerzustands-Icons: 56 px (`h-14 w-14`),
+`strokeWidth 1.5`, `text-ink-muted/50`.
+
+| Kontext | Wert | Lucide-Icon |
+| --- | --- | --- |
+| Kategorie | `stoffrecht` | `FlaskConical` (Kolben) |
+| Kategorie | `mehrweg` | `Recycle` (Kreislauf) |
+| Kategorie | `kennzeichnung` | `Tag` |
+| Kategorie | `konformitaet` | `ShieldCheck` (Schild mit Haken) |
+| Kategorie | `rollen_epr` | `Users` (Personen) |
+| Kategorie | `verbote` | `Ban` |
+| Kategorie | `sonstiges` | `Info` |
+| Gilt-Status | `in_kraft` | `Check` (Haken) |
+| Gilt-Status | `kuenftig` | `Clock` (Uhr) |
+| Gilt-Status | `rechtsakt_ausstehend` | `Hourglass` |
+| Gilt-Status | `entwurf_eu` | `Circle` (Punkt) |
+| Bearbeitungs-Ampel | `offen` | `Circle` (Punkt) |
+| Bearbeitungs-Ampel | `in_bearbeitung` | `Clock` (Uhr) |
+| Bearbeitungs-Ampel | `erledigt` | `Check` (Haken) |
+| Glossar-Typ | `begriff` | `BookOpen` |
+| Glossar-Typ | `anforderung` | `ScrollText` |
+| Glossar-Typ | `praxisfrage` | `MessageCircleQuestion` |
+| Glossar-Typ | `verpackung_material` | `Package` |
+| Leerzustand | Glossar ohne Treffer | `SearchX` (groß) |
+| Leerzustand | Assistant-Start | `MessageCircleQuestion` (groß) |
+| Leerzustand | Dokumente leer | `FileText` (groß) |
+
+Einsatzorte: Kategorie-/Status-Chips in Wissen (Liste + Detail), Praxisfragen,
+Glossar, Dashboard („Nächste Schritte“, Status-Analyse) und die Quellen-Chips
+des Assistant. Die 12-px-`TrafficDot`-Punkte bleiben für reine Zähler-Legenden
+(Ampel-Zusammenfassung) bestehen; in Zeilen mit konkretem Bearbeitungsstatus
+ersetzt das Ampel-Icon den Punkt.
+
 ## Barrierefreiheit
 
 Basistext 16 px+, Kontraste AA (Grün `#006950`, Blau `#004494` und Rot `#ba1a1a` auf Weiß > 4.5:1;

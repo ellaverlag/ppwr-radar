@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { ArrowBackIcon } from "@/components/icons";
+import { GiltStatusIcon, KategorieIcon } from "@/components/kategorie-icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import { getAnforderung, type GiltStatus } from "@/lib/wissensbasis";
@@ -78,9 +79,11 @@ export default async function AnforderungDetailPage({
       <header className="mt-8">
         <div className="flex flex-wrap items-center gap-2">
           <Badge variant="green">
+            <KategorieIcon kategorie={anforderung.kategorie} />
             {tLabels(`kategorien.${anforderung.kategorie}`)}
           </Badge>
           <Badge variant={giltStatusVariant(anforderung.gilt_status)}>
+            <GiltStatusIcon status={anforderung.gilt_status} />
             {tLabels(`giltStatus.${anforderung.gilt_status}`)}
           </Badge>
           <Badge variant="neutral">

@@ -22,7 +22,7 @@ export function Badge({
   return (
     <span
       title={title}
-      className={`inline-flex items-center rounded border px-2 py-1 text-label ${VARIANTS[variant]}`}
+      className={`inline-flex items-center gap-1 rounded border px-2 py-1 text-label ${VARIANTS[variant]}`}
     >
       {children}
     </span>

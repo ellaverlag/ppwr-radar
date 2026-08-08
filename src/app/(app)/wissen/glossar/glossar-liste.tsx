@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/badge";
+import { GlossarTypIcon } from "@/components/kategorie-icons";
 import type { GlossarEintrag } from "@/lib/glossar";
 
 /**
@@ -54,6 +55,7 @@ export function GlossarListe({
                             {eintrag.begriff}
                           </span>
                           <Badge variant="neutral">
+                            <GlossarTypIcon typ={eintrag.typ} />
                             {labels.typBadge[eintrag.typ] ?? eintrag.typ}
                           </Badge>
                           {eintrag.betrifft_mich && (

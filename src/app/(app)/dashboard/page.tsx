@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { ChatIcon, PlusIcon } from "@/components/icons";
+import { GiltStatusIcon } from "@/components/kategorie-icons";
 import {
   LegalCard,
   LegalCardFooter,
@@ -389,6 +390,9 @@ export default async function DashboardPage({
                               : "gold"
                           }
                         >
+                          <GiltStatusIcon
+                            status={zeile.anforderung.gilt_status}
+                          />
                           {tLabels(
                             `giltStatus.${zeile.anforderung.gilt_status}`
                           )}

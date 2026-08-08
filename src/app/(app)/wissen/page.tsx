@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/page-header";
 import { LegalCard } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import { SearchIcon } from "@/components/icons";
+import { GiltStatusIcon, KategorieIcon } from "@/components/kategorie-icons";
 import {
   getAnforderungen,
   type GiltStatus,
@@ -209,9 +210,11 @@ export default async function WissenPage({
                   </div>
                   <div className="flex flex-wrap items-center gap-2 md:col-span-4">
                     <Badge variant="green">
+                      <KategorieIcon kategorie={a.kategorie} />
                       {tLabels(`kategorien.${a.kategorie}`)}
                     </Badge>
                     <Badge variant={giltStatusVariant(a.gilt_status)}>
+                      <GiltStatusIcon status={a.gilt_status} />
                       {tLabels(`giltStatus.${a.gilt_status}`)}
                     </Badge>
                     <Badge variant="neutral" title={t("rechtsstandTitle")}>
