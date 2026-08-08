@@ -668,24 +668,40 @@
   },
   "Assistant": {
     "titel": "Wie kann ich Ihnen helfen?",
-    "beschreibung": "Stellen Sie rechtliche Fragen zur EU-Verpackungsverordnung (PPWR).",
+    "beschreibung": "Stellen Sie Fragen zur EU-Verpackungsverordnung (PPWR) – beantwortet aus der geprüften Wissensbasis, mit Fundstellen.",
     "fragePlaceholder": "Ihre Frage zur PPWR …",
     "fragen": "Fragen",
-    "erklaertiefen": [
-      "Einfach erklärt",
-      "Fachlich",
-      "Rechtstext"
+    "denken": "Der Assistant prüft die Wissensbasis …",
+    "erklaertiefeLabel": "Erklärtiefe",
+    "tiefen": {
+      "einfach": "Einfach erklärt",
+      "fachlich": "Fachlich",
+      "rechtstext": "Rechtstext"
+    },
+    "beispielTitel": "Beispiel-Einstiegsfragen",
+    "beispielFragen": [
+      "Bin ich Erzeuger oder Hersteller?",
+      "Was muss ich bis wann tun?",
+      "Brauche ich eine Konformitätserklärung?"
     ],
-    "beispielansicht": "Beispielansicht",
-    "beispielTitel": "Kennzeichnungspflichten für Kunststoffvliese",
-    "beispielText": "So wird eine Antwort des Assistant aufgebaut sein: eine fachliche Einordnung mit Rechtsstand, gegliederte Pflichten und ein Hinweis auf Grenzen der Auslegung.",
-    "punkt1Titel": "01 · Materialidentifikation",
-    "punkt1Text": "Gliederungspunkte nennen die konkrete Pflicht mit Fundstelle.",
-    "punkt2Titel": "02 · Hinweise zur Entsorgung",
-    "punkt2Text": "Jede Antwort trennt Pflichten, Fristen und Empfehlungen.",
-    "hinweisFett": "Wichtiger Hinweis:",
-    "hinweisText": "Antworten sind redaktionell geprüfte Auslegungen und keine Rechtsberatung.",
-    "footer": "Beispielansicht · Der Assistant folgt in einem späteren Paket"
+    "leerTitel": "Stellen Sie Ihre erste Frage",
+    "leerText": "Der Assistant antwortet ausschließlich auf Basis der redaktionell geprüften Wissensbasis des PPWR Radar – jede Aussage mit Fundstelle. Der Verlauf gilt nur für diese Sitzung und wird nicht gespeichert.",
+    "quellenLabel": "Quellen",
+    "disclaimer": "Keine Rechtsberatung · Antwort aus der geprüften Wissensbasis des PPWR Radar",
+    "previewHinweis": "Antwort basiert auf ungeprüften Vorschau-Inhalten",
+    "kandidatFrage": "War Ihre Frage von allgemeinem Interesse? Anonymisiert zur Aufnahme in die Praxisfragen vorschlagen.",
+    "kandidatGrenze": "Wir nehmen die Frage gern in die redaktionelle Prüfung auf – anonymisiert, ohne Firmen- und Personendaten.",
+    "kandidatCta": "Frage vorschlagen",
+    "kandidatDanke": "Vielen Dank – Ihre Frage geht anonymisiert in die redaktionelle Prüfung.",
+    "kandidatFehler": "Der Vorschlag konnte nicht gespeichert werden. Bitte versuchen Sie es später erneut.",
+    "rateLimit": "Sie haben das Limit von {limit} Fragen pro Stunde erreicht. Bitte versuchen Sie es in einer Stunde erneut – Ihre bisherigen Antworten bleiben in dieser Ansicht erhalten.",
+    "fehler": {
+      "eingabe": "Bitte formulieren Sie Ihre Frage mit mindestens 3 Zeichen.",
+      "zugang": "Ihr Zugang ist nicht mehr freigeschaltet. Bitte laden Sie die Seite neu.",
+      "timeout": "Die Antwort hat zu lange gedauert. Bitte stellen Sie die Frage erneut – gern etwas konkreter formuliert.",
+      "ueberlastet": "Der Assistant ist gerade stark ausgelastet. Bitte versuchen Sie es in wenigen Minuten erneut.",
+      "unbekannt": "Die Antwort konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    }
   },
   "Labels": {
     "kategorien": {

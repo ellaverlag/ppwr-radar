@@ -10,9 +10,11 @@
     "import:templates": "node scripts/import-templates.mjs"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.116.0",
     "@supabase/ssr": "^0.12.3",
     "@supabase/supabase-js": "^2.110.7",
     "html-to-docx": "^1.8.0",
+    "lucide-react": "^1.30.0",
     "marked": "^18.0.9",
     "next": "16.2.10",
     "next-intl": "^4.13.5",

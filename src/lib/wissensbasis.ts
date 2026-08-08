@@ -236,6 +236,108 @@ export async function getRollenDefinitionen(): Promise<RollenDefinition[]> {
   return (data ?? []) as RollenDefinition[];
 }
 
+// ---------------------------------------------------------------------------
+// Suche für den Assistant (RAG-Retrieval)
+// ---------------------------------------------------------------------------
+
+export interface SuchTreffer {
+  typ: "anforderung" | "auslegung" | "rolle";
+  /** UUID bei anforderungen/auslegungen, rolle_id bei Rollen. */
+  ref: string;
+  rang: number;
+}
+
+/**
+ * Postgres-Volltextsuche (websearch_to_tsquery, Konfiguration german) über
+ * anforderungen, auslegungen und rollen_definitionen. Die DB-Funktion läuft
+ * als SECURITY INVOKER: über den Session-Client greifen die RLS-Policies
+ * (nur Freigegebenes), im PREVIEW_MODE sieht der Service-Role-Client alles –
+ * derselbe Datenpfad wie bei den Gettern oben.
+ */
+export async function sucheWissensbasis(
+  query: string,
+  limit = 8
+): Promise<SuchTreffer[]> {
+  const client = await wissensbasisClient();
+  const { data, error } = await client.rpc("assistant_suche", {
+    p_query: query,
+    p_limit: limit,
+  });
+  if (error) {
+    throw new Error(`Wissensbasis-Suche fehlgeschlagen: ${error.message}`);
+  }
+  return ((data ?? []) as { typ: string; ref: string; rang: number }[]).map(
+    (t) => ({ typ: t.typ as SuchTreffer["typ"], ref: t.ref, rang: t.rang })
+  );
+}
+
+/**
+ * ilike-Fallback über Titel/Frage/Begriff, wenn die Volltextsuche leer
+ * ausgeht (z. B. Tippfehler oder zu spezifische Formulierung). Gleiche
+ * Freigabe-Filter wie die Getter; Treffer ohne Ranking in Tabellenordnung.
+ */
+export async function sucheWissensbasisIlike(
+  begriffe: string[],
+  limitJeTabelle = 4
+): Promise<SuchTreffer[]> {
+  const terme = begriffe
+    .map((b) => b.trim())
+    .filter((b) => b.length >= 3)
+    .slice(0, 5)
+    .map((b) => `%${b.replaceAll("%", "\\%").replaceAll("_", "\\_")}%`);
+  if (terme.length === 0) return [];
+
+  const client = await wissensbasisClient();
+  const freigabe = !isPreviewMode();
+
+  let anfQuery = client.from("anforderungen").select("id");
+  if (freigabe) {
+    anfQuery = anfQuery.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+  }
+  let ausQuery = client.from("auslegungen").select("id");
+  if (freigabe) {
+    ausQuery = ausQuery.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+  }
+  let rolQuery = client.from("rollen_definitionen").select("rolle_id");
+  if (freigabe) {
+    rolQuery = rolQuery.eq("review_status", FREIGEGEBEN).eq("aktiv", true);
+  }
+
+  const [anf, aus, rol] = await Promise.all([
+    anfQuery
+      .or(terme.map((t) => `titel.ilike.${t}`).join(","))
+      .limit(limitJeTabelle),
+    ausQuery
+      .or(
+        terme
+          .flatMap((t) => [`frage.ilike.${t}`, `kurztitel.ilike.${t}`])
+          .join(",")
+      )
+      .limit(limitJeTabelle),
+    rolQuery
+      .or(terme.map((t) => `begriff_de.ilike.${t}`).join(","))
+      .limit(limitJeTabelle),
+  ]);
+
+  return [
+    ...(anf.data ?? []).map((z) => ({
+      typ: "anforderung" as const,
+      ref: z.id as string,
+      rang: 0,
+    })),
+    ...(aus.data ?? []).map((z) => ({
+      typ: "auslegung" as const,
+      ref: z.id as string,
+      rang: 0,
+    })),
+    ...(rol.data ?? []).map((z) => ({
+      typ: "rolle" as const,
+      ref: z.rolle_id as string,
+      rang: 0,
+    })),
+  ];
+}
+
 export async function getWizardFragen(): Promise<WizardFrage[]> {
   // wizard_fragen hat keine review-/ausspielen-Spalten und wird immer
   // vollständig gelesen.
