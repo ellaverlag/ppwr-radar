@@ -45,7 +45,7 @@ function inlineRuns(tokens: Token[] | undefined, fett = false): Inline[] {
   return runs;
 }
 
-function markdownZuPdfInhalt(md: string): Record<string, unknown>[] {
+export function markdownZuPdfInhalt(md: string): Record<string, unknown>[] {
   const inhalt: Record<string, unknown>[] = [];
   for (const token of marked.lexer(md)) {
     switch (token.type) {
@@ -142,7 +142,7 @@ function markdownZuPdfInhalt(md: string): Record<string, unknown>[] {
 }
 
 /** Zeichen, die Roboto (PDF) nicht abdeckt, durch abgedeckte ersetzen. */
-function pdfTauglich(text: string): string {
+export function pdfTauglich(text: string): string {
   return text
     .replace(/[☐⬜]/g, "[ ]")
     .replace(/[☑✅✔]/g, "[x]")

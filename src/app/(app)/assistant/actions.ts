@@ -1,10 +1,12 @@
 "use server";
 
-import { frageClaude, type ChatNachricht } from "@/lib/assistant/antwort";
+import { frageClaude } from "@/lib/assistant/antwort";
 import {
   FRAGEN_PRO_STUNDE,
   pruefeRateLimit,
+  setzeVerlaufGemerkt,
   speichereFrageKandidat,
+  speichereVerlauf,
   zaehleFrage,
 } from "@/lib/assistant/nutzung";
 import { ladeProfilKontext } from "@/lib/assistant/profil-kontext";
@@ -28,6 +30,7 @@ import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
 /**
  * Server Actions des Assistant. Fehlerpfade liefern Status-Codes statt
  * Stacktraces – die Texte dazu kommen aus den i18n-Labels der Seite.
+ * Jede erfolgreiche Antwort wird automatisch im Verlauf gespeichert.
  */
 
 export interface QuellenChip {
@@ -37,6 +40,7 @@ export interface QuellenChip {
   url: string;
   kategorie: Kategorie;
   verbindlichkeit: Verbindlichkeit;
+  fundstellen: string[];
 }
 
 export type AssistantAntwort =
@@ -46,13 +50,16 @@ export type AssistantAntwort =
       quellen: QuellenChip[];
       grenze: boolean;
       preview: boolean;
+      rechtsstand: string;
+      /** null, wenn der Verlauf nicht gespeichert werden konnte (kein Profil). */
+      verlaufId: string | null;
+      createdAt: string;
     }
   | { status: "rate_limit"; limit: number }
   | { status: "fehler"; art: "eingabe" | "zugang" | "timeout" | "ueberlastet" | "unbekannt" };
 
 const TIEFEN: Erklaertiefe[] = ["einfach", "fachlich", "rechtstext"];
 const MAX_FRAGE = 1000;
-const MAX_VERLAUF = 12;
 
 const alsChip = (chunk: KontextChunk): QuellenChip => ({
   typ: chunk.typ,
@@ -61,6 +68,7 @@ const alsChip = (chunk: KontextChunk): QuellenChip => ({
   url: chunk.url,
   kategorie: chunk.kategorie,
   verbindlichkeit: chunk.verbindlichkeit,
+  fundstellen: chunk.fundstellen,
 });
 
 /** QUELLEN-Schlusszeile parsen und aus dem Antworttext entfernen. */
@@ -82,24 +90,21 @@ function trenneQuellenzeile(text: string): { antwort: string; codes: string[] | 
 export async function stelleAssistantFrage(input: {
   frage: string;
   tiefe: Erklaertiefe;
-  verlauf: ChatNachricht[];
+  /** Kontext-Umschalter: Name der Produktlinie oder null = alle. */
+  kontextLinie: string | null;
 }): Promise<AssistantAntwort> {
   const zugang = await pruefeZugang();
   if (!zugang?.freigeschaltet) return { status: "fehler", art: "zugang" };
 
   const frage = input.frage?.trim() ?? "";
   const tiefe = TIEFEN.includes(input.tiefe) ? input.tiefe : "fachlich";
+  const kontextLinie =
+    typeof input.kontextLinie === "string" && input.kontextLinie.trim()
+      ? input.kontextLinie.trim().slice(0, 80)
+      : null;
   if (frage.length < 3 || frage.length > MAX_FRAGE) {
     return { status: "fehler", art: "eingabe" };
   }
-  const verlauf = (Array.isArray(input.verlauf) ? input.verlauf : [])
-    .filter(
-      (n) =>
-        (n.rolle === "nutzer" || n.rolle === "assistant") &&
-        typeof n.text === "string"
-    )
-    .slice(-MAX_VERLAUF)
-    .map((n) => ({ rolle: n.rolle, text: n.text.slice(0, 6000) }));
 
   if (!(await pruefeRateLimit(zugang.user.id))) {
     return { status: "rate_limit", limit: FRAGEN_PRO_STUNDE };
@@ -110,7 +115,7 @@ export async function stelleAssistantFrage(input: {
     const [{ chunks: suchChunks, rechtsstand }, profil, eskalation] =
       await Promise.all([
         ladeKontextChunks(frage),
-        ladeProfilKontext(zugang.user.id),
+        ladeProfilKontext(zugang.user.id, kontextLinie),
         ladeAppConfig("cattwyk_erstgespraech_hinweis"),
       ]);
 
@@ -132,9 +137,10 @@ export async function stelleAssistantFrage(input: {
       rechtsstand,
       tiefe,
       eskalationsHinweis: eskalation?.trim() || ESKALATION_FALLBACK,
+      kontextLinie,
     });
 
-    const ergebnis = await frageClaude(systemPrompt, verlauf, frage, tiefe);
+    const ergebnis = await frageClaude(systemPrompt, [], frage, tiefe);
     if (!ergebnis.ok) {
       const art =
         ergebnis.fehler === "timeout"
@@ -157,12 +163,37 @@ export async function stelleAssistantFrage(input: {
             )
             .map(alsChip);
 
+    const preview = isPreviewMode();
+
+    // Automatisch in den Verlauf – „vergessen zu sichern“ gibt es nicht
+    let verlaufId: string | null = null;
+    let createdAt = new Date().toISOString();
+    if (profil.profilId) {
+      const gespeichert = await speichereVerlauf({
+        profilId: profil.profilId,
+        frage,
+        antwortMarkdown: antwort,
+        erklaertiefe: tiefe,
+        quellen,
+        rechtsstand,
+        preview,
+        produktlinieKontext: kontextLinie,
+      });
+      if (gespeichert) {
+        verlaufId = gespeichert.id;
+        createdAt = gespeichert.createdAt;
+      }
+    }
+
     return {
       status: "ok",
       antwort,
       quellen,
       grenze: antwort.includes(GRENZE_MARKER),
-      preview: isPreviewMode(),
+      preview,
+      rechtsstand,
+      verlaufId,
+      createdAt,
     };
   } catch (fehler) {
     console.error(
@@ -171,6 +202,21 @@ export async function stelleAssistantFrage(input: {
     );
     return { status: "fehler", art: "unbekannt" };
   }
+}
+
+/** Merken-Flag einer gespeicherten Antwort umschalten. */
+export async function merkeAntwort(
+  verlaufId: string,
+  gemerkt: boolean
+): Promise<{ ok: boolean }> {
+  const zugang = await pruefeZugang();
+  if (!zugang?.freigeschaltet) return { ok: false };
+  if (!/^[0-9a-f-]{36}$/i.test(verlaufId)) return { ok: false };
+
+  const profil = await ladeProfilKontext(zugang.user.id);
+  if (!profil.profilId) return { ok: false };
+  const ok = await setzeVerlaufGemerkt(profil.profilId, verlaufId, gemerkt);
+  return { ok };
 }
 
 /** Frage anonymisiert als Praxisfragen-Kandidat vorschlagen. */

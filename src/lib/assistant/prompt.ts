@@ -64,14 +64,36 @@ function profilAlsText(profil: ProfilKontextAssistant): string {
     .join("\n");
 }
 
+/** Profilbezug: die Antwort muss erkennbar das Portfolio des Nutzers analysieren. */
+function profilbezugRegel(
+  profil: ProfilKontextAssistant,
+  kontextLinie: string | null
+): string {
+  const basis =
+    "PROFILBEZUG (wichtig): Beziehe die Antwort erkennbar auf die konkrete(n) Produktlinie(n) des Nutzers – nenne den Namen der betroffenen Linie(n) ausdrücklich (z. B. „Für Ihre Linie ‚Feinkost im Glas‘ bedeutet das …“), wende die Regeln auf deren Merkmale und Rollen an, und sage ausdrücklich, wenn eine allgemeine Regel für den konkreten Fall des Nutzers NICHT einschlägig ist. Der Nutzer soll merken, dass sein Portfolio analysiert wurde, nicht ein Merkblatt zitiert. Leite daraus aber keine Konformitätszusage ab.";
+
+  if (kontextLinie) {
+    return `${basis} Der Nutzer hat als Kontext ausdrücklich die Produktlinie „${kontextLinie}“ gewählt: Beziehe die Antwort ausschließlich auf diese Linie und nenne sie beim Namen; andere Linien lässt du weg.`;
+  }
+  if (profil.alleLinienNamen.length > 1) {
+    return `${basis} Der Nutzer hat mehrere Produktlinien (${profil.alleLinienNamen
+      .map((n) => `„${n}“`)
+      .join(", ")}) und keine eingegrenzt: Differenziere bei linienspezifischen Fragen kurz je Linie („Für ‚A‘: … / Für ‚B‘: …“). Fallen die Antworten stark auseinander, weise aktiv darauf hin, dass für eine präzise Antwort die Wahl einer Linie über den Kontext-Umschalter über dem Eingabefeld nötig ist.`;
+  }
+  return basis;
+}
+
 export function baueSystemPrompt(args: {
   chunks: KontextChunk[];
   profil: ProfilKontextAssistant;
   rechtsstand: string;
   tiefe: Erklaertiefe;
   eskalationsHinweis: string;
+  /** Gewählte Produktlinie des Kontext-Umschalters; null = alle. */
+  kontextLinie?: string | null;
 }): string {
   const { chunks, profil, rechtsstand, tiefe, eskalationsHinweis } = args;
+  const kontextLinie = args.kontextLinie ?? null;
 
   const datensaetze =
     chunks.length > 0
@@ -87,9 +109,9 @@ VERBINDLICHE REGELN – keine Ausnahmen:
 4. Du leistest KEINE Rechtsberatung im Einzelfall. Formulierungen wie „Sie sind konform“, „Sie erfüllen die Anforderungen“ oder „Sie müssen nichts tun“ sind verboten. Beschreibe stattdessen, was die jeweilige Anforderung verlangt („diese Anforderung verlangt …“) und woran die Erfüllung hängt.
 5. Läuft die Frage auf eine individuelle Rechtsfrage hinaus (Vertragsgestaltung, Einzelfallbewertung, Streitfall, Haftung), weise darauf hin und ergänze wörtlich: „${eskalationsHinweis}“
 6. Datensätze mit Verbindlichkeit „unverbindliche_auslegung“ kennzeichnest du ausdrücklich als „Auslegung der EU-Kommission, rechtlich nicht bindend“.
-7. Beziehe das Verpackungsprofil des Nutzers ein, wo es die Antwort konkreter macht (z. B. Rollen je Produktlinie) – aber leite daraus keine Konformitätszusage ab.
+7. ${profilbezugRegel(profil, kontextLinie)}
 8. ${TIEFEN_INSTRUKTION[tiefe]}
-9. Antworte auf Deutsch, höflich per „Sie“. Halte die Antwort kompakt und gegliedert (kurze Absätze, ggf. Aufzählungen).
+9. Antworte auf Deutsch, höflich per „Sie“. Halte die Antwort kompakt und gegliedert: Markdown mit kurzen Absätzen, Zwischenüberschriften als ### bzw. ####, Aufzählungen mit „-“, Hervorhebungen mit **fett**. Kein HTML, keine Tabellen, keine Links.
 10. SCHLUSSZEILE (Pflicht, maschinenlesbar): Beende jede Antwort mit einer eigenen letzten Zeile im Format „QUELLEN: <Code, Code, …>“ – nur die Codes der Datensätze, die du tatsächlich verwendet hast (z. B. „QUELLEN: #06, A01“). Hast du keinen Datensatz verwendet, schreibe „QUELLEN: keine“.
 
 VERPACKUNGSPROFIL DES NUTZERS (aus dem Onboarding, keine Firmendaten):

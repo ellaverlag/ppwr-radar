@@ -13,6 +13,8 @@ import { createClient } from "@/lib/supabase/server";
  */
 
 export interface ProfilKontextAssistant {
+  /** Für den Verlaufs-Insert; null, wenn kein (fertiges) Profil existiert. */
+  profilId: string | null;
   linien: {
     name: string;
     rollen: string[];
@@ -20,17 +22,23 @@ export interface ProfilKontextAssistant {
     merkmale: string[];
     lebensmittelkontakt: boolean;
   }[];
+  /** Namen ALLER aktiven Linien (auch bei nurLinie-Filter, für den Prompt). */
+  alleLinienNamen: string[];
   /** Vereinigte Rollen/Verpackungstypen – für frage_kandidaten.kontext. */
   rollen: string[];
   verpackungstypen: string[];
 }
 
 export async function ladeProfilKontext(
-  userId: string
+  userId: string,
+  /** Kontext-Umschalter: nur diese Produktlinie in den Prompt geben. */
+  nurLinie?: string | null
 ): Promise<ProfilKontextAssistant> {
   const supabase = await createClient();
   const leer: ProfilKontextAssistant = {
+    profilId: null,
     linien: [],
+    alleLinienNamen: [],
     rollen: [],
     verpackungstypen: [],
   };
@@ -54,9 +62,12 @@ export async function ladeProfilKontext(
       .eq("aktuell", true),
   ]);
 
-  const aktive = (verpackungen ?? []).filter(
+  const alleAktiven = (verpackungen ?? []).filter(
     (zeile) => zeile.status !== "stillgelegt"
   );
+  const aktive = nurLinie
+    ? alleAktiven.filter((zeile) => zeile.bezeichnung === nurLinie)
+    : alleAktiven;
   const ergebnisNachName = new Map(
     (ergebnisse ?? []).map((zeile) => [zeile.produktlinie as string, zeile])
   );
@@ -100,7 +111,9 @@ export async function ladeProfilKontext(
   });
 
   return {
+    profilId: profil.id as string,
     linien,
+    alleLinienNamen: alleAktiven.map((zeile) => zeile.bezeichnung as string),
     rollen: [...alleRollen],
     verpackungstypen: [...alleTypen],
   };

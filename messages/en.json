@@ -681,6 +681,23 @@
       "timeout": "Die Antwort hat zu lange gedauert. Bitte stellen Sie die Frage erneut – gern etwas konkreter formuliert.",
       "ueberlastet": "Der Assistant ist gerade stark ausgelastet. Bitte versuchen Sie es in wenigen Minuten erneut.",
       "unbekannt": "Die Antwort konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
+    },
+    "kontextLabel": "Kontext",
+    "kontextAlle": "Alle Produktlinien",
+    "verlaufTab": "Meine Fragen",
+    "verlaufLeer": "Noch keine Fragen gestellt. Ihre Antworten werden hier automatisch gespeichert – samt Quellen und PDF-Export.",
+    "ausVerlauf": "Aus dem Verlauf",
+    "neueFrage": "Neue Frage",
+    "merken": "Merken",
+    "gemerkt": "Gemerkt",
+    "pdfButton": "Als PDF speichern",
+    "pdfFehler": "Das PDF konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+    "pdf": {
+      "titel": "Antwort des PPWR-Radar-Assistenten",
+      "byline": "PPWR Radar · by packaging journal",
+      "rechtsstandLabel": "Rechtsstand",
+      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender.",
+      "erzeugtAm": "Erzeugt am {datum} · Rechtsstand {stand}"
     }
   },
   "Labels": {
