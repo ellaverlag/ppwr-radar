@@ -34,12 +34,17 @@ Daten und technische Kennungen. Labels immer 600 mit `0.05em`-Tracking, meist up
 
 ## Öffentliche Seiten / PJ-Markenschrift
 
-Es existieren bewusst **zwei Schriftsysteme**, und die Grenze verläuft am Login:
+Es existieren bewusst **zwei Schriftsysteme**, und die Grenze verläuft hinter dem Login:
 
-- **Öffentlich = Verlagsmarke** (`/`, `/check`, `/check/ergebnis`): Die Seiten sprechen als
-  Angebot des packaging journal und tragen dessen Online-Markenschrift.
-- **App = Produktmarke** (alles hinter dem Login inkl. `/login` selbst): Das Werkzeug spricht
+- **Öffentlich = Verlagsmarke** (`/`, `/check`, `/check/ergebnis`, `/login`): Die Seiten
+  sprechen als Angebot des packaging journal und tragen dessen Online-Markenschrift.
+- **App = Produktmarke** (alles hinter dem Login): Das Werkzeug spricht
   als PPWR Radar und bleibt vollständig bei Inter/JetBrains Mono gemäß der Tabelle oben.
+
+Achtung Stolperfalle (war ein Live-Bug): Die Tokens `--font-plex`/`--font-landing` stehen in
+`globals.css` zwingend in einem **`@theme inline`**-Block. Im normalen `@theme` löst der
+Browser die var()-Kette auf `:root` auf – dort sind die next/font-Variablen der öffentlichen
+Seiten unbekannt, der Token wird ungültig und alles fällt still auf Inter zurück.
 
 Regeln der öffentlichen Strecke (Fonts laden nur dort, via `src/app/landing-fonts.ts`):
 

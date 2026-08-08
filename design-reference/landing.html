@@ -3,44 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PPWR Radar – Ihre persönliche PPWR-KI | packaging journal</title>
-<meta name="description" content="Die PPWR gilt. PPWR Radar zeigt Ihnen, was das für Ihre Verpackungen bedeutet – Ihre Rolle, Ihre Pflichten, Ihre Dokumente. Verifiziert von Cattwyk Rechtsanwaltsgesellschaft.">
+<title>PPWR Radar – Ihr komplettes PPWR-System | packaging journal</title>
+<meta name="description" content="Rollen klären, Pflichten kennen, Dokumente erstellen, nachschlagen, fragen – PPWR Radar ist das komplette Compliance-System zur EU-Verpackungsverordnung. Verifiziert von Cattwyk Rechtsanwaltsgesellschaft.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600;700&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --gruen:#006950; --gruen-dark:#00543f; --gruen-tint:#e6f0ec;
     --blau:#004494; --blau-tint:#e6ecf4;
     --gold:#FFCC00; --gold-text:#745b00; --gold-tint:#fff8e0;
-    --ink:#1a1a1a; --ink-soft:#4a4a4a; --ink-mute:#767676;
-    --line:#E5E5E5; --line-soft:#efefef;
-    --paper:#ffffff; --paper-off:#fafafa; --paper-shell:#f5f5f3;
-    --radius:4px;
-    --wrap:1200px;
+    --ink:#1a1a1a; --ink-soft:#3a3a3a; --ink-mute:#767676;
+    --line:#E5E5E5; --paper:#ffffff; --paper-off:#fafafa; --paper-shell:#f5f5f3;
+    --radius:4px; --wrap:1200px;
+    --display:'IBM Plex Sans',system-ui,sans-serif;
+    --body:'Manrope','IBM Plex Sans',system-ui,sans-serif;
     --mono:'JetBrains Mono',ui-monospace,monospace;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',system-ui,sans-serif;
-    color:var(--ink); background:var(--paper);
-    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
-  }
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
-  h1,h2,h3{line-height:1.15;letter-spacing:-.02em;font-weight:700}
-  h2{font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:800}
-  .eyebrow{
-    font-family:var(--mono);font-size:.75rem;font-weight:500;
-    letter-spacing:.08em;text-transform:uppercase;color:var(--gruen);
-    display:inline-block;
-  }
-  .btn{
-    display:inline-flex;align-items:center;gap:.5rem;
-    font-weight:600;font-size:1rem;padding:.85rem 1.5rem;border-radius:var(--radius);
-    border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,color .15s;
-  }
+  h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-0.04em;line-height:1.12}
+  h2{font-size:clamp(1.7rem,3.2vw,2.5rem)}
+  .eyebrow{font-family:var(--body);font-size:.75rem;font-weight:600;letter-spacing:0.02em;text-transform:uppercase;color:var(--gruen);display:inline-block}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--body);font-weight:600;font-size:1rem;padding:.85rem 1.5rem;border-radius:var(--radius);border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
   .btn-primary{background:var(--gruen);color:#fff}
   .btn-primary:hover{background:var(--gruen-dark)}
   .btn-ghost{background:#fff;color:var(--gruen);border-color:var(--gruen)}
@@ -48,86 +36,90 @@
   .btn-lg{padding:1rem 1.9rem;font-size:1.05rem}
   :focus-visible{outline:2px solid var(--blau);outline-offset:2px}
 
-  /* ---------- Header ---------- */
+  /* Header */
   header.top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{display:flex;align-items:center;gap:.6rem;font-weight:800;letter-spacing:-.02em;font-size:1.15rem}
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-0.02em}
   .brand .mark{width:30px;height:30px;flex:none}
-  .brand small{display:block;font-weight:500;font-size:.68rem;color:var(--ink-mute);letter-spacing:0;margin-top:-2px}
-  .top nav{display:flex;align-items:center;gap:2rem}
+  .brand small{display:block;font-family:var(--body);font-weight:500;font-size:.68rem;color:var(--ink-mute);letter-spacing:0;margin-top:-2px}
+  .top nav{display:flex;align-items:center;gap:1.6rem}
   .top nav a.link{font-size:.95rem;color:var(--ink-soft);font-weight:500}
   .top nav a.link:hover{color:var(--gruen)}
-  @media(max-width:820px){.top nav a.link{display:none}}
+  @media(max-width:860px){.top nav a.link{display:none}}
 
-  /* ---------- Hero ---------- */
-  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:
-     radial-gradient(120% 90% at 88% -10%, var(--gruen-tint) 0%, rgba(230,240,236,0) 55%),
-     var(--paper)}
-  .hero .wrap{padding-top:72px;padding-bottom:72px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:40px;padding-top:48px;padding-bottom:48px}}
-  .hero h1{font-size:clamp(2.1rem,4.6vw,3.4rem);font-weight:800;margin:.9rem 0 1.1rem}
-  .hero h1 .hl{color:var(--gruen)}
-  .hero p.lead{font-size:1.2rem;color:var(--ink-soft);max-width:34ch;margin-bottom:1.9rem}
-  .hero .cta-row{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
-  .hero .microcopy{font-size:.85rem;color:var(--ink-mute);margin-top:1.1rem}
-  .countdown{display:inline-flex;align-items:center;gap:.55rem;background:var(--gold-tint);border:1px solid #f0dfa0;color:var(--gold-text);
-    font-family:var(--mono);font-size:.8rem;font-weight:500;padding:.4rem .75rem;border-radius:var(--radius)}
+  /* Hero */
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(120% 90% at 88% -10%, var(--gruen-tint) 0%, rgba(230,240,236,0) 55%), var(--paper)}
+  .hero .wrap{padding-top:64px;padding-bottom:64px;display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:36px;padding-top:40px;padding-bottom:40px}}
+  .countdown{display:inline-flex;align-items:center;gap:.55rem;background:var(--gold-tint);border:1px solid #f0dfa0;color:var(--gold-text);font-family:var(--mono);font-size:.8rem;font-weight:500;padding:.4rem .75rem;border-radius:var(--radius);margin-bottom:1rem}
   .countdown .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px #f4e4a8}
+  .hero h1{font-size:clamp(2rem,4.4vw,3.2rem);margin-bottom:1.1rem}
+  .hero h1 .fixed{color:var(--ink)}
+  /* animated rotating clause */
+  .rotator{display:block;color:var(--gruen);min-height:1.2em;position:relative}
+  .rotator .word{display:inline-block}
+  .rotator .caret{display:inline-block;width:3px;height:1em;background:var(--gruen);margin-left:2px;vertical-align:-0.12em;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  .hero p.lead{font-size:1.15rem;color:var(--ink-soft);max-width:40ch;margin-bottom:1.7rem;line-height:1.5}
+  .hero .cta-row{display:flex;gap:.8rem;flex-wrap:wrap;align-items:center}
+  .hero .microcopy{font-size:.85rem;color:var(--ink-mute);margin-top:1rem}
 
-  /* Hero visual: mock role-card */
+  /* Hero visual */
   .hero-panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
   .hp-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:var(--paper-off)}
   .hp-head .t{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute)}
   .hp-head .rs{font-family:var(--mono);font-size:.7rem;color:var(--ink-mute)}
   .hp-body{padding:20px 18px}
   .hp-line{font-size:.82rem;color:var(--ink-mute);margin-bottom:6px}
-  .hp-prod{font-weight:700;font-size:1.05rem;margin-bottom:14px}
+  .hp-prod{font-family:var(--display);font-weight:700;font-size:1.05rem;margin-bottom:14px;letter-spacing:-0.02em}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
   .chip{font-family:var(--mono);font-size:.72rem;font-weight:500;padding:.28rem .6rem;border-radius:var(--radius);border:1px solid var(--blau);color:var(--blau);background:var(--blau-tint)}
-  .chip.warn{border-color:#e7c86a;color:var(--gold-text);background:var(--gold-tint)}
   .hp-why{border-top:1px dashed var(--line);padding-top:13px;font-size:.85rem;color:var(--ink-soft)}
   .hp-why b{color:var(--ink)}
   .hp-src{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
   .src{font-family:var(--mono);font-size:.68rem;color:var(--blau);border:1px solid var(--blau-tint);background:var(--blau-tint);padding:.2rem .45rem;border-radius:var(--radius)}
 
-  /* ---------- Trust strip ---------- */
+  /* Trust */
   .trust{border-bottom:1px solid var(--line);background:var(--paper-off)}
-  .trust .wrap{display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;padding:18px 24px;font-size:.9rem;color:var(--ink-soft)}
+  .trust .wrap{display:flex;align-items:center;justify-content:center;gap:2.5rem;flex-wrap:wrap;padding:16px 24px;font-size:.9rem;color:var(--ink-soft)}
   .trust b{color:var(--ink)}
   .trust .sep{width:1px;height:18px;background:var(--line)}
   @media(max-width:700px){.trust .sep{display:none}}
 
-  /* ---------- Section base ---------- */
-  section{padding:80px 0}
-  .sec-head{max-width:60ch;margin-bottom:48px}
+  section{padding:76px 0}
+  .sec-head{max-width:62ch;margin-bottom:44px}
   .sec-head h2{margin:.6rem 0 .8rem}
   .sec-head p{font-size:1.1rem;color:var(--ink-soft)}
 
-  /* ---------- Problem → Answer ---------- */
+  /* Pillars – the five services */
+  .pillars{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+  .pillar{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--paper);transition:border-color .15s}
+  .pillar:hover{border-color:var(--gruen)}
+  .pillar .step{font-family:var(--mono);font-size:.72rem;color:var(--ink-mute);letter-spacing:.06em;display:block;margin-bottom:14px}
+  .pillar .ico{width:40px;height:40px;border-radius:var(--radius);background:var(--gruen-tint);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+  .pillar .ico svg{width:22px;height:22px;stroke:var(--gruen);fill:none;stroke-width:2}
+  .pillar h3{font-size:1.18rem;margin-bottom:.5rem}
+  .pillar p{font-size:.95rem;color:var(--ink-soft)}
+  .pillar .tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:.68rem;color:var(--gruen);background:var(--gruen-tint);padding:.2rem .5rem;border-radius:var(--radius)}
+  /* first two span wider = the funnel entry, rest below */
+  .p1{grid-column:span 7}.p2{grid-column:span 5}
+  .p3{grid-column:span 4}.p4{grid-column:span 4}.p5{grid-column:span 4}
+  @media(max-width:820px){.pillar{grid-column:span 12 !important}}
+
+  /* Problem/Answer */
   .split{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
   @media(max-width:800px){.split{grid-template-columns:1fr}}
   .split>div{padding:34px}
   .split .problem{background:var(--paper-off);border-right:1px solid var(--line)}
   @media(max-width:800px){.split .problem{border-right:none;border-bottom:1px solid var(--line)}}
-  .split h3{font-size:1.15rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+  .split h3{font-size:1.15rem;margin-bottom:1rem}
   .split ul{list-style:none;display:flex;flex-direction:column;gap:.7rem}
   .split li{font-size:.98rem;color:var(--ink-soft);padding-left:1.5rem;position:relative}
   .split .problem li::before{content:"–";position:absolute;left:0;color:var(--ink-mute);font-weight:700}
   .split .answer li::before{content:"→";position:absolute;left:0;color:var(--gruen);font-weight:700}
   .split .answer{background:var(--gruen-tint)}
 
-  /* ---------- Features ---------- */
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  @media(max-width:900px){.grid3{grid-template-columns:1fr}}
-  .card{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--paper);transition:border-color .15s}
-  .card:hover{border-color:var(--gruen)}
-  .card .ico{width:40px;height:40px;border-radius:var(--radius);background:var(--gruen-tint);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-  .card .ico svg{width:22px;height:22px;stroke:var(--gruen)}
-  .card h3{font-size:1.12rem;margin-bottom:.5rem}
-  .card p{font-size:.95rem;color:var(--ink-soft)}
-  .card .num{font-family:var(--mono);font-size:.72rem;color:var(--ink-mute);letter-spacing:.06em;margin-bottom:14px;display:block}
-
-  /* ---------- Audience ---------- */
+  /* Audience */
   .aud{background:var(--paper-shell);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   @media(max-width:900px){.aud-grid{grid-template-columns:1fr}}
@@ -136,40 +128,31 @@
   .aud-card h3{font-size:1.08rem;margin-bottom:.5rem}
   .aud-card p{font-size:.93rem;color:var(--ink-soft)}
 
-  /* ---------- Steps ---------- */
-  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:s}
-  @media(max-width:900px){.steps{grid-template-columns:1fr}}
-  .step{padding:26px;border:1px solid var(--line);border-right:none;position:relative}
-  .step:last-child{border-right:1px solid var(--line)}
-  @media(max-width:900px){.step{border-right:1px solid var(--line);border-bottom:none}.step:last-child{border-bottom:1px solid var(--line)}}
-  .step .n{font-family:var(--mono);font-weight:500;font-size:.8rem;color:#fff;background:var(--gruen);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-  .step h3{font-size:1rem;margin-bottom:.4rem}
-  .step p{font-size:.9rem;color:var(--ink-soft)}
-
-  /* ---------- Pricing ---------- */
+  /* Pricing */
   .price-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
   @media(max-width:900px){.price-grid{grid-template-columns:1fr}}
   .price{border:1px solid var(--line);border-radius:var(--radius);padding:32px;background:#fff;position:relative}
   .price.featured{border:2px solid var(--gruen)}
   .price .badge{position:absolute;top:-11px;left:32px;background:var(--gruen);color:#fff;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:.25rem .6rem;border-radius:var(--radius)}
   .price .plan{font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:12px}
-  .price .amount{font-size:2.6rem;font-weight:800;letter-spacing:-.03em;line-height:1}
-  .price .amount .cur{font-size:1.4rem;vertical-align:top;font-weight:700}
+  .price .amount{font-family:var(--display);font-size:2.6rem;font-weight:700;letter-spacing:-.03em;line-height:1}
+  .price .amount .cur{font-size:1.4rem;vertical-align:top}
   .price .per{font-size:.9rem;color:var(--ink-mute);margin:6px 0 4px}
   .price .renew{font-size:.82rem;color:var(--ink-mute);margin-bottom:20px}
-  .price ul{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:24px}
+  .price ul{list-style:none;display:flex;flex-direction:column;gap:.65rem;margin-bottom:16px}
   .price li{font-size:.93rem;color:var(--ink-soft);padding-left:1.6rem;position:relative}
   .price li::before{content:"";position:absolute;left:0;top:.45em;width:13px;height:13px;background:var(--gruen-tint);border-radius:50%}
   .price li::after{content:"✓";position:absolute;left:2px;top:0;color:var(--gruen);font-size:.8rem;font-weight:700}
   .price .btn{width:100%;justify-content:center}
+  .price .fineprint{font-size:.78rem;color:var(--ink-mute);margin-top:12px;text-align:center}
   .price-side{display:flex;flex-direction:column;gap:20px}
   .price-mini{border:1px solid var(--line);border-radius:var(--radius);padding:24px;background:#fff}
   .price-mini .plan{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px}
-  .price-mini .amount{font-size:1.5rem;font-weight:800}
+  .price-mini .amount{font-family:var(--display);font-size:1.5rem;font-weight:700}
   .price-mini p{font-size:.88rem;color:var(--ink-soft);margin:8px 0 16px}
   .stripe-note{font-size:.78rem;color:var(--ink-mute);font-family:var(--mono);margin-top:18px;text-align:center}
 
-  /* ---------- Free check band ---------- */
+  /* Free check band */
   .band{background:var(--blau);color:#fff;border-radius:var(--radius)}
   .band .inner{padding:44px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
   .band h2{color:#fff}
@@ -177,17 +160,17 @@
   .band .btn-primary{background:#fff;color:var(--blau)}
   .band .btn-primary:hover{background:#eef2f8}
 
-  /* ---------- FAQ ---------- */
+  /* FAQ */
   .faq{max-width:820px;margin:0 auto}
   details{border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;background:#fff}
   details[open]{border-color:var(--gruen)}
-  summary{cursor:pointer;padding:18px 22px;font-weight:600;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem}
+  summary{cursor:pointer;padding:18px 22px;font-family:var(--display);font-weight:600;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;letter-spacing:-0.02em}
   summary::-webkit-details-marker{display:none}
   summary::after{content:"+";font-family:var(--mono);font-size:1.3rem;color:var(--gruen);flex:none}
   details[open] summary::after{content:"–"}
   details .a{padding:0 22px 20px;color:var(--ink-soft);font-size:.96rem}
 
-  /* ---------- Final CTA ---------- */
+  /* Final */
   .final{background:var(--gruen);color:#fff;text-align:center}
   .final h2{color:#fff;margin-bottom:1rem}
   .final p{color:#bfe0d6;font-size:1.1rem;max-width:52ch;margin:0 auto 2rem}
@@ -196,7 +179,6 @@
   .final .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
   .final .btn-ghost:hover{background:rgba(255,255,255,.1)}
 
-  /* ---------- Footer ---------- */
   footer{background:var(--paper-off);border-top:1px solid var(--line);padding:40px 0}
   footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
   footer .disc{max-width:52ch;font-size:.82rem;color:var(--ink-mute);line-height:1.6}
@@ -206,7 +188,7 @@
   footer .col h4{font-size:.72rem;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--ink-mute);margin-bottom:.8rem}
   .legal-note{border-top:1px solid var(--line);margin-top:28px;padding-top:20px;font-size:.78rem;color:var(--ink-mute)}
 
-  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}.rotator .caret{animation:none}}
 </style>
 </head>
 <body>
@@ -223,11 +205,12 @@
       <div>PPWR Radar<small>by packaging journal</small></div>
     </div>
     <nav>
-      <a class="link" href="#funktionen">Funktionen</a>
+      <a class="link" href="#leistungen">Leistungen</a>
       <a class="link" href="#zielgruppe">Für wen</a>
       <a class="link" href="#preise">Preise</a>
       <a class="link" href="#faq">FAQ</a>
-      <a class="btn btn-primary" href="#preise">Jetzt starten</a>
+      <a class="btn btn-ghost" href="#check">Kostenlos prüfen</a>
+      <a class="btn btn-primary" href="/login?next=dashboard">Jetzt starten</a>
     </nav>
   </div>
 </header>
@@ -237,121 +220,119 @@
   <div class="wrap">
     <div>
       <span class="countdown"><span class="dot"></span>Die PPWR gilt seit dem 12. August 2026</span>
-      <h1>Die PPWR gilt. Wissen Sie, was das für <span class="hl">Ihre Verpackungen</span> heißt?</h1>
-      <p class="lead">PPWR Radar ist Ihre persönliche PPWR-KI: Sie klärt Ihre Rolle, zeigt Ihre Pflichten und erstellt die Dokumente, die Sie jetzt brauchen. Verständlich, mit Fundstelle, immer auf Stand.</p>
+      <h1>
+        <span class="fixed">Die PPWR gilt.<br>PPWR Radar</span>
+        <span class="rotator" aria-live="polite"><span class="word" id="rotWord">klärt Ihre Rolle.</span><span class="caret"></span></span>
+      </h1>
+      <p class="lead">Ihr komplettes Compliance-System zur EU-Verpackungsverordnung: von der ersten Rollenklärung bis zum fertigen Dokument – verständlich, mit Fundstelle, immer auf Stand.</p>
       <div class="cta-row">
-        <a class="btn btn-primary btn-lg" href="#preise">PPWR|ready werden</a>
+        <a class="btn btn-primary btn-lg" href="/login?next=dashboard">Jetzt starten</a>
         <a class="btn btn-ghost btn-lg" href="#check">Kostenlos: Bin ich betroffen?</a>
       </div>
-      <p class="microcopy">In 15 Minuten von der Unsicherheit zur Klarheit · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft</p>
+      <p class="microcopy">Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft</p>
     </div>
     <div class="hero-panel" role="img" aria-label="Beispiel einer Rollen-Analyse in PPWR Radar">
-      <div class="hp-head">
-        <span class="t">Ihre PPWR-Rolle</span>
-        <span class="rs">Stand 12.08.2026</span>
-      </div>
+      <div class="hp-head"><span class="t">Ihre PPWR-Rolle</span><span class="rs">Stand 12.08.2026</span></div>
       <div class="hp-body">
         <div class="hp-line">Produktlinie</div>
         <div class="hp-prod">Feinkost im Glas</div>
-        <div class="chips">
-          <span class="chip">Erzeuger</span>
-          <span class="chip">Hersteller</span>
-          <span class="chip">Endvertreiber</span>
-        </div>
+        <div class="chips"><span class="chip">Erzeuger</span><span class="chip">Hersteller</span><span class="chip">Endvertreiber</span></div>
         <div class="hp-why">
-          <b>Sie gelten als Erzeuger,</b> weil Sie das Produkt unter eigener Marke abfüllen lassen – trägt die Konformitätsverantwortung.
-          <div class="hp-src">
-            <span class="src">Art. 3 Abs. 1 Nr. 13 PPWR</span>
-            <span class="src">§ 7 VerpackDG</span>
-          </div>
+          <b>Sie gelten als Erzeuger,</b> weil Sie unter eigener Marke abfüllen lassen – damit tragen Sie die Konformitätsverantwortung.
+          <div class="hp-src"><span class="src">Art. 3 Abs. 1 Nr. 13 PPWR</span><span class="src">§ 7 VerpackDG</span></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TRUST -->
 <div class="trust">
   <div class="wrap">
     <span>Herausgegeben vom <b>packaging journal</b></span>
     <span class="sep"></span>
     <span>Juristischer Partner: <b>Cattwyk Rechtsanwaltsgesellschaft</b></span>
     <span class="sep"></span>
-    <span>Jede Antwort mit <b>Rechtsstand &amp; Fundstelle</b></span>
+    <span>Über <b>200 Fundstellen</b>, laufend aktualisiert</span>
   </div>
 </div>
 
-<!-- PROBLEM / ANSWER -->
-<section id="problem">
+<!-- FIVE PILLARS -->
+<section id="leistungen">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow">Das Problem</span>
-      <h2>Andere erklären die PPWR. Wir sagen Ihnen, was sie für Sie bedeutet.</h2>
-      <p>Merkblätter, Webinare, PDF-Leitfäden – alle erklären die Verordnung allgemein. Ihre Situation ist aber nicht allgemein.</p>
+      <span class="eyebrow">Was PPWR Radar leistet</span>
+      <h2>Kein weiteres Merkblatt. Ein System, das mitarbeitet.</h2>
+      <p>Fünf Werkzeuge, ein Profil: einmal angelegt, arbeiten sie zusammen – von der Orientierung bis zum prüffähigen Dokument, und darüber hinaus aktuell gehalten.</p>
     </div>
-    <div class="split">
-      <div class="problem">
-        <h3>Womit Sie gerade allein sind</h3>
-        <ul>
-          <li>Bin ich „Erzeuger" oder „Hersteller" – und was ist der Unterschied überhaupt?</li>
-          <li>Was von alledem gilt schon jetzt, was erst 2028 oder 2030?</li>
-          <li>Welche Dokumente brauche ich – und wie sehen die aus?</li>
-          <li>Gilt das auch für meine spezielle Verpackung mit Lebensmittelkontakt?</li>
-          <li>Und was ändert sich morgen wieder?</li>
-        </ul>
+    <div class="pillars">
+      <div class="pillar p1">
+        <span class="step">Zuerst</span>
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
+        <h3>Rollen-Klärung je Produktlinie</h3>
+        <p>Die zentrale Frage der PPWR zuerst: Sind Sie Erzeuger, Hersteller, Vertreiber – oder mehreres zugleich? Der Onboarding-Assistent leitet Ihre Rolle je Produktlinie her und löst die Erzeuger/Hersteller-Verwechslung auf, an der die halbe Branche hängt. Mit Begründung und Fundstelle.</p>
+        <span class="tag">13 Rollen · Art. 3 PPWR × VerpackDG</span>
       </div>
-      <div class="answer">
-        <h3>Was PPWR Radar für Sie tut</h3>
-        <ul>
-          <li>Leitet Ihre Rolle je Produktlinie her – mit Begründung und Fundstelle</li>
-          <li>Trennt klar: „gilt seit dem 12.8." von „kommt erst 2028/2030"</li>
-          <li>Erstellt Konformitätserklärung &amp; Dokumentationsgerüst als Entwurf</li>
-          <li>Antwortet auf Ihre konkrete Frage – im Kontext Ihres Portfolios</li>
-          <li>Meldet sich, wenn sich die Rechtslage ändert</li>
-        </ul>
+      <div class="pillar p2">
+        <span class="step">Daraus folgt</span>
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 12l5-3"/><circle cx="12" cy="12" r="1.5" fill="#006950" stroke="none"/></svg></div>
+        <h3>Ihre persönliche Status-Analyse</h3>
+        <p>Radar gleicht Ihr Profil mit allen Anforderungen ab und zeigt Ihr Compliance-Cockpit: was gilt, was ist offen, was ist kritisch – mit Fristen bis 2030 und den nächsten Schritten. Ihre Pflichtenlage auf einen Blick, nicht die des Nachbarn.</p>
+        <span class="tag">Ampel · Fristen · nächste Schritte</span>
+      </div>
+      <div class="pillar p3">
+        <span class="step">Konkret</span>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M18 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2z"/></svg></div>
+        <h3>Dokumenten-Generator</h3>
+        <p>Konformitätserklärung, technische Dokumentation, Pflichtenübersicht und Muster-Lieferantenanfragen – aus Ihrem Profil vorbefüllt, als Word und PDF. Nimmt Arbeit ab, statt sie zu beschreiben.</p>
+        <span class="tag">4 Vorlagen · Word & PDF</span>
+      </div>
+      <div class="pillar p4">
+        <span class="step">Zum Nachschlagen</span>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <h3>Das große Nachschlagewerk</h3>
+        <p>Über 200 verifizierte Positionen: 40 Anforderungen in drei Erklärtiefen, 50 Praxisfragen aus der Branche, ein Glossar von A wie Abfüller bis Z wie Zweigniederlassung – durchsuchbar, mit Quelle und Link zum Originaltext.</p>
+        <span class="tag">Anforderungen · Praxisfragen · Glossar</span>
+      </div>
+      <div class="pillar p5">
+        <span class="step">Wenn Sie fragen</span>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Ihr KI-Spezialist</h3>
+        <p>Stellen Sie Ihre Frage in eigenen Worten. Der Assistent kennt Ihr Profil, antwortet nur aus der geprüften Wissensbasis mit Artikel und Rechtsstand – und sagt ehrlich, wann ein Fall in die Rechtsberatung gehört. Kein Raten, kein Halluzinieren.</p>
+        <span class="tag">profilbezogen · mit Quelle · ehrliche Grenze</span>
       </div>
     </div>
+    <p style="margin-top:22px;font-size:.9rem;color:var(--ink-mute)">Und darüber: <b style="color:var(--ink-soft)">Radar-Updates</b> halten alles aktuell – neue Rechtsakte und Leitlinien fließen geprüft ein, betroffene Nutzer werden benachrichtigt, veraltete Dokumente werden markiert.</p>
   </div>
 </section>
 
-<!-- FEATURES -->
-<section id="funktionen" style="background:var(--paper-off);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<!-- PROBLEM / ANSWER -->
+<section style="background:var(--paper-off);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-head">
-      <span class="eyebrow">Was drin ist</span>
-      <h2>Vier Werkzeuge, ein System</h2>
-      <p>Alles arbeitet mit Ihrem Profil zusammen – einmal angelegt, überall genutzt.</p>
+      <span class="eyebrow">Warum das reicht</span>
+      <h2>Andere erklären die PPWR. Radar erledigt sie mit Ihnen.</h2>
+      <p>Merkblätter und Webinare erklären die Verordnung allgemein. Ihre Situation ist aber nicht allgemein – und mit einer Erklärung allein ist noch kein Dokument geschrieben.</p>
     </div>
-    <div class="grid3">
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div>
-        <h3>Rollen-Klärung</h3>
-        <p>Der Onboarding-Assistent fragt Ihre Tätigkeiten ab – und leitet daraus Ihre PPWR-Rolle je Produktlinie ab. Endlich Klarheit bei Erzeuger vs. Hersteller, dem größten Verwirrungspunkt der Branche.</p>
+    <div class="split">
+      <div class="problem">
+        <h3>Womit Sie sonst allein sind</h3>
+        <ul>
+          <li>„Erzeuger" oder „Hersteller" – und was heißt das für mich?</li>
+          <li>Was gilt schon jetzt, was erst 2028 oder 2030?</li>
+          <li>Wie sieht meine Konformitätserklärung konkret aus?</li>
+          <li>Gilt das auch für meine Verpackung mit Lebensmittelkontakt?</li>
+          <li>Und wer sagt mir, wenn sich morgen etwas ändert?</li>
+        </ul>
       </div>
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M14 3v5h5"/><path d="M18 21H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2z"/></svg></div>
-        <h3>Dokumenten-Generator</h3>
-        <p>Konformitätserklärung nach Anhang VIII, Gerüst der technischen Dokumentation nach Anhang VII, Pflichtenübersicht – vorbefüllt aus Ihrem Profil, als prüffähige Arbeitsgrundlage.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <h3>Persönlicher Assistent</h3>
-        <p>Stellen Sie Ihre Frage in eigenen Worten. Die Antwort kennt Ihr Profil, nennt Artikel und Rechtsstand – und sagt ehrlich, wenn ein Fall in die Rechtsberatung gehört.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 12l5-3"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/></svg></div>
-        <h3>Radar-Updates</h3>
-        <p>Neue Durchführungsrechtsakte, Leitlinien, VerpackDG-Details – geprüft aufbereitet und gegen Ihr Profil abgeglichen: „Diese Änderung betrifft 2 Ihrer Verpackungen."</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
-        <h3>Einfach erklärt</h3>
-        <p>Jeder Inhalt in drei Tiefen: „Einfach erklärt" für den schnellen Überblick, „Fachlich" für die Details, „Rechtstext" für den Nachweis. Sie entscheiden, wie tief.</p>
-      </div>
-      <div class="card">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-        <h3>Zum Anhören</h3>
-        <p>Lassen Sie sich Erklärungen vorlesen – und ab Herbst Ihr persönliches Audio-Briefing: die Änderungen der Woche, zugeschnitten auf Ihr Portfolio.</p>
+      <div class="answer">
+        <h3>Was Radar für Sie übernimmt</h3>
+        <ul>
+          <li>Leitet Ihre Rolle je Produktlinie her – mit Fundstelle</li>
+          <li>Trennt „gilt seit dem 12.8." von „kommt 2028/2030"</li>
+          <li>Erstellt die Dokumente vorbefüllt als Word und PDF</li>
+          <li>Prüft Ihr Portfolio inklusive Stoff- und Kontaktfragen</li>
+          <li>Meldet Änderungen und markiert veraltete Dokumente</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -362,106 +343,91 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Für wen</span>
-      <h2>Gemacht für die Menschen, die es umsetzen müssen</h2>
+      <h2>Gemacht für die, die es umsetzen müssen</h2>
     </div>
     <div class="aud-grid">
       <div class="aud-card">
         <div class="role">Verpackungshersteller</div>
         <h3>„Bin ich für die Konformität verantwortlich?"</h3>
-        <p>Klären Sie je Produktlinie, ob Sie Erzeuger sind, welche Stoff- und Mehrweg-Anforderungen gelten und welche Nachweise Ihre Dokumentation braucht.</p>
+        <p>Klären Sie je Produktlinie Ihre Rolle, prüfen Sie Stoff- und Mehrweg-Anforderungen und erstellen Sie die technische Dokumentation als Gerüst.</p>
       </div>
       <div class="aud-card">
         <div class="role">Verpackende Unternehmen</div>
-        <h3>„Was muss ich als Abfüller oder Markeninhaber tun?"</h3>
-        <p>Verstehen Sie Ihre Doppelrolle, erzeugen Sie Ihre Konformitätserklärung und behalten Sie Registrierungs- und Systembeteiligungspflichten im Blick.</p>
+        <h3>„Was muss ich als Abfüller oder Marke tun?"</h3>
+        <p>Verstehen Sie Ihre Doppelrolle, erzeugen Sie Ihre Konformitätserklärung und behalten Sie Registrierung und Systembeteiligung im Blick.</p>
       </div>
       <div class="aud-card">
         <div class="role">Handel &amp; E-Commerce</div>
         <h3>„Werde ich zum Hersteller, ohne es zu wissen?"</h3>
-        <p>Eigenmarken, Import, grenzüberschreitender Direktvertrieb – Radar zeigt, wann Sie EPR-Pflichten treffen und wann Sie einen Bevollmächtigten brauchen.</p>
+        <p>Eigenmarke, Import, Direktvertrieb – Radar zeigt, wann Sie EPR-Pflichten treffen und wann Sie einen Bevollmächtigten brauchen.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- STEPS -->
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow">So funktioniert's</span>
-      <h2>In 15 Minuten zur Klarheit</h2>
-    </div>
-    <div class="steps">
-      <div class="step"><div class="n">1</div><h3>Profil anlegen</h3><p>Beantworten Sie ein paar Fragen zu Tätigkeiten, Verpackungen und Märkten – keine Fachbegriffe nötig.</p></div>
-      <div class="step"><div class="n">2</div><h3>Rolle erfahren</h3><p>Radar leitet Ihre Rolle je Produktlinie her und erklärt, warum – mit Fundstelle zum Nachlesen.</p></div>
-      <div class="step"><div class="n">3</div><h3>Dokumente erhalten</h3><p>Status-Analyse, Pflichtenliste und vorbefüllte Dokumente stehen sofort zum Download bereit.</p></div>
-      <div class="step"><div class="n">4</div><h3>Aktuell bleiben</h3><p>Zwölf Monate Radar inklusive: Bei jeder Änderung wissen Sie, was für Sie zu tun ist.</p></div>
     </div>
   </div>
 </section>
 
 <!-- PRICING -->
-<section id="preise" style="background:var(--paper-shell);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+<section id="preise">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Preise</span>
-      <h2>Ein Paket. Alles drin. Zwölf Monate aktuell.</h2>
-      <p>Zum Launch zum Einführungspreis – inklusive der Radar-Updates für ein ganzes Jahr.</p>
+      <h2>Ein Paket. Das ganze System. Zwölf Monate aktuell.</h2>
+      <p>Alle fünf Werkzeuge, alle Updates – zum Launch zum Einführungspreis.</p>
     </div>
     <div class="price-grid">
       <div class="price featured">
         <span class="badge">Launch-Angebot</span>
         <div class="plan">PPWR|ready Paket</div>
         <div class="amount"><span class="cur">€</span>490</div>
-        <div class="per">einmalig · inkl. 12 Monate PPWR Radar</div>
-        <div class="renew">danach 290 €/Jahr Verlängerung · später regulär 690 €</div>
+        <div class="per">im ersten Jahr · zzgl. USt.</div>
+        <div class="renew">danach automatische Verlängerung 290 €/Jahr zzgl. USt., jederzeit zum Laufzeitende kündbar · später regulär 690 €</div>
         <ul>
-          <li>Compliance-Profil &amp; individuelle Status-Analyse</li>
           <li>Rollen-Klärung je Produktlinie mit Fundstelle</li>
-          <li>Dokumenten-Generator (Konformitätserklärung, technische Doku, Pflichtenübersicht)</li>
-          <li>Persönlicher Assistent mit Quellenangabe</li>
-          <li>Wissens-Bibliothek in drei Erklärtiefen</li>
+          <li>Individuelle Status-Analyse mit Fristen &amp; nächsten Schritten</li>
+          <li>Dokumenten-Generator (4 Vorlagen, Word &amp; PDF)</li>
+          <li>Nachschlagewerk: Anforderungen, Praxisfragen, Glossar</li>
+          <li>KI-Spezialist mit Profilbezug und Quellenangabe</li>
           <li>12 Monate Radar-Updates &amp; Quartals-Webinare</li>
         </ul>
-        <a class="btn btn-primary btn-lg" href="#" data-stripe="paket">Jetzt PPWR|ready werden</a>
+        <a class="btn btn-primary btn-lg" href="/login?next=dashboard" data-stripe="paket">Jetzt PPWR|ready werden</a>
+        <p class="fineprint">Transparenter Festpreis. Kein Angebotsprozess, keine Setup-Gebühr.</p>
       </div>
       <div class="price-side">
         <div class="price-mini">
           <div class="plan">Team-Lizenz</div>
           <div class="amount">ab <span class="cur">€</span>1.499</div>
           <p>Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams.</p>
-          <a class="btn btn-ghost" href="#" data-stripe="team" style="width:100%;justify-content:center">Team-Zugang anfragen</a>
+          <a class="btn btn-ghost" href="/login?next=dashboard" data-stripe="team" style="width:100%;justify-content:center">Team-Zugang anfragen</a>
         </div>
         <div class="price-mini">
           <div class="plan">Radar-Verlängerung</div>
           <div class="amount"><span class="cur">€</span>290<span style="font-size:.9rem;font-weight:500;color:var(--ink-mute)"> /Jahr</span></div>
-          <p>Nach dem ersten Jahr: Updates, Assistent und Webinare bleiben aktuell.</p>
+          <p>Nach dem ersten Jahr bleiben Updates, Assistent und Webinare aktuell. Ihre Dokumente behalten Sie in jedem Fall.</p>
           <span class="chip" style="border-color:var(--line);color:var(--ink-mute);background:var(--paper-off)">im Paket enthalten</span>
         </div>
       </div>
     </div>
-    <p class="stripe-note">// Zahlungsabwicklung über Stripe – Buttons werden zum Launch aktiviert</p>
+    <p class="stripe-note">// Preise verstehen sich netto zzgl. gesetzlicher USt. · Angebot richtet sich an Unternehmen · Zahlung über Stripe</p>
   </div>
 </section>
 
 <!-- FREE CHECK -->
-<section id="check">
+<section id="check" style="background:var(--paper-off);border-top:1px solid var(--line)">
   <div class="wrap">
     <div class="band">
       <div class="inner">
         <div>
           <span class="eyebrow" style="color:var(--gold)">Kostenlos &amp; ohne Anmeldung</span>
           <h2>Erst prüfen: Betrifft mich die PPWR überhaupt?</h2>
-          <p>Fünf kurze Fragen, eine erste Einschätzung Ihrer Betroffenheit – unverbindlich und ohne Login. Der ehrlichste Einstieg, den wir anbieten können.</p>
+          <p>Fünf kurze Fragen, eine erste Einschätzung Ihrer Betroffenheit – unverbindlich, ohne Login. Der ehrlichste Einstieg, den wir anbieten können.</p>
         </div>
-        <a class="btn btn-primary btn-lg" href="#" data-stripe="check">Betroffenheits-Check starten</a>
+        <a class="btn btn-primary btn-lg" href="/check">Betroffenheits-Check starten</a>
       </div>
     </div>
   </div>
 </section>
 
 <!-- FAQ -->
-<section id="faq" style="background:var(--paper-off);border-top:1px solid var(--line)">
+<section id="faq">
   <div class="wrap">
     <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="eyebrow">Häufige Fragen</span>
@@ -470,36 +436,36 @@
     <div class="faq">
       <details open>
         <summary>Ist PPWR Radar eine Rechtsberatung?</summary>
-        <div class="a">Nein – und das ist bewusst so. PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe als Arbeitsgrundlage. Es ersetzt keine Rechtsberatung und begründet kein Mandatsverhältnis. Genau dort, wo Ihre Situation eine individuelle rechtliche Prüfung braucht, sagt das System das offen und verweist an unseren juristischen Partner, die Cattwyk Rechtsanwaltsgesellschaft.</div>
+        <div class="a">Nein – und das ist bewusst so. PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe als Arbeitsgrundlage. Es ersetzt keine Rechtsberatung und begründet kein Mandatsverhältnis. Wo Ihre Situation eine individuelle rechtliche Prüfung braucht, sagt das System das offen und empfiehlt, rechtlichen Rat einzuholen.</div>
+      </details>
+      <details>
+        <summary>Wie unterscheidet sich Radar von Muster-Vorlagen und Compliance-Software?</summary>
+        <div class="a">Muster-Vorlagen sind generisch – sie wissen nicht, wer Sie sind. Enterprise-Compliance-Software ist stark für Konzerne mit großen Datenbeständen, beginnt aber mit einem Angebots- und Integrationsprozess. PPWR Radar startet davor und begleitet weiter: Es klärt zuerst Ihre Rolle, zeigt Ihre Pflichten, füllt Ihre Dokumente vor, beantwortet Ihre Fragen und hält alles aktuell – im Selbstbedienungszugang zum Festpreis. Wo Speziallösungen nötig sind (Labor-Recyclingbewertung, ERP-Integration, Rechtsberatung), sagen wir das ehrlich und nennen den richtigen Weg.</div>
       </details>
       <details>
         <summary>Woher weiß ich, dass die Inhalte stimmen?</summary>
-        <div class="a">Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert. Der Assistent antwortet ausschließlich aus dieser geprüften Basis – und sagt ehrlich, wenn zu einer Frage keine gesicherte Regelung vorliegt.</div>
+        <div class="a">Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert, und der Assistent antwortet ausschließlich aus dieser geprüften Basis.</div>
       </details>
       <details>
         <summary>Was passiert, wenn sich die Rechtslage ändert?</summary>
-        <div class="a">Genau dafür ist der Radar da. Neue Durchführungsrechtsakte, Leitlinien und nationale Konkretisierungen fließen geprüft ein. Betroffene Nutzer werden aktiv benachrichtigt – und wenn ein bereits erstelltes Dokument auf einem veralteten Stand basiert, zeigt Ihr Dashboard „Update verfügbar".</div>
-      </details>
-      <details>
-        <summary>Für welche Unternehmen lohnt sich das?</summary>
-        <div class="a">Für alle, die Verpackungen herstellen, befüllen, unter eigener Marke in Verkehr bringen, importieren oder im E-Commerce direkt an Endkunden liefern. Wenn Sie nicht sicher sind, starten Sie mit dem kostenlosen Betroffenheits-Check – er sagt Ihnen in fünf Fragen, ob und wie stark Sie betroffen sind.</div>
+        <div class="a">Genau dafür ist der Radar da. Neue Durchführungsrechtsakte, Leitlinien und nationale Konkretisierungen fließen geprüft ein. Betroffene Nutzer werden benachrichtigt – und wenn ein bereits erstelltes Dokument auf veraltetem Stand basiert, zeigt Ihr Dashboard „Update verfügbar".</div>
       </details>
       <details>
         <summary>Was kostet es nach dem ersten Jahr?</summary>
-        <div class="a">Das Launch-Paket kostet einmalig 490 € und enthält zwölf Monate Radar. Danach halten Sie Ihren Zugang mit 290 €/Jahr aktuell – oder Sie nutzen die erstellten Dokumente einfach weiter, ohne Verlängerung. Es gibt kein automatisches Abo, das Sie übersehen könnten.</div>
+        <div class="a">Das Launch-Paket kostet einmalig 490 € zzgl. USt. und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Zugang automatisch um jeweils ein Jahr (290 €/Jahr zzgl. USt.) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang.</div>
       </details>
     </div>
   </div>
 </section>
 
-<!-- FINAL CTA -->
+<!-- FINAL -->
 <section class="final">
   <div class="wrap">
     <span class="eyebrow" style="color:#bfe0d6">Der 12. August ist da</span>
     <h2>Verschaffen Sie sich Klarheit – heute.</h2>
     <p>In 15 Minuten wissen Sie, welche Rolle Sie haben, was für Ihre Verpackungen gilt und welche Dokumente Sie brauchen.</p>
     <div style="display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
-      <a class="btn btn-primary btn-lg" href="#preise">PPWR|ready werden</a>
+      <a class="btn btn-primary btn-lg" href="/login?next=dashboard">Jetzt starten</a>
       <a class="btn btn-ghost btn-lg" href="#check">Erst kostenlos prüfen</a>
     </div>
   </div>
@@ -517,33 +483,51 @@
         </svg>
         <div>PPWR Radar<small>by packaging journal</small></div>
       </div>
-      PPWR Radar ist ein Produkt des packaging journal. Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft.
+      PPWR Radar ist ein Produkt des packaging journal (ella Verlag und Medien GmbH). Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft.
     </div>
     <div class="cols">
-      <div class="col">
-        <h4>Produkt</h4>
-        <a href="#funktionen">Funktionen</a>
-        <a href="#preise">Preise</a>
-        <a href="#check">Betroffenheits-Check</a>
-        <a href="#faq">FAQ</a>
-      </div>
-      <div class="col">
-        <h4>Rechtliches</h4>
-        <a href="#">Impressum</a>
-        <a href="#">Datenschutz</a>
-        <a href="#">AGB</a>
-      </div>
-      <div class="col">
-        <h4>Konto</h4>
-        <a href="#">Anmelden</a>
-        <a href="#preise">Registrieren</a>
-      </div>
+      <div class="col"><h4>Produkt</h4><a href="#leistungen">Leistungen</a><a href="#preise">Preise</a><a href="#check">Betroffenheits-Check</a><a href="#faq">FAQ</a></div>
+      <div class="col"><h4>Rechtliches</h4><a href="https://packaging-journal.de/impressum/">Impressum</a><a href="#">Datenschutz</a><a href="#">AGB</a></div>
+      <div class="col"><h4>Konto</h4><a href="/login">Anmelden</a><a href="/login?next=dashboard">Registrieren</a></div>
     </div>
   </div>
   <div class="wrap">
     <p class="legal-note">PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal</p>
   </div>
 </footer>
+
+<script>
+  // Rotating final clause in the hero – encodes the five services
+  (function(){
+    var phrases = [
+      "klärt Ihre Rolle.",
+      "zeigt Ihre Pflichten.",
+      "erstellt Ihre Dokumente.",
+      "ist Ihr Nachschlagewerk.",
+      "beantwortet Ihre Fragen."
+    ];
+    var el = document.getElementById('rotWord');
+    if(!el) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduce){ el.textContent = phrases[0]; return; }
+    var i = 0, ch = 0, deleting = false;
+    function tick(){
+      var full = phrases[i];
+      if(!deleting){
+        ch++;
+        el.textContent = full.slice(0, ch);
+        if(ch === full.length){ deleting = true; return setTimeout(tick, 1600); }
+        return setTimeout(tick, 55);
+      } else {
+        ch--;
+        el.textContent = full.slice(0, ch);
+        if(ch === 0){ deleting = false; i = (i+1) % phrases.length; return setTimeout(tick, 260); }
+        return setTimeout(tick, 28);
+      }
+    }
+    setTimeout(tick, 700);
+  })();
+</script>
 
 </body>
 </html>

@@ -57,25 +57,31 @@
     "herausgeberAria": "packaging journal – visit the website"
   },
   "Landing": {
+    "abschied": "Your account has been deleted. Thank you for trying PPWR Radar – you are welcome back any time.",
     "nav": {
-      "funktionen": "Funktionen",
+      "leistungen": "Leistungen",
       "zielgruppe": "Für wen",
       "preise": "Preise",
       "faq": "FAQ",
       "anmelden": "Anmelden",
       "jetztStarten": "Jetzt starten",
-      "kostenlosPruefen": "Free check"
+      "kostenlosPruefen": "Kostenlos prüfen"
     },
     "hero": {
       "badge": "Die PPWR gilt seit dem 12. August 2026",
-      "titelVor": "Die PPWR gilt. Wissen Sie, was das für",
-      "titelHighlight": "Ihre Verpackungen",
-      "titelNach": "heißt?",
-      "text": "PPWR Radar ist Ihre persönliche PPWR-KI: Sie klärt Ihre Rolle, zeigt Ihre Pflichten und erstellt die Dokumente, die Sie jetzt brauchen. Verständlich, mit Fundstelle, immer auf Stand.",
-      "ctaPrimaer": "PPWR|ready werden",
+      "titelFix1": "Die PPWR gilt.",
+      "titelFix2": "PPWR Radar",
+      "rotationsPhrasen": [
+        "klärt Ihre Rolle.",
+        "zeigt Ihre Pflichten.",
+        "erstellt Ihre Dokumente.",
+        "ist Ihr Nachschlagewerk.",
+        "beantwortet Ihre Fragen."
+      ],
+      "text": "Ihr komplettes Compliance-System zur EU-Verpackungsverordnung: von der ersten Rollenklärung bis zum fertigen Dokument – verständlich, mit Fundstelle, immer auf Stand.",
+      "ctaPrimaer": "Jetzt starten",
       "ctaSekundaer": "Kostenlos: Bin ich betroffen?",
-      "microcopy": "In 15 Minuten von der Unsicherheit zur Klarheit · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft",
-      "microcopy2": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse.",
+      "microcopy": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft",
       "karte": {
         "ariaLabel": "Beispiel einer Rollen-Analyse in PPWR Radar",
         "kopf": "Ihre PPWR-Rolle",
@@ -88,137 +94,120 @@
           "Endvertreiber"
         ],
         "begruendungFett": "Sie gelten als Erzeuger,",
-        "begruendung": "weil Sie das Produkt unter eigener Marke abfüllen lassen – trägt die Konformitätsverantwortung.",
+        "begruendung": "weil Sie unter eigener Marke abfüllen lassen – damit tragen Sie die Konformitätsverantwortung.",
         "fundstellen": [
           "Art. 3 Abs. 1 Nr. 13 PPWR",
           "§ 7 VerpackDG"
         ]
-      },
-      "checkMicrocopy": "5 questions · 2 minutes · no sign-up"
+      }
     },
     "trust": {
       "herausgeberVor": "Herausgegeben vom",
       "herausgeber": "packaging journal",
       "partnerVor": "Juristischer Partner:",
       "partner": "Cattwyk Rechtsanwaltsgesellschaft",
-      "fundstelleVor": "Jede Antwort mit",
-      "fundstelle": "Rechtsstand & Fundstelle"
+      "fundstelleVor": "Über",
+      "fundstelle": "200 Fundstellen",
+      "fundstelleNach": ", laufend aktualisiert"
+    },
+    "leistungen": {
+      "eyebrow": "Was PPWR Radar leistet",
+      "titel": "Kein weiteres Merkblatt. Ein System, das mitarbeitet.",
+      "text": "Fünf Werkzeuge, ein Profil: einmal angelegt, arbeiten sie zusammen – von der Orientierung bis zum prüffähigen Dokument, und darüber hinaus aktuell gehalten.",
+      "saeulen": [
+        {
+          "schritt": "Zuerst",
+          "titel": "Rollen-Klärung je Produktlinie",
+          "text": "Die zentrale Frage der PPWR zuerst: Sind Sie Erzeuger, Hersteller, Vertreiber – oder mehreres zugleich? Der Onboarding-Assistent leitet Ihre Rolle je Produktlinie her und löst die Erzeuger/Hersteller-Verwechslung auf, an der die halbe Branche hängt. Mit Begründung und Fundstelle.",
+          "tag": "13 Rollen · Art. 3 PPWR × VerpackDG"
+        },
+        {
+          "schritt": "Daraus folgt",
+          "titel": "Ihre persönliche Status-Analyse",
+          "text": "Radar gleicht Ihr Profil mit allen Anforderungen ab und zeigt Ihr Compliance-Cockpit: was gilt, was ist offen, was ist kritisch – mit Fristen bis 2030 und den nächsten Schritten. Ihre Pflichtenlage auf einen Blick, nicht die des Nachbarn.",
+          "tag": "Ampel · Fristen · nächste Schritte"
+        },
+        {
+          "schritt": "Konkret",
+          "titel": "Dokumenten-Generator",
+          "text": "Konformitätserklärung, technische Dokumentation, Pflichtenübersicht und Muster-Lieferantenanfragen – aus Ihrem Profil vorbefüllt, als Word und PDF. Nimmt Arbeit ab, statt sie zu beschreiben.",
+          "tag": "4 Vorlagen · Word & PDF"
+        },
+        {
+          "schritt": "Zum Nachschlagen",
+          "titel": "Das große Nachschlagewerk",
+          "text": "Über 200 verifizierte Positionen: 40 Anforderungen in drei Erklärtiefen, 50 Praxisfragen aus der Branche, ein Glossar von A wie Abfüller bis Z wie Zweigniederlassung – durchsuchbar, mit Quelle und Link zum Originaltext.",
+          "tag": "Anforderungen · Praxisfragen · Glossar"
+        },
+        {
+          "schritt": "Wenn Sie fragen",
+          "titel": "Ihr KI-Spezialist",
+          "text": "Stellen Sie Ihre Frage in eigenen Worten. Der Assistent kennt Ihr Profil, antwortet nur aus der geprüften Wissensbasis mit Artikel und Rechtsstand – und sagt ehrlich, wann ein Fall in die Rechtsberatung gehört. Kein Raten, kein Halluzinieren.",
+          "tag": "profilbezogen · mit Quelle · ehrliche Grenze"
+        }
+      ],
+      "nachsatzVor": "Und darüber:",
+      "nachsatzFett": "Radar-Updates",
+      "nachsatz": "halten alles aktuell – neue Rechtsakte und Leitlinien fließen geprüft ein, betroffene Nutzer werden benachrichtigt, veraltete Dokumente werden markiert."
     },
     "problem": {
-      "eyebrow": "Das Problem",
-      "titel": "Andere erklären die PPWR. Wir sagen Ihnen, was sie für Sie bedeutet.",
-      "text": "Merkblätter, Webinare, PDF-Leitfäden – alle erklären die Verordnung allgemein. Ihre Situation ist aber nicht allgemein.",
-      "linksTitel": "Womit Sie gerade allein sind",
+      "eyebrow": "Warum das reicht",
+      "titel": "Andere erklären die PPWR. Radar erledigt sie mit Ihnen.",
+      "text": "Merkblätter und Webinare erklären die Verordnung allgemein. Ihre Situation ist aber nicht allgemein – und mit einer Erklärung allein ist noch kein Dokument geschrieben.",
+      "linksTitel": "Womit Sie sonst allein sind",
       "linksPunkte": [
-        "Bin ich „Erzeuger“ oder „Hersteller“ – und was ist der Unterschied überhaupt?",
-        "Was von alledem gilt schon jetzt, was erst 2028 oder 2030?",
-        "Welche Dokumente brauche ich – und wie sehen die aus?",
-        "Gilt das auch für meine spezielle Verpackung mit Lebensmittelkontakt?",
-        "Und was ändert sich morgen wieder?"
+        "„Erzeuger“ oder „Hersteller“ – und was heißt das für mich?",
+        "Was gilt schon jetzt, was erst 2028 oder 2030?",
+        "Wie sieht meine Konformitätserklärung konkret aus?",
+        "Gilt das auch für meine Verpackung mit Lebensmittelkontakt?",
+        "Und wer sagt mir, wenn sich morgen etwas ändert?"
       ],
-      "rechtsTitel": "Was PPWR Radar für Sie tut",
+      "rechtsTitel": "Was Radar für Sie übernimmt",
       "rechtsPunkte": [
-        "Leitet Ihre Rolle je Produktlinie her – mit Begründung und Fundstelle",
-        "Trennt klar: „gilt seit dem 12.8.“ von „kommt erst 2028/2030“",
-        "Erstellt Konformitätserklärung & Dokumentationsgerüst als Entwurf",
-        "Antwortet auf Ihre konkrete Frage – im Kontext Ihres Portfolios",
-        "Meldet sich, wenn sich die Rechtslage ändert"
-      ]
-    },
-    "funktionen": {
-      "eyebrow": "Was drin ist",
-      "titel": "Vier Werkzeuge, ein System",
-      "text": "Alles arbeitet mit Ihrem Profil zusammen – einmal angelegt, überall genutzt.",
-      "karten": [
-        {
-          "titel": "Rollen-Klärung",
-          "text": "Der Onboarding-Assistent fragt Ihre Tätigkeiten ab – und leitet daraus Ihre PPWR-Rolle je Produktlinie ab. Endlich Klarheit bei Erzeuger vs. Hersteller, dem größten Verwirrungspunkt der Branche."
-        },
-        {
-          "titel": "Dokumenten-Generator",
-          "text": "Konformitätserklärung nach Anhang VIII, Gerüst der technischen Dokumentation nach Anhang VII, Pflichtenübersicht – vorbefüllt aus Ihrem Profil, als prüffähige Arbeitsgrundlage."
-        },
-        {
-          "titel": "Persönlicher Assistent",
-          "text": "Stellen Sie Ihre Frage in eigenen Worten. Die Antwort kennt Ihr Profil, nennt Artikel und Rechtsstand – und sagt ehrlich, wenn ein Fall in die Rechtsberatung gehört."
-        },
-        {
-          "titel": "Radar-Updates",
-          "text": "Neue Durchführungsrechtsakte, Leitlinien, VerpackDG-Details – geprüft aufbereitet und gegen Ihr Profil abgeglichen: „Diese Änderung betrifft 2 Ihrer Verpackungen.“"
-        },
-        {
-          "titel": "Einfach erklärt",
-          "text": "Jeder Inhalt in drei Tiefen: „Einfach erklärt“ für den schnellen Überblick, „Fachlich“ für die Details, „Rechtstext“ für den Nachweis. Sie entscheiden, wie tief."
-        },
-        {
-          "titel": "Zum Anhören",
-          "text": "Lassen Sie sich Erklärungen vorlesen – und ab Herbst Ihr persönliches Audio-Briefing: die Änderungen der Woche, zugeschnitten auf Ihr Portfolio."
-        },
-        {
-          "titel": "Nachschlagewerk",
-          "text": "Glossar von A wie Abfüller bis Z wie Zweigniederlassung – alle Begriffe, Verpackungsarten und Praxisfragen durchsuchbar, mit Quelle. Für alle, die lieber blättern als chatten."
-        }
+        "Leitet Ihre Rolle je Produktlinie her – mit Fundstelle",
+        "Trennt „gilt seit dem 12.8.“ von „kommt 2028/2030“",
+        "Erstellt die Dokumente vorbefüllt als Word und PDF",
+        "Prüft Ihr Portfolio inklusive Stoff- und Kontaktfragen",
+        "Meldet Änderungen und markiert veraltete Dokumente"
       ]
     },
     "zielgruppe": {
       "eyebrow": "Für wen",
-      "titel": "Gemacht für die Menschen, die es umsetzen müssen",
+      "titel": "Gemacht für die, die es umsetzen müssen",
       "karten": [
         {
           "rolle": "Verpackungshersteller",
           "frage": "„Bin ich für die Konformität verantwortlich?“",
-          "text": "Klären Sie je Produktlinie, ob Sie Erzeuger sind, welche Stoff- und Mehrweg-Anforderungen gelten und welche Nachweise Ihre Dokumentation braucht."
+          "text": "Klären Sie je Produktlinie Ihre Rolle, prüfen Sie Stoff- und Mehrweg-Anforderungen und erstellen Sie die technische Dokumentation als Gerüst."
         },
         {
           "rolle": "Verpackende Unternehmen",
-          "frage": "„Was muss ich als Abfüller oder Markeninhaber tun?“",
-          "text": "Verstehen Sie Ihre Doppelrolle, erzeugen Sie Ihre Konformitätserklärung und behalten Sie Registrierungs- und Systembeteiligungspflichten im Blick."
+          "frage": "„Was muss ich als Abfüller oder Marke tun?“",
+          "text": "Verstehen Sie Ihre Doppelrolle, erzeugen Sie Ihre Konformitätserklärung und behalten Sie Registrierung und Systembeteiligung im Blick."
         },
         {
           "rolle": "Handel & E-Commerce",
           "frage": "„Werde ich zum Hersteller, ohne es zu wissen?“",
-          "text": "Eigenmarken, Import, grenzüberschreitender Direktvertrieb – Radar zeigt, wann Sie EPR-Pflichten treffen und wann Sie einen Bevollmächtigten brauchen."
-        }
-      ]
-    },
-    "schritte": {
-      "eyebrow": "So funktioniert’s",
-      "titel": "In 15 Minuten zur Klarheit",
-      "punkte": [
-        {
-          "titel": "Profil anlegen",
-          "text": "Beantworten Sie ein paar Fragen zu Tätigkeiten, Verpackungen und Märkten – keine Fachbegriffe nötig."
-        },
-        {
-          "titel": "Rolle erfahren",
-          "text": "Radar leitet Ihre Rolle je Produktlinie her und erklärt, warum – mit Fundstelle zum Nachlesen."
-        },
-        {
-          "titel": "Dokumente erhalten",
-          "text": "Status-Analyse, Pflichtenliste und vorbefüllte Dokumente stehen sofort zum Download bereit."
-        },
-        {
-          "titel": "Aktuell bleiben",
-          "text": "Zwölf Monate Radar inklusive: Bei jeder Änderung wissen Sie, was für Sie zu tun ist."
+          "text": "Eigenmarke, Import, Direktvertrieb – Radar zeigt, wann Sie EPR-Pflichten treffen und wann Sie einen Bevollmächtigten brauchen."
         }
       ]
     },
     "preise": {
       "eyebrow": "Preise",
-      "titel": "Ein Paket. Alles drin. Zwölf Monate aktuell.",
-      "text": "Zum Launch zum Einführungspreis – inklusive der Radar-Updates für ein ganzes Jahr.",
+      "titel": "Ein Paket. Das ganze System. Zwölf Monate aktuell.",
+      "text": "Alle fünf Werkzeuge, alle Updates – zum Launch zum Einführungspreis.",
       "launchBadge": "Launch-Angebot",
       "paketName": "PPWR|ready Paket",
       "preisWaehrung": "€",
       "preisBetrag": "490",
-      "preisZeile1": "einmalig zzgl. USt. · inkl. 12 Monate PPWR Radar",
-      "preisZeile2": "danach automatische Verlängerung: 290 €/Jahr zzgl. USt., jederzeit kündbar · später regulär 690 €",
+      "preisZeile1": "im ersten Jahr · zzgl. USt.",
+      "preisZeile2": "danach automatische Verlängerung 290 €/Jahr zzgl. USt., jederzeit zum Laufzeitende kündbar · später regulär 690 €",
       "leistungen": [
-        "Compliance-Profil & individuelle Status-Analyse",
         "Rollen-Klärung je Produktlinie mit Fundstelle",
-        "Dokumenten-Generator (Konformitätserklärung, technische Doku, Pflichtenübersicht)",
-        "Persönlicher Assistent mit Quellenangabe",
-        "Wissens-Bibliothek in drei Erklärtiefen",
+        "Individuelle Status-Analyse mit Fristen & nächsten Schritten",
+        "Dokumenten-Generator (4 Vorlagen, Word & PDF)",
+        "Nachschlagewerk: Anforderungen, Praxisfragen, Glossar",
+        "KI-Spezialist mit Profilbezug und Quellenangabe",
         "12 Monate Radar-Updates & Quartals-Webinare"
       ],
       "ctaPaket": "Jetzt PPWR|ready werden",
@@ -226,19 +215,19 @@
       "teamName": "Team-Lizenz",
       "teamPreisVor": "ab",
       "teamPreis": "1.499",
-      "teamText": "Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams. Preise zzgl. USt.",
+      "teamText": "Für 5 Nutzer mit gemeinsamem Firmenprofil – ideal für Qualitäts- und Compliance-Teams.",
       "ctaTeam": "Team-Zugang anfragen",
       "verlaengerungName": "Radar-Verlängerung",
       "verlaengerungPreis": "290",
-      "verlaengerungEinheit": "/Jahr zzgl. USt.",
-      "verlaengerungText": "Nach dem ersten Jahr: Updates, Assistent und Webinare bleiben aktuell.",
+      "verlaengerungEinheit": "/Jahr",
+      "verlaengerungText": "Nach dem ersten Jahr bleiben Updates, Assistent und Webinare aktuell. Ihre Dokumente behalten Sie in jedem Fall.",
       "verlaengerungChip": "im Paket enthalten",
-      "stripeHinweis": "// Zahlungsabwicklung über Stripe – Buttons werden zum Launch aktiviert"
+      "stripeHinweis": "// Preise verstehen sich netto zzgl. gesetzlicher USt. · Angebot richtet sich an Unternehmen · Zahlung über Stripe"
     },
     "checkBand": {
       "eyebrow": "Kostenlos & ohne Anmeldung",
       "titel": "Erst prüfen: Betrifft mich die PPWR überhaupt?",
-      "text": "Fünf kurze Fragen, eine erste Einschätzung Ihrer Betroffenheit – unverbindlich und ohne Login. Der ehrlichste Einstieg, den wir anbieten können.",
+      "text": "Fünf kurze Fragen, eine erste Einschätzung Ihrer Betroffenheit – unverbindlich, ohne Login. Der ehrlichste Einstieg, den wir anbieten können.",
       "cta": "Betroffenheits-Check starten"
     },
     "faq": {
@@ -247,27 +236,23 @@
       "eintraege": [
         {
           "frage": "Ist PPWR Radar eine Rechtsberatung?",
-          "antwort": "Nein – und das ist bewusst so. PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe als Arbeitsgrundlage. Es ersetzt keine Rechtsberatung und begründet kein Mandatsverhältnis. Genau dort, wo Ihre Situation eine individuelle rechtliche Prüfung braucht, sagt das System das offen und verweist an unseren juristischen Partner, die Cattwyk Rechtsanwaltsgesellschaft."
+          "antwort": "Nein – und das ist bewusst so. PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe als Arbeitsgrundlage. Es ersetzt keine Rechtsberatung und begründet kein Mandatsverhältnis. Wo Ihre Situation eine individuelle rechtliche Prüfung braucht, sagt das System das offen und empfiehlt, rechtlichen Rat einzuholen."
         },
         {
-          "frage": "Wie unterscheidet sich PPWR Radar von Muster-Vorlagen und Compliance-Software?",
-          "antwort": "Muster-Vorlagen sind generisch – sie wissen nicht, wer Sie sind. Enterprise-Compliance-Software ist stark für Konzerne mit großen Datenbeständen, beginnt aber mit einem Angebots- und Integrationsprozess. PPWR Radar startet davor: Es klärt zuerst Ihre Rolle je Produktlinie, füllt Ihre Dokumente daraus vor und hält sie bei Rechtsänderungen aktuell – im Selbstbedienungszugang zum Festpreis. Und wo Ihre Situation Speziallösungen braucht (Labor-Bewertung der Recyclingfähigkeit, ERP-Integration, Rechtsberatung), sagen wir das ehrlich und nennen den richtigen Weg."
+          "frage": "Wie unterscheidet sich Radar von Muster-Vorlagen und Compliance-Software?",
+          "antwort": "Muster-Vorlagen sind generisch – sie wissen nicht, wer Sie sind. Enterprise-Compliance-Software ist stark für Konzerne mit großen Datenbeständen, beginnt aber mit einem Angebots- und Integrationsprozess. PPWR Radar startet davor und begleitet weiter: Es klärt zuerst Ihre Rolle, zeigt Ihre Pflichten, füllt Ihre Dokumente vor, beantwortet Ihre Fragen und hält alles aktuell – im Selbstbedienungszugang zum Festpreis. Wo Speziallösungen nötig sind (Labor-Recyclingbewertung, ERP-Integration, Rechtsberatung), sagen wir das ehrlich und nennen den richtigen Weg."
         },
         {
           "frage": "Woher weiß ich, dass die Inhalte stimmen?",
-          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert. Der Assistent antwortet ausschließlich aus dieser geprüften Basis – und sagt ehrlich, wenn zu einer Frage keine gesicherte Regelung vorliegt."
+          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert, und der Assistent antwortet ausschließlich aus dieser geprüften Basis."
         },
         {
           "frage": "Was passiert, wenn sich die Rechtslage ändert?",
-          "antwort": "Genau dafür ist der Radar da. Neue Durchführungsrechtsakte, Leitlinien und nationale Konkretisierungen fließen geprüft ein. Betroffene Nutzer werden aktiv benachrichtigt – und wenn ein bereits erstelltes Dokument auf einem veralteten Stand basiert, zeigt Ihr Dashboard „Update verfügbar“."
-        },
-        {
-          "frage": "Für welche Unternehmen lohnt sich das?",
-          "antwort": "Für alle, die Verpackungen herstellen, befüllen, unter eigener Marke in Verkehr bringen, importieren oder im E-Commerce direkt an Endkunden liefern. Wenn Sie nicht sicher sind, starten Sie mit dem kostenlosen Betroffenheits-Check – er sagt Ihnen in fünf Fragen, ob und wie stark Sie betroffen sind."
+          "antwort": "Genau dafür ist der Radar da. Neue Durchführungsrechtsakte, Leitlinien und nationale Konkretisierungen fließen geprüft ein. Betroffene Nutzer werden benachrichtigt – und wenn ein bereits erstelltes Dokument auf veraltetem Stand basiert, zeigt Ihr Dashboard „Update verfügbar“."
         },
         {
           "frage": "Was kostet es nach dem ersten Jahr?",
-          "antwort": "Das Launch-Paket kostet einmalig 490 € zzgl. USt. und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Radar-Zugang automatisch um jeweils ein Jahr (290 €/Jahr zzgl. USt.) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Und falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang."
+          "antwort": "Das Launch-Paket kostet einmalig 490 € zzgl. USt. und enthält zwölf Monate PPWR Radar. Danach verlängert sich Ihr Zugang automatisch um jeweils ein Jahr (290 €/Jahr zzgl. USt.) – jederzeit zum Laufzeitende kündbar, und wir erinnern Sie rechtzeitig vor jeder Verlängerung. Falls Sie kündigen: Ihre erstellten Dokumente gehören Ihnen und bleiben nutzbar – nur Updates, Assistent und Webinare enden mit dem Zugang."
         }
       ]
     },
@@ -275,13 +260,14 @@
       "eyebrow": "Der 12. August ist da",
       "titel": "Verschaffen Sie sich Klarheit – heute.",
       "text": "In 15 Minuten wissen Sie, welche Rolle Sie haben, was für Ihre Verpackungen gilt und welche Dokumente Sie brauchen.",
-      "ctaPrimaer": "PPWR|ready werden",
+      "ctaPrimaer": "Jetzt starten",
       "ctaSekundaer": "Erst kostenlos prüfen"
     },
     "footer": {
-      "beschreibung": "Legal partner: Cattwyk Rechtsanwaltsgesellschaft.",
+      "produktVon": "Ein Produkt des",
+      "beschreibung": "PPWR Radar ist ein Produkt des packaging journal (ella Verlag und Medien GmbH). Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft.",
       "produkt": "Produkt",
-      "funktionen": "Funktionen",
+      "leistungen": "Leistungen",
       "preise": "Preise",
       "check": "Betroffenheits-Check",
       "faq": "FAQ",
@@ -292,14 +278,8 @@
       "konto": "Konto",
       "anmelden": "Anmelden",
       "registrieren": "Registrieren",
-      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal",
-      "produktVon": "A product of"
-    },
-    "checkBandKompakt": {
-      "titel": "Still unsure? Take the free check first.",
-      "cta": "Start the impact check"
-    },
-    "abschied": "Your account has been deleted. Thank you for trying PPWR Radar – you are welcome back any time."
+      "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+    }
   },
   "Login": {
     "fehler": {

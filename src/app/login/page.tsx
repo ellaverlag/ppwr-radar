@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { landingFontClasses } from "@/app/landing-fonts";
 import { BrandLink } from "@/components/brand";
 import { loginWithMagicLink } from "./actions";
 
@@ -26,7 +27,10 @@ export default async function LoginPage({
   const errorMessage = errorKey ? t(`fehler.${errorKey}`) : null;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-surface px-4">
+    // Login gehört zur öffentlichen Strecke: PJ-Markenschrift wie Landing/Check
+    <main
+      className={`${landingFontClasses} flex min-h-screen items-center justify-center bg-surface px-4`}
+    >
       <div className="w-full max-w-md">
         <div className="mb-12 text-center">
           <BrandLink href="/" width={226} priority center />
@@ -35,7 +39,9 @@ export default async function LoginPage({
         <div className="rounded border border-line bg-canvas p-8">
           {params.sent ? (
             <div className="text-center">
-              <h1 className="text-headline text-ink">{t("gesendetTitel")}</h1>
+              <h1 className="font-plex text-headline tracking-[-0.04em] text-ink">
+                {t("gesendetTitel")}
+              </h1>
               <p className="mt-4 text-body text-ink-muted">
                 {t("gesendetTextVor")}{" "}
                 <span className="font-semibold text-ink">{params.email}</span>{" "}
@@ -50,7 +56,9 @@ export default async function LoginPage({
             </div>
           ) : (
             <>
-              <h1 className="text-headline text-ink">{t("titel")}</h1>
+              <h1 className="font-plex text-headline tracking-[-0.04em] text-ink">
+                {t("titel")}
+              </h1>
               <p className="mt-2 text-body text-ink-muted">{t("text")}</p>
 
               {errorMessage && (

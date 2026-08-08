@@ -33,12 +33,6 @@
   /* Schriften */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-  /* PJ-Online-Markenschrift – nur öffentliche Strecke (/, /check).
-     Fallback-Stack jeweils über Inter auf system-ui. */
-  --font-plex: var(--font-ibm-plex-sans), var(--font-inter), ui-sans-serif,
-    system-ui, sans-serif;
-  --font-landing: var(--font-manrope-sans), var(--font-inter), ui-sans-serif,
-    system-ui, sans-serif;
 
   /* Typo-Skala */
   --text-display: 3rem;
@@ -67,6 +61,42 @@
 
   /* Radius: 4px Standard, keine Schatten (Tiefe über 1px-Rahmen) */
   --radius: 0.25rem;
+}
+
+/*
+ * PJ-Online-Markenschrift – nur öffentliche Strecke (/, /check, /login).
+ * ZWINGEND `@theme inline`: Die next/font-Variablen (--font-ibm-plex-sans,
+ * --font-manrope-sans) sind nur auf den Wurzel-Elementen der öffentlichen
+ * Seiten gesetzt. Im normalen @theme würde Tailwind die Tokens auf :root
+ * definieren – dort sind die Variablen unbekannt, die var()-Kette wird am
+ * Definitionsort aufgelöst und der Token damit ungültig (Seite fiele still
+ * auf Inter zurück). `inline` schreibt den Stack direkt in die Utility,
+ * sodass die Variablen erst am Element aufgelöst werden.
+ */
+@theme inline {
+  --font-plex: var(--font-ibm-plex-sans), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+  --font-landing: var(--font-manrope-sans), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+/* Blinkender Caret der Hero-Rotation (Landing). Die Komponente rendert den
+   Caret bei prefers-reduced-motion gar nicht erst – der Media-Query hier ist
+   die zweite Sicherung auf CSS-Ebene. */
+@theme {
+  --animate-caret-blink: caret-blink 1s step-end infinite;
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-caret-blink {
+    animation: none;
+  }
 }
 
 body {
