@@ -66,7 +66,13 @@ export interface Anforderung {
   lebensmittelkontakt: string;
   ausnahmen: string | null;
   uebergangsregeln: string | null;
-  tatbestand: string | null;
+  /**
+   * In der Live-DB jsonb: je nach Import ein String ODER ein Objekt
+   * {text: "…"}. NIE direkt rendern – immer über tatbestandText() lesen,
+   * sonst crasht React am Objekt-Child (äußerte sich als „404“ auf der
+   * Anforderungs-Detailseite, weil der Fehler ins gestreamte HTML fiel).
+   */
+  tatbestand: string | { text?: string } | null;
   rechtsfolgen_je_rolle: Record<string, string> | null;
   verweise: string[] | null;
   kurzerklaerung: string | null;
@@ -126,6 +132,21 @@ export interface WizardFrage {
   bedingung_anzeige: string | null;
   gespeiste_regeln: string | null;
   hinweis_ui: string | null;
+}
+
+/** Tatbestand als Anzeigetext – normalisiert String- und {text}-Form. */
+export function tatbestandText(
+  tatbestand: Anforderung["tatbestand"]
+): string | null {
+  if (typeof tatbestand === "string") return tatbestand.trim() || null;
+  if (
+    tatbestand &&
+    typeof tatbestand === "object" &&
+    typeof tatbestand.text === "string"
+  ) {
+    return tatbestand.text.trim() || null;
+  }
+  return null;
 }
 
 // ---------------------------------------------------------------------------

@@ -7,6 +7,7 @@ import {
   getRollenDefinitionen,
   sucheWissensbasis,
   sucheWissensbasisIlike,
+  tatbestandText,
   type Anforderung,
   type Auslegung,
   type RollenDefinition,
@@ -69,8 +70,9 @@ function anforderungChunk(a: Anforderung): KontextChunk {
   const teile: string[] = [];
   if (a.kurzerklaerung) teile.push(a.kurzerklaerung);
   if (a.erklaerung_fachlich) teile.push(a.erklaerung_fachlich);
-  if (typeof a.tatbestand === "string" && a.tatbestand) {
-    teile.push(`Tatbestand: ${a.tatbestand}`);
+  const tatbestand = tatbestandText(a.tatbestand);
+  if (tatbestand) {
+    teile.push(`Tatbestand: ${tatbestand}`);
   }
   if (a.rechtsfolgen_je_rolle) {
     const folgen = Object.entries(a.rechtsfolgen_je_rolle)

@@ -7,7 +7,11 @@ import { ArrowBackIcon } from "@/components/icons";
 import { GiltStatusIcon, KategorieIcon } from "@/components/kategorie-icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
-import { getAnforderung, type GiltStatus } from "@/lib/wissensbasis";
+import {
+  getAnforderung,
+  tatbestandText,
+  type GiltStatus,
+} from "@/lib/wissensbasis";
 import { Erklaertiefen, type Tiefe } from "./erklaertiefen";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -120,9 +124,12 @@ export default async function AnforderungDetailPage({
         </Section>
       )}
 
-      {anforderung.tatbestand && (
+      {/* tatbestand ist jsonb (String ODER {text}) – nur normalisiert rendern */}
+      {tatbestandText(anforderung.tatbestand) && (
         <Section title={tWissen("tatbestandTitel")}>
-          <p className="whitespace-pre-line">{anforderung.tatbestand}</p>
+          <p className="whitespace-pre-line">
+            {tatbestandText(anforderung.tatbestand)}
+          </p>
         </Section>
       )}
 
