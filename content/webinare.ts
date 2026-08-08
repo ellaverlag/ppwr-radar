@@ -44,5 +44,8 @@ export const AUFZEICHNUNGEN: Webinar[] = [
     hinweis:
       "Diese Aufzeichnung entstand vor Geltungsbeginn und Verkündung des VerpackDG – die Grundlagen gelten fort, den aktuellen Stand finden Sie in Wissen und Radar.",
     embed_url: "https://streamyard.com/e/pf4e3fb5kmug",
+    // Gestaltetes Standbild im Token-Design (1280×720); eine echte Folie
+    // kann es jederzeit ersetzen: Datei tauschen oder Pfad hier ändern.
+    thumbnail: "/webinare/webinar-ppwr-2025-12.png",
   },
 ];

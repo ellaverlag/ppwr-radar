@@ -58,12 +58,19 @@ export function WebinarKarte({
   const vorschau = (
     <span className="relative block w-full overflow-hidden bg-primary-tint pt-[56.25%]">
       {thumbnail ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={thumbnail}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={thumbnail}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          {/* Leichter dunkler Verlauf, damit der Play-Kreis auf jedem Bild lesbar bleibt */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 bg-gradient-to-t from-ink/40 via-ink/10 to-transparent"
+          />
+        </>
       ) : (
         <span
           aria-hidden="true"
