@@ -1,6 +1,7 @@
 import "server-only";
 
 import { ladeBegriffsLemmata } from "@/lib/glossar";
+import { glossarBegriffUrl } from "@/lib/wissen-links";
 import { getRollenDefinitionen } from "@/lib/wissensbasis";
 
 /**
@@ -10,6 +11,12 @@ import { getRollenDefinitionen } from "@/lib/wissensbasis";
  * Optionen ohne Zuordnung bleiben ohne Zweitzeile – nachpflegbar über neue
  * Lemmata. Genutzt vom Onboarding UND vom Mini-Wizard der Produktlinien-
  * Verwaltung (gleiche Fragen, gleiche Hilfen).
+ *
+ * Ausnahme F05 (häufigste Fehlerquelle: Transport- vs. Versand-/Verkaufs-
+ * verpackung): Hier führen ABGRENZENDE Alltagsbeispiele mit Gegenbeispiel
+ * als feste Override-Texte – die neutralen Lexikon-Definitionen reichen
+ * zum Entwechseln nicht aus. Das Glossar-Lemma bleibt je Option als
+ * „?“-Link erreichbar.
  */
 const ERKLAERUNGS_QUELLEN: Record<
   string,
@@ -44,6 +51,25 @@ const ERKLAERUNGS_QUELLEN: Record<
   },
 };
 
+/** Feste Abgrenzungstexte (mit Gegenbeispiel) – gewinnen vor dem Lemma-Text. */
+const ERKLAERUNGS_OVERRIDES: Record<string, Record<string, string>> = {
+  F05: {
+    verkauf:
+      "Die Verpackung, in der das Produkt beim Endkunden ankommt – z. B. die Folie um eine einzelne Zeitschrift, das Glas, die Flasche.",
+    um: "Fasst mehrere Verkaufseinheiten – z. B. der Tray um 12 Joghurts. NICHT die Palette.",
+    transport:
+      "Nur für den Transport zwischen Betrieben, wird vor dem Verkauf entfernt – z. B. Palette, Umkarton für den Versand ans Lager. NICHT die Verpackung, in der der Endkunde die Ware bekommt.",
+    ecommerce:
+      "Der Versandkarton/-umschlag beim Direktversand an Endkunden – z. B. der Karton, in dem eine Online-Bestellung ankommt.",
+  },
+};
+
+export interface OptionErklaerung {
+  text: string;
+  /** Deep-Link auf das passende Glossar-Lemma („?“-Link an der Option). */
+  glossarUrl?: string;
+}
+
 function kuerzeErklaerung(text: string, max = 180): string {
   const t = text.trim().replace(/\s+/g, " ");
   if (t.length <= max) return t;
@@ -53,20 +79,36 @@ function kuerzeErklaerung(text: string, max = 180): string {
 
 export async function ladeErklaerungen(
   frageId: string
-): Promise<Record<string, string>> {
+): Promise<Record<string, OptionErklaerung>> {
   const quellen = ERKLAERUNGS_QUELLEN[frageId];
   if (!quellen) return {};
+  const overrides = ERKLAERUNGS_OVERRIDES[frageId] ?? {};
   const [lemmata, rollen] = await Promise.all([
     ladeBegriffsLemmata(),
     getRollenDefinitionen().catch(() => []),
   ]);
-  const ergebnis: Record<string, string> = {};
+
+  const ergebnis: Record<string, OptionErklaerung> = {};
   for (const [option, quelle] of Object.entries(quellen)) {
+    let begriff: string | undefined;
+    let lexikonText: string | undefined;
+    if (quelle.art === "lemma") {
+      const lemma = lemmata.find((l) => l.code === quelle.code);
+      begriff = lemma?.lemma;
+      lexikonText = lemma?.kurzerklaerung ?? undefined;
+    } else {
+      const rolle = rollen.find((r) => r.rolle_id === quelle.id);
+      begriff = rolle?.begriff_de;
+      lexikonText = rolle?.definition_kurz;
+    }
+
     const text =
-      quelle.art === "lemma"
-        ? lemmata.find((l) => l.code === quelle.code)?.kurzerklaerung
-        : rollen.find((r) => r.rolle_id === quelle.id)?.definition_kurz;
-    if (text) ergebnis[option] = kuerzeErklaerung(text);
+      overrides[option] ?? (lexikonText ? kuerzeErklaerung(lexikonText) : null);
+    if (!text) continue;
+    ergebnis[option] = {
+      text,
+      glossarUrl: begriff ? glossarBegriffUrl(begriff) : undefined,
+    };
   }
   return ergebnis;
 }

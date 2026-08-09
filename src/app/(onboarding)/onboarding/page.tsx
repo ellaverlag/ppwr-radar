@@ -13,7 +13,10 @@ import {
 } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
 import { WizardOptionsListe } from "@/components/wizard-optionen";
-import { ladeErklaerungen } from "@/lib/wizard-erklaerungen";
+import {
+  ladeErklaerungen,
+  type OptionErklaerung,
+} from "@/lib/wizard-erklaerungen";
 import { getWizardFragen, type WizardFrage } from "@/lib/wissensbasis";
 import { erforderePaket } from "@/lib/zugang";
 import {
@@ -75,7 +78,7 @@ function FrageSchritt({
   t: Uebersetzer;
   zurueckText: string;
   weiterText: string;
-  erklaerungen: Record<string, string>;
+  erklaerungen: Record<string, OptionErklaerung>;
 }) {
   const zielVariable = frage.ziel_variable.split(";")[0].trim();
   const bisherige =

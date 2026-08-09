@@ -1,4 +1,5 @@
 import { OPTION_KEYS, parseOptionen, type Antwort } from "@/lib/onboarding";
+import type { OptionErklaerung } from "@/lib/wizard-erklaerungen";
 import type { WizardFrage } from "@/lib/wissensbasis";
 
 /**
@@ -17,7 +18,7 @@ export function OptionRow({
   wert: string;
   label: string;
   checked: boolean;
-  erklaerung?: string;
+  erklaerung?: OptionErklaerung;
 }) {
   // Fundstellen wie „(Art. 3 Abs. 1 Nr. 5)“ ans Zeilenende in Mono –
   // der Alltagsbegriff führt, die Fundstelle belegt
@@ -46,7 +47,21 @@ export function OptionRow({
         </span>
         {erklaerung && (
           <span className="mt-1 block text-body-sm leading-snug text-ink-muted">
-            {erklaerung}
+            {erklaerung.text}
+            {erklaerung.glossarUrl && (
+              // Neuer Tab, damit der Wizard-Schritt nicht verlassen wird;
+              // interaktives Element im Label toggelt die Option nicht mit
+              <a
+                href={erklaerung.glossarUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${text} im Glossar nachschlagen`}
+                title="Im Glossar nachschlagen"
+                className="ml-1.5 inline-flex h-[18px] w-[18px] items-center justify-center rounded-full border border-legal align-text-bottom text-[11px] font-semibold leading-none text-legal hover:bg-chip-hover"
+              >
+                ?
+              </a>
+            )}
           </span>
         )}
       </span>
@@ -62,7 +77,7 @@ export function WizardOptionsListe({
 }: {
   frage: WizardFrage;
   bisherige: Antwort | undefined;
-  erklaerungen: Record<string, string>;
+  erklaerungen: Record<string, OptionErklaerung>;
 }) {
   const optionen = parseOptionen(frage);
   const keys = OPTION_KEYS[frage.frage_id] ?? optionen;
