@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/labels";
 import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
 import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { anforderungUrl } from "@/lib/wissen-links";
+import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
 import { createClient } from "@/lib/supabase/server";
 import { pruefeZugang } from "@/lib/zugang";
 import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
@@ -72,6 +73,10 @@ export default async function DashboardPage({
     : { data: null };
 
   let ergebnisse: ErgebnisZeile[] = [];
+  // Eindeutige Produktlinie: nur wenn genau EINE aktive Linie existiert,
+  // wird sie im „Dokument erstellen“-Link vorgewählt (sonst wählt der
+  // Nutzer im Generator selbst).
+  let eindeutigeVerpackungId: string | null = null;
   if (profil?.onboarding_abgeschlossen) {
     // Rollen-Karte zeigt alle AKTIVEN Linien (aktuelle Ergebnisse);
     // stillgelegte Linien fallen heraus.
@@ -84,14 +89,14 @@ export default async function DashboardPage({
         .order("erstellt_am", { ascending: true }),
       supabase
         .from("profil_verpackungen")
-        .select("bezeichnung, status")
+        .select("id, bezeichnung, status")
         .eq("profil_id", profil.id),
     ]);
-    const aktiveNamen = new Set(
-      (verpackungen ?? [])
-        .filter((zeile) => zeile.status !== "stillgelegt")
-        .map((zeile) => zeile.bezeichnung as string)
+    const aktive = (verpackungen ?? []).filter(
+      (zeile) => zeile.status !== "stillgelegt"
     );
+    const aktiveNamen = new Set(aktive.map((zeile) => zeile.bezeichnung as string));
+    if (aktive.length === 1) eindeutigeVerpackungId = aktive[0].id as string;
     ergebnisse = ((data ?? []) as ErgebnisZeile[]).filter((zeile) =>
       aktiveNamen.has(zeile.produktlinie)
     );
@@ -422,12 +427,18 @@ export default async function DashboardPage({
                           {zeile.anforderung.kurzerklaerung}
                         </p>
                       )}
-                      <Link
-                        href={anforderungUrl(zeile.anforderung.id)}
-                        className="mt-1 inline-block text-body-sm font-medium text-legal hover:underline"
-                      >
-                        {t("schrittZurAnforderung")}
-                      </Link>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+                        <Link
+                          href={anforderungUrl(zeile.anforderung.id)}
+                          className="inline-block text-body-sm font-medium text-legal hover:underline"
+                        >
+                          {t("schrittZurAnforderung")}
+                        </Link>
+                        <DokumentErstellenLink
+                          generatorKey={zeile.anforderung.generator_key}
+                          verpackungId={eindeutigeVerpackungId}
+                        />
+                      </div>
                     </div>
                   </li>
                 ))}

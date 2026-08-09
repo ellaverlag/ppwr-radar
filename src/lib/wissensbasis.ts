@@ -81,6 +81,11 @@ export interface Anforderung {
   handlungsanweisung: string | null;
   risiko_bei_verstoss: string | null;
   audio_url: string | null;
+  /**
+   * Optionaler Template-Key des Dokumenten-Generators (TEMPLATE_TYPEN).
+   * Gesetzt → „Dokument erstellen“-Link an der Anforderung; null → keiner.
+   */
+  generator_key: string | null;
   review_status: ReviewStatus;
   rechtsstand: string;
   version: number;

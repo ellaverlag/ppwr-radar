@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
+import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
 import { BearbeitungIcon, GiltStatusIcon } from "@/components/kategorie-icons";
 import { PageHeader } from "@/components/page-header";
 import { TrafficDot } from "@/components/ui";
+import { createClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/labels";
 import {
   ladeStatusAnalyse,
@@ -32,17 +34,39 @@ export default async function StatusPage({
 }: {
   searchParams: Promise<{ filter?: string }>;
 }) {
-  await erforderePaket();
+  const zugang = await erforderePaket();
   // ?filter=offen: nur die offenen „gilt bereits“-Anforderungen – exakt die
   // Menge hinter „Offen – gilt bereits“ im Dashboard und den dringendsten
   // Schritten. Die Ampel-Zusammenfassung bleibt ungefiltert.
   const filterOffen = (await searchParams).filter === "offen";
 
+  const supabase = await createClient();
   const [t, tLabels, analyse] = await Promise.all([
     getTranslations("StatusAnalyse"),
     getTranslations("Labels"),
     ladeStatusAnalyse(),
   ]);
+
+  // Eindeutige Produktlinie für den „Dokument erstellen“-Link: nur bei genau
+  // einer aktiven Linie vorwählen (sonst wählt der Nutzer im Generator).
+  let eindeutigeVerpackungId: string | null = null;
+  {
+    const { data: profil } = await supabase
+      .from("profile")
+      .select("id")
+      .eq("user_id", zugang.user.id)
+      .maybeSingle();
+    if (profil) {
+      const { data: verpackungen } = await supabase
+        .from("profil_verpackungen")
+        .select("id, status")
+        .eq("profil_id", profil.id);
+      const aktive = (verpackungen ?? []).filter(
+        (zeile) => zeile.status !== "stillgelegt"
+      );
+      if (aktive.length === 1) eindeutigeVerpackungId = aktive[0].id as string;
+    }
+  }
 
   if (!analyse) {
     return (
@@ -197,6 +221,14 @@ export default async function StatusPage({
                           ),
                         })}
                       </p>
+                    )}
+                    {anforderung.generator_key && (
+                      <div className="mt-2">
+                        <DokumentErstellenLink
+                          generatorKey={anforderung.generator_key}
+                          verpackungId={eindeutigeVerpackungId}
+                        />
+                      </div>
                     )}
                   </div>
                   <div className="flex shrink-0 items-center gap-3">

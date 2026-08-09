@@ -3,15 +3,18 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
+import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
 import { ArrowBackIcon } from "@/components/icons";
 import { GiltStatusIcon, KategorieIcon } from "@/components/kategorie-icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
+import { createClient } from "@/lib/supabase/server";
 import {
   getAnforderung,
   tatbestandText,
   type GiltStatus,
 } from "@/lib/wissensbasis";
+import { pruefeZugang } from "@/lib/zugang";
 import { Erklaertiefen, type Tiefe } from "./erklaertiefen";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,6 +63,35 @@ export default async function AnforderungDetailPage({
   const tWissen = await getTranslations("Wissen");
   const tLabels = await getTranslations("Labels");
 
+  // „Dokument erstellen“ nur für freigeschaltete Nutzer (Generator gated).
+  // Produktlinie nur vorwählen, wenn genau eine aktive Linie existiert.
+  let zeigeGenerator = false;
+  let eindeutigeVerpackungId: string | null = null;
+  if (anforderung.generator_key) {
+    const zugang = await pruefeZugang();
+    if (zugang?.freigeschaltet) {
+      zeigeGenerator = true;
+      const supabase = await createClient();
+      const { data: profil } = await supabase
+        .from("profile")
+        .select("id")
+        .eq("user_id", zugang.user.id)
+        .maybeSingle();
+      if (profil) {
+        const { data: verpackungen } = await supabase
+          .from("profil_verpackungen")
+          .select("id, status")
+          .eq("profil_id", profil.id);
+        const aktive = (verpackungen ?? []).filter(
+          (zeile) => zeile.status !== "stillgelegt"
+        );
+        if (aktive.length === 1) {
+          eindeutigeVerpackungId = aktive[0].id as string;
+        }
+      }
+    }
+  }
+
   const tiefen: Tiefe[] = [
     { key: "einfach", text: anforderung.kurzerklaerung },
     { key: "fachlich", text: anforderung.erklaerung_fachlich },
@@ -105,6 +137,15 @@ export default async function AnforderungDetailPage({
         <p className="mt-3 font-mono text-mono-sm uppercase text-ink-muted">
           {t("giltAb", { datum: formatDate(anforderung.gilt_ab) })}
         </p>
+        {zeigeGenerator && (
+          <div className="mt-5">
+            <DokumentErstellenLink
+              generatorKey={anforderung.generator_key}
+              verpackungId={eindeutigeVerpackungId}
+              className="inline-flex items-center rounded bg-primary px-5 py-2.5 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90 hover:no-underline"
+            />
+          </div>
+        )}
       </header>
 
       {/* Erklärtiefen: Einfach (kurzerklaerung) | Fachlich | Rechtstext */}
