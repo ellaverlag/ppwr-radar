@@ -28,9 +28,9 @@ export interface Webinar {
 
 export const NAECHSTE_WEBINARE: Webinar[] = [
   {
-    titel: "Quartals-Webinar für PPWR|ready-Kunden",
+    titel: "Regelmäßige Live-Webinare mit Q&A",
     beschreibung:
-      "Termin und Thema werden hier und per E-Mail angekündigt.",
+      "Live-Webinare mit Q&A-Runden mit unseren Fachanwältinnen – Termine kündigen wir hier und per E-Mail an.",
     badge: "Ankündigung",
   },
 ];

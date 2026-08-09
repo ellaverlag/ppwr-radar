@@ -124,13 +124,13 @@
         {
           "schritt": "Daraus folgt",
           "titel": "Ihre persönliche Status-Analyse",
-          "text": "Radar gleicht Ihr Profil mit allen Anforderungen ab und zeigt Ihr Compliance-Cockpit: was gilt, was ist offen, was ist kritisch – mit Fristen bis 2030 und den nächsten Schritten. Ihre Pflichtenlage auf einen Blick, nicht die des Nachbarn.",
+          "text": "Radar gleicht Ihr Profil mit allen Anforderungen ab und zeigt Ihr Compliance-Cockpit: welche Pflichten Sie je Rolle und Produktlinie treffen, was offen ist und was kritisch – mit Fristen bis 2030 und den nächsten Schritten. Ihre Pflichtenlage auf einen Blick, nicht die des Nachbarn.",
           "tag": "Ampel · Fristen · nächste Schritte"
         },
         {
           "schritt": "Konkret",
           "titel": "Dokumenten-Generator",
-          "text": "Konformitätserklärung, technische Dokumentation, Pflichtenübersicht und Muster-Lieferantenanfragen – aus Ihrem Profil vorbefüllt, als Word und PDF. Nimmt Arbeit ab, statt sie zu beschreiben.",
+          "text": "Konformitätserklärung, technische Dokumentation als Gerüst, Pflichtenübersicht und Muster-Lieferantenanfragen – aus Ihrem Profil vorbefüllt, als Word und PDF. Nimmt Arbeit ab, statt sie zu beschreiben.",
           "tag": "4 Vorlagen · Word & PDF"
         },
         {
@@ -141,9 +141,9 @@
         },
         {
           "schritt": "Wenn Sie fragen",
-          "titel": "Ihr KI-Spezialist",
-          "text": "Stellen Sie Ihre Frage in eigenen Worten. Der Assistent kennt Ihr Profil, antwortet nur aus der geprüften Wissensbasis mit Artikel und Rechtsstand – und sagt ehrlich, wann ein Fall in die Rechtsberatung gehört. Kein Raten, kein Halluzinieren.",
-          "tag": "profilbezogen · mit Quelle · ehrliche Grenze"
+          "titel": "Ihr persönlicher PPWR-Assistent",
+          "text": "Stellen Sie Ihre Frage in eigenen Worten. Anders als ein beliebiger KI-Chatbot, der aus dem Nichts formuliert, ist dieser Assistent auf die Gesetzestexte geschult und kennt Ihr Profil: Er antwortet ausschließlich aus der geprüften, juristisch verifizierten Wissensbasis – mit Artikel und Rechtsstand, bezogen auf Ihre Produktlinien. Und er sagt ehrlich, wann ein Fall in die individuelle Rechtsberatung gehört, statt zu raten.",
+          "tag": "geschult auf Gesetzestexte · mit Quelle · ehrliche Grenze"
         }
       ],
       "nachsatzVor": "Und darüber:",
@@ -167,7 +167,7 @@
         "Leitet Ihre Rolle je Produktlinie her – mit Fundstelle",
         "Trennt „gilt seit dem 12.8.“ von „kommt 2028/2030“",
         "Erstellt die Dokumente vorbefüllt als Word und PDF",
-        "Prüft Ihr Portfolio inklusive Stoff- und Kontaktfragen",
+        "Zeigt Ihre Pflichten je Rolle und Produktlinie – mit Fristen",
         "Meldet Änderungen und markiert veraltete Dokumente"
       ]
     },
@@ -208,7 +208,7 @@
         "Dokumenten-Generator (4 Vorlagen, Word & PDF)",
         "Nachschlagewerk: Anforderungen, Praxisfragen, Glossar",
         "KI-Spezialist mit Profilbezug und Quellenangabe",
-        "12 Monate Radar-Updates & Quartals-Webinare"
+        "12 Monate Radar-Updates & regelmäßige Webinare mit Q&A-Runden mit unseren Fachanwältinnen"
       ],
       "ctaPaket": "Jetzt PPWR|ready werden",
       "festpreisZeile": "Transparenter Festpreis. Kein Angebotsprozess, keine Setup-Gebühr.",
