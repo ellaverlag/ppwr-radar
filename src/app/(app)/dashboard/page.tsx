@@ -109,10 +109,15 @@ export default async function DashboardPage({
     erledigt: i < 2 ? onboardingFertig : false,
   }));
 
-  // Nach dem Onboarding speisen sich die nächsten Schritte aus der
-  // Status-Analyse: die drei dringendsten offenen Anforderungen.
+  // Nach dem Onboarding speisen sich die dringendsten Schritte aus der
+  // Status-Analyse: die drei dringendsten aus GENAU den offenen „gilt
+  // bereits“-Anforderungen (dieselbe Menge wie „Offen – gilt bereits“ in
+  // der Status-Karte) – nicht aus den Vormerkungen für später.
   const offeneSchritte = (analyse?.zutreffend ?? [])
-    .filter((zeile) => zeile.status === "offen")
+    .filter(
+      (zeile) =>
+        zeile.status === "offen" && zeile.anforderung.gilt_status === "in_kraft"
+    )
     .slice(0, 3);
 
   const [memos, news, videos] = await Promise.all([
@@ -364,10 +369,21 @@ export default async function DashboardPage({
         </LegalCard>
       </div>
 
-      {/* Meine nächsten Schritte */}
+      {/* Ihre dringendsten Schritte – bewusste Auswahl aus den offenen
+          „gilt bereits“-Anforderungen, mit Link auf den Rest */}
       <LegalCard className="mt-6">
         <div className="flex-1 p-6">
-          <h2 className="mb-8 text-headline text-ink">{t("schritteTitel")}</h2>
+          <h2 className="text-headline text-ink">{t("schritteTitel")}</h2>
+          {analyse && offeneSchritte.length > 0 ? (
+            <p className="mb-8 mt-1 text-body-sm text-ink-muted">
+              {t("schritteUntertitel", {
+                anzahl: offeneSchritte.length,
+                offen: analyse.zahlen.kritisch,
+              })}
+            </p>
+          ) : (
+            <div className="mb-8" />
+          )}
           {analyse && analyse.zahlen.gesamt > 0 ? (
             offeneSchritte.length === 0 ? (
               <p className="text-body text-ink-muted">
@@ -417,7 +433,16 @@ export default async function DashboardPage({
                 ))}
               </ol>
             )
-          ) : (
+          ) : null}
+          {analyse && analyse.zahlen.gesamt > 0 && analyse.zahlen.kritisch > 0 && (
+            <Link
+              href="/dashboard/status?filter=offen"
+              className="mt-8 inline-block text-body-sm font-medium text-legal hover:underline"
+            >
+              {t("schritteAlleLink", { offen: analyse.zahlen.kritisch })}
+            </Link>
+          )}
+          {!(analyse && analyse.zahlen.gesamt > 0) && (
             <ol className="space-y-6 border-l border-line-strong pl-6">
               {schritte.map((schritt) => (
                 <li key={schritt.nr} className="flex gap-4">

@@ -426,7 +426,9 @@
     "naechsteFrist": "Nächste Frist:",
     "naechsteFristText": "Geltungsbeginn der PPWR am 12.08.2026.",
     "fristenFooter": "Art. 71 PPWR · Geltungsbeginn",
-    "schritteTitel": "Meine nächsten Schritte",
+    "schritteTitel": "Ihre dringendsten Schritte",
+    "schritteUntertitel": "Die {anzahl} wichtigsten von {offen} offenen Anforderungen – nach Dringlichkeit.",
+    "schritteAlleLink": "Alle {offen} offenen Anforderungen ansehen →",
     "schritte": [
       {
         "titel": "Betroffenheits-Check durchführen",
@@ -471,7 +473,7 @@
     "statusKritisch": "Offen – gilt bereits",
     "statusVormerkung": "Vormerkung – gilt später",
     "statusAnsehen": "Status-Liste ansehen",
-    "schritteAlleErledigt": "Alle zutreffenden Anforderungen sind erledigt oder in Bearbeitung – aktuell kein offener Schritt.",
+    "schritteAlleErledigt": "Aktuell kein offener Schritt bei den bereits geltenden Anforderungen – alles erledigt oder in Bearbeitung. Vormerkungen für später finden Sie in der Status-Analyse.",
     "schrittZurAnforderung": "Details ansehen",
     "rollenVerwalten": "Verpackungen verwalten →"
   },
@@ -856,7 +858,9 @@
     },
     "statusLabel": "Bearbeitungsstatus für „{titel}“",
     "keineTreffer": "Nach aktuellem Stand trifft keine der ausgespielten Anforderungen auf Ihr Profil zu.",
-    "fussnote": "Die Zuordnung folgt Ihren Rollen und Verpackungsarten aus dem Onboarding. Materialspezifische Anforderungen zeigen wir vorsorglich mit an, da Materialien im Profil nicht erfasst werden."
+    "fussnote": "Die Zuordnung folgt Ihren Rollen und Verpackungsarten aus dem Onboarding. Materialspezifische Anforderungen zeigen wir vorsorglich mit an, da Materialien im Profil nicht erfasst werden.",
+    "filterHinweis": "Gefiltert: Offen – gilt bereits ({anzahl})",
+    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen"
   },
   "Verpackungen": {
     "titel": "Meine Verpackungen",

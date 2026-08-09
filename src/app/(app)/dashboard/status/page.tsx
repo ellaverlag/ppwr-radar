@@ -27,8 +27,16 @@ function listeAufzaehlen(teile: string[]): string {
   return `${teile.slice(0, -1).join(", ")} und ${teile[teile.length - 1]}`;
 }
 
-export default async function StatusPage() {
+export default async function StatusPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
   await erforderePaket();
+  // ?filter=offen: nur die offenen „gilt bereits“-Anforderungen – exakt die
+  // Menge hinter „Offen – gilt bereits“ im Dashboard und den dringendsten
+  // Schritten. Die Ampel-Zusammenfassung bleibt ungefiltert.
+  const filterOffen = (await searchParams).filter === "offen";
 
   const [t, tLabels, analyse] = await Promise.all([
     getTranslations("StatusAnalyse"),
@@ -82,6 +90,13 @@ export default async function StatusPage() {
   };
 
   const { zahlen } = analyse;
+  const sichtbar = filterOffen
+    ? analyse.zutreffend.filter(
+        (zeile) =>
+          zeile.status === "offen" &&
+          zeile.anforderung.gilt_status === "in_kraft"
+      )
+    : analyse.zutreffend;
 
   return (
     <>
@@ -109,14 +124,28 @@ export default async function StatusPage() {
         </span>
       </div>
 
-      {analyse.zutreffend.length === 0 ? (
+      {filterOffen && (
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <Badge variant="red">
+            {t("filterHinweis", { anzahl: sichtbar.length })}
+          </Badge>
+          <Link
+            href="/dashboard/status"
+            className="text-body-sm font-medium text-legal hover:underline"
+          >
+            {t("filterAlle", { gesamt: zahlen.gesamt })}
+          </Link>
+        </div>
+      )}
+
+      {sichtbar.length === 0 ? (
         <div className="rounded border border-line bg-canvas p-6">
           <p className="text-body text-ink-muted">{t("keineTreffer")}</p>
         </div>
       ) : (
         <div className="rounded border border-line bg-canvas">
           <ul className="divide-y divide-line">
-            {analyse.zutreffend.map((zeile) => {
+            {sichtbar.map((zeile) => {
               const { anforderung } = zeile;
               const kritisch =
                 zeile.status === "offen" &&

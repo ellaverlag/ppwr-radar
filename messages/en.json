@@ -426,7 +426,9 @@
     "naechsteFrist": "Nächste Frist:",
     "naechsteFristText": "Geltungsbeginn der PPWR am 12.08.2026.",
     "fristenFooter": "Art. 71 PPWR · Geltungsbeginn",
-    "schritteTitel": "Meine nächsten Schritte",
+    "schritteTitel": "Ihre dringendsten Schritte",
+    "schritteUntertitel": "Die {anzahl} wichtigsten von {offen} offenen Anforderungen – nach Dringlichkeit.",
+    "schritteAlleLink": "Alle {offen} offenen Anforderungen ansehen →",
     "schritte": [
       {
         "titel": "Betroffenheits-Check durchführen",
@@ -471,7 +473,7 @@
     "statusKritisch": "Open – already in force",
     "statusVormerkung": "Noted – applies later",
     "statusAnsehen": "View status list",
-    "schritteAlleErledigt": "All applicable requirements are done or in progress – no open step right now.",
+    "schritteAlleErledigt": "Aktuell kein offener Schritt bei den bereits geltenden Anforderungen – alles erledigt oder in Bearbeitung. Vormerkungen für später finden Sie in der Status-Analyse.",
     "schrittZurAnforderung": "View details",
     "rollenVerwalten": "Verpackungen verwalten →"
   },
@@ -856,7 +858,9 @@
     },
     "statusLabel": "Processing status for “{titel}”",
     "keineTreffer": "Based on the current data, none of the published requirements apply to your profile.",
-    "fussnote": "The mapping follows your roles and packaging types from onboarding. Material-specific requirements are shown as a precaution, since materials are not captured in the profile."
+    "fussnote": "The mapping follows your roles and packaging types from onboarding. Material-specific requirements are shown as a precaution, since materials are not captured in the profile.",
+    "filterHinweis": "Gefiltert: Offen – gilt bereits ({anzahl})",
+    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen"
   },
   "Verpackungen": {
     "titel": "Meine Verpackungen",
