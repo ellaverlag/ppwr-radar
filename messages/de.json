@@ -286,7 +286,9 @@
     "fehler": {
       "missing_email": "Bitte geben Sie eine E-Mail-Adresse ein.",
       "send_failed": "Der Anmelde-Link konnte nicht versendet werden. Bitte versuchen Sie es erneut.",
-      "auth_failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist möglicherweise abgelaufen – bitte fordern Sie einen neuen an."
+      "auth_failed": "Die Anmeldung ist fehlgeschlagen. Der Link ist möglicherweise abgelaufen – bitte fordern Sie einen neuen an.",
+      "verifier": "Dieser Link wurde in einem anderen Browser oder auf einem anderen Gerät geöffnet als dem, in dem er angefordert wurde. Bitte öffnen Sie den Link im selben Browser – oder fordern Sie hier einfach einen neuen an, den Sie direkt auf diesem Gerät nutzen können.",
+      "expired": "Der Anmelde-Link ist abgelaufen oder wurde bereits verwendet. Bitte fordern Sie einen neuen an."
     },
     "gesendetTitel": "E-Mail unterwegs",
     "gesendetTextVor": "Wir haben einen Anmelde-Link an",
@@ -297,7 +299,9 @@
     "emailLabel": "E-Mail-Adresse",
     "emailPlaceholder": "name@firma.de",
     "senden": "Anmelde-Link senden",
-    "claim": "Verpackungs-Compliance im Blick – zur EU-Verpackungsverordnung (PPWR)."
+    "claim": "Verpackungs-Compliance im Blick – zur EU-Verpackungsverordnung (PPWR).",
+    "fehlerTitel": "Anmeldung nicht abgeschlossen",
+    "neuAnfordern": "Neuen Link anfordern"
   },
   "Check": {
     "anmelden": "Anmelden",

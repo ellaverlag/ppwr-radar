@@ -9,7 +9,13 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("login") };
 }
 
-const ERROR_KEYS = ["missing_email", "send_failed", "auth_failed"] as const;
+const ERROR_KEYS = [
+  "missing_email",
+  "send_failed",
+  "auth_failed",
+  "verifier",
+  "expired",
+] as const;
 
 export default async function LoginPage({
   searchParams,
@@ -62,9 +68,12 @@ export default async function LoginPage({
               <p className="mt-2 text-body text-ink-muted">{t("text")}</p>
 
               {errorMessage && (
-                <p className="mt-6 rounded border border-danger bg-danger/5 px-4 py-3 text-body-sm text-danger">
-                  {errorMessage}
-                </p>
+                <div className="mt-6 rounded border border-danger bg-danger/5 px-4 py-3">
+                  <p className="text-body-sm font-semibold text-danger">
+                    {t("fehlerTitel")}
+                  </p>
+                  <p className="mt-1 text-body-sm text-ink">{errorMessage}</p>
+                </div>
               )}
 
               <form action={loginWithMagicLink} className="mt-8 space-y-6">
@@ -92,7 +101,9 @@ export default async function LoginPage({
                   type="submit"
                   className="w-full rounded bg-primary px-6 py-4 text-label uppercase tracking-widest text-white transition-opacity hover:opacity-90"
                 >
-                  {t("senden")}
+                  {errorKey && errorKey !== "missing_email"
+                    ? t("neuAnfordern")
+                    : t("senden")}
                 </button>
               </form>
             </>
