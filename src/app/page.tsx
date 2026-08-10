@@ -11,9 +11,11 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import { ComingSoonLanding } from "@/app/coming-soon";
 import { landingFontClasses } from "@/app/landing-fonts";
 import { HeroRotator } from "@/app/hero-rotator";
 import { BrandLink } from "@/components/brand";
+import { istComingSoon } from "@/lib/launch";
 import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -121,6 +123,7 @@ export default async function LandingPage({
     token_hash?: string;
     type?: string;
     abschied?: string;
+    vormerken?: string;
   }>;
 }) {
   // Callback-Fix: Leitet Supabase den Magic-Link auf die Site-URL statt auf
@@ -142,6 +145,13 @@ export default async function LandingPage({
     data: { user },
   } = await supabase.auth.getUser();
   if (user) redirect("/dashboard");
+
+  // Coming-Soon: Ohne Session (Admin-Bypass = jede Session, die oben schon
+  // zum Dashboard weitergeleitet wurde) zeigt die Startseite die reduzierte
+  // Vorfreude-Fassung ohne Login-/Kauf-CTAs.
+  if (istComingSoon()) {
+    return <ComingSoonLanding vormerken={params.vormerken} />;
+  }
 
   const t = await getTranslations("Landing");
 

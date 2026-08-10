@@ -280,6 +280,17 @@
       "anmelden": "Anmelden",
       "registrieren": "Registrieren",
       "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+    },
+    "comingSoon": {
+      "headerBadge": "Launching 12 Aug 2026",
+      "hinweisTitel": "Launching soon",
+      "hinweisText": "PPWR Radar launches on 12 August 2026, when the EU Packaging Regulation takes effect. Stay tuned!",
+      "emailLabel": "Email address for the launch notification",
+      "emailPlaceholder": "you@company.com",
+      "emailCta": "Notify me at launch",
+      "emailErfolg": "Thank you – we will notify you at launch.",
+      "emailFehler": "That did not work. Please check the address and try again.",
+      "emailHinweis": "Just one email at launch – no marketing."
     }
   },
   "Login": {
@@ -315,7 +326,10 @@
     "mehrfachauswahl": "Mehrfachauswahl möglich.",
     "zurueck": "← Zurück",
     "zurStartseiteKurz": "← Zur Startseite",
-    "weiter": "Weiter →"
+    "weiter": "Weiter →",
+    "comingSoonTitel": "The full analysis launches on 12 Aug 2026",
+    "comingSoonText": "PPWR Radar launches when the PPWR takes effect – with full role analysis, obligation list and document generator. Get notified at launch.",
+    "comingSoonCta": "Notify me at launch"
   },
   "CheckErgebnis": {
     "nichtVerfuegbar": "Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",

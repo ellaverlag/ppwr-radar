@@ -25,6 +25,7 @@ export default async function LoginPage({
     email?: string;
     error?: string;
     next?: string;
+    admin?: string;
   }>;
 }) {
   const params = await searchParams;
@@ -54,7 +55,7 @@ export default async function LoginPage({
                 {t("gesendetTextNach")}
               </p>
               <a
-                href="/login"
+                href={params.admin === "1" ? "/login?admin=1" : "/login"}
                 className="mt-8 inline-block text-body-sm font-medium text-legal hover:underline"
               >
                 {t("andereAdresse")}
@@ -79,6 +80,9 @@ export default async function LoginPage({
               <form action={loginWithMagicLink} className="mt-8 space-y-6">
                 {params.next && (
                   <input type="hidden" name="next" value={params.next} />
+                )}
+                {params.admin === "1" && (
+                  <input type="hidden" name="admin" value="1" />
                 )}
                 <div>
                   <label

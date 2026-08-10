@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { istComingSoon } from "@/lib/launch";
 import {
   ersteinschaetzung,
   kontexteAusCheckAntworten,
@@ -180,8 +181,25 @@ export default async function CheckErgebnisPage() {
         </div>
       </div>
 
-      {/* Paywall-CTA */}
+      {/* Paywall-CTA – im Coming-Soon-Modus stattdessen der Start-Hinweis */}
       <div className="mt-12 text-center">
+        {istComingSoon() ? (
+          <div className="mx-auto max-w-lg rounded border-2 border-primary bg-primary-tint p-8">
+            <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
+              {t("comingSoonTitel")}
+            </h2>
+            <p className="mt-3 text-body text-ink-soft">
+              {t("comingSoonText")}
+            </p>
+            <Link
+              href="/#vormerken"
+              className="mt-6 inline-flex items-center gap-2 rounded bg-primary px-6 py-3 text-body font-semibold text-white transition-colors hover:bg-primary-dark"
+            >
+              {t("comingSoonCta")} →
+            </Link>
+          </div>
+        ) : (
+          <>
         <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
           {t("paywallTitel")}
         </h2>
@@ -206,6 +224,8 @@ export default async function CheckErgebnisPage() {
             {t("mehrErfahren")}
           </Link>
         </div>
+          </>
+        )}
         <form action={checkNeuStarten} className="mt-8">
           <button
             type="submit"

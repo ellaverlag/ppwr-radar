@@ -16,9 +16,12 @@ function sicheresZiel(roh: string): string {
 export async function loginWithMagicLink(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
   const next = sicheresZiel(String(formData.get("next") ?? ""));
+  // Coming-Soon-Modus: admin=1 durch die Bestätigungs-/Fehler-Ansichten
+  // durchreichen, sonst leitet die Middleware zurück zur Startseite
+  const adminSuffix = formData.get("admin") === "1" ? "&admin=1" : "";
 
   if (!email) {
-    redirect("/login?error=missing_email");
+    redirect(`/login?error=missing_email${adminSuffix}`);
   }
 
   const origin = await basisUrl();
@@ -36,8 +39,8 @@ export async function loginWithMagicLink(formData: FormData) {
 
   if (error) {
     console.error("Magic-Link-Versand fehlgeschlagen:", error.message);
-    redirect("/login?error=send_failed");
+    redirect(`/login?error=send_failed${adminSuffix}`);
   }
 
-  redirect(`/login?sent=1&email=${encodeURIComponent(email)}`);
+  redirect(`/login?sent=1&email=${encodeURIComponent(email)}${adminSuffix}`);
 }

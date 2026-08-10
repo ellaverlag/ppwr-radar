@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { istComingSoon } from "@/lib/launch";
 
 /** Routen, die ohne Login erreichbar sind. */
 const PUBLIC_PATHS = [
@@ -61,6 +62,21 @@ export async function updateSession(request: NextRequest) {
   if (user && pathname === "/login") {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
+  // Coming-Soon: /login ist ohne Session nur über ?admin=1 erreichbar
+  // (unauffälliger Admin-Zugang; die eigentliche Zugangskontrolle bleibt
+  // der Magic-Link). Der Betroffenheits-Check /check bleibt bewusst offen.
+  if (
+    !user &&
+    istComingSoon() &&
+    pathname === "/login" &&
+    request.nextUrl.searchParams.get("admin") !== "1"
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
     url.search = "";
     return NextResponse.redirect(url);
   }

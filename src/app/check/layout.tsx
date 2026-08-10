@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { istComingSoon } from "@/lib/launch";
 import { landingFontClasses } from "@/app/landing-fonts";
 import { BrandLink } from "@/components/brand";
 
@@ -25,12 +26,14 @@ export default async function CheckLayout({
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between px-4 md:px-16">
           <BrandLink href="/" priority />
-          <Link
-            href="/login"
-            className="text-body-sm font-medium text-ink-muted hover:text-ink"
-          >
-            {t("anmelden")}
-          </Link>
+          {!istComingSoon() && (
+            <Link
+              href="/login"
+              className="text-body-sm font-medium text-ink-muted hover:text-ink"
+            >
+              {t("anmelden")}
+            </Link>
+          )}
         </div>
       </header>
 
