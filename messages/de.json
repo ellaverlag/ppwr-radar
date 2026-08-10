@@ -282,9 +282,9 @@
       "disclaimer": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
     },
     "comingSoon": {
-      "headerBadge": "Start am 12.08.2026",
+      "headerBadge": "Startet in Kürze",
       "hinweisTitel": "Startet in Kürze",
-      "hinweisText": "PPWR Radar geht zum Geltungsbeginn der EU-Verpackungsverordnung am 12. August 2026 an den Start. Seien Sie gespannt!",
+      "hinweisText": "PPWR Radar geht rechtzeitig zum Geltungsbeginn der EU-Verpackungsverordnung an den Start. Seien Sie gespannt!",
       "emailLabel": "E-Mail-Adresse für die Start-Benachrichtigung",
       "emailPlaceholder": "ihre@firma.de",
       "emailCta": "Zum Start benachrichtigen",
@@ -327,8 +327,8 @@
     "zurueck": "← Zurück",
     "zurStartseiteKurz": "← Zur Startseite",
     "weiter": "Weiter →",
-    "comingSoonTitel": "Die vollständige Analyse startet am 12.08.2026",
-    "comingSoonText": "PPWR Radar geht zum PPWR-Geltungsbeginn an den Start – mit vollständiger Rollen-Analyse, Pflichtenliste und Dokumenten-Generator. Lassen Sie sich zum Start benachrichtigen.",
+    "comingSoonTitel": "Die vollständige Analyse startet in Kürze",
+    "comingSoonText": "PPWR Radar geht rechtzeitig zum PPWR-Geltungsbeginn an den Start – mit vollständiger Rollen-Analyse, Pflichtenliste und Dokumenten-Generator. Lassen Sie sich zum Start benachrichtigen.",
     "comingSoonCta": "Zum Start benachrichtigen lassen"
   },
   "CheckErgebnis": {
