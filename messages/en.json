@@ -1005,7 +1005,8 @@
     "keineTreffer": "Based on the current data, none of the published requirements apply to your profile.",
     "fussnote": "The mapping follows your roles and packaging types from onboarding. Material-specific requirements are shown as a precaution, since materials are not captured in the profile.",
     "filterHinweis": "Gefiltert: Offen – gilt bereits ({anzahl})",
-    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen"
+    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen",
+    "betrifftVerpackungen": "Betrifft {anzahl, plural, one {# Verpackung} other {# Verpackungen}} Ihrer Produktlinien."
   },
   "Verpackungen": {
     "titel": "Meine Verpackungen",

@@ -211,6 +211,14 @@ export default async function StatusPage({
                     <p className="mt-1.5 text-body-sm text-ink-muted">
                       {grundText(zeile)}
                     </p>
+                    {zeile.betrifftVerpackungen != null &&
+                      zeile.betrifftVerpackungen > 0 && (
+                        <p className="mt-1 text-body-sm text-ink-muted">
+                          {t("betrifftVerpackungen", {
+                            anzahl: zeile.betrifftVerpackungen,
+                          })}
+                        </p>
+                      )}
                     {zeile.grund.materialEinschraenkung && (
                       <p className="mt-1 text-body-sm text-ink-muted">
                         {t("materialHinweis", {

@@ -1005,7 +1005,8 @@
     "keineTreffer": "Nach aktuellem Stand trifft keine der ausgespielten Anforderungen auf Ihr Profil zu.",
     "fussnote": "Die Zuordnung folgt Ihren Rollen und Verpackungsarten aus dem Onboarding. Materialspezifische Anforderungen zeigen wir vorsorglich mit an, da Materialien im Profil nicht erfasst werden.",
     "filterHinweis": "Gefiltert: Offen – gilt bereits ({anzahl})",
-    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen"
+    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen",
+    "betrifftVerpackungen": "Betrifft {anzahl, plural, one {# Verpackung} other {# Verpackungen}} Ihrer Produktlinien."
   },
   "Verpackungen": {
     "titel": "Meine Verpackungen",
