@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { SearchX } from "lucide-react";
 import { SearchIcon } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
+import type { PruefstatusLabels } from "@/components/pruefstatus-badge";
 import { LegalCard } from "@/components/ui";
 import {
   ladeGlossar,
@@ -120,6 +121,7 @@ export default async function GlossarPage({
     betrifftMichTitle: t("betrifftMichTitle"),
     zurAnforderung: t("zurAnforderung"),
     zurAntwort: t("zurAntwort"),
+    pruefstatus: tLabels.raw("pruefstatus") as PruefstatusLabels,
   };
 
 

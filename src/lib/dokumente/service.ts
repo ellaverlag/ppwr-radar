@@ -23,10 +23,11 @@ import {
 } from "@/lib/dokumente/renderer";
 import { isPreviewMode } from "@/lib/preview";
 import { createClient } from "@/lib/supabase/server";
+import { AUSSPIELBARE_STATUS } from "@/lib/wissensbasis";
 
 /**
  * Dokumenten-Generator (Säule B): lädt Templates ausschließlich aus
- * generator_templates (Single Source of Law – live nur freigegeben+aktiv
+ * generator_templates (Single Source of Law – live nur ausspielbarer Status+aktiv
  * via RLS, im Preview-Modus auch Entwürfe via Service-Role), rendert,
  * erzeugt .docx und PDF und legt beide im privaten Storage-Bucket ab.
  *
@@ -60,7 +61,7 @@ function serviceClient() {
   });
 }
 
-/** Live: Session-Client (RLS = freigegeben+aktiv); Preview: auch Entwürfe. */
+/** Live: Session-Client (RLS = ausspielbarer Status+aktiv); Preview: auch Entwürfe. */
 export async function ladeTemplate(
   key: TemplateKey
 ): Promise<GeneratorTemplate | null> {
@@ -74,10 +75,25 @@ export async function ladeTemplate(
     .limit(1);
   if (!isPreviewMode()) {
     // RLS filtert ohnehin – explizit für Lesbarkeit
-    query = query.eq("review_status", "cattwyk_freigegeben");
+    query = query.in("review_status", AUSSPIELBARE_STATUS);
   }
   const { data } = await query.maybeSingle();
   return (data as GeneratorTemplate | null) ?? null;
+}
+
+/**
+ * Prüfstatus der Vorlage als neutraler Satz für die Dokument-Fußzeile.
+ * Dokumente werden auf Deutsch erzeugt, daher hier ohne i18n.
+ */
+export function vorlagenStatusHinweis(reviewStatus: string): string {
+  switch (reviewStatus) {
+    case "cattwyk_freigegeben":
+      return "Vorlage juristisch plausibilisiert";
+    case "redaktion_geprueft":
+      return "Vorlage redaktionell geprüft, juristische Prüfung läuft";
+    default:
+      return "Vorlage im Entwurf – ungeprüft";
+  }
 }
 
 export async function ladeVerfuegbareTemplates(): Promise<
@@ -288,9 +304,10 @@ export async function erzeugeUndSpeichereDokument(
   const text = mergeAnkerEingaben(gerendert, eingaben, key);
   const koerper = dokumentKoerper(text);
 
+  const statusHinweis = vorlagenStatusHinweis(daten.template.review_status);
   const [docx, pdf] = await Promise.all([
-    erzeugeDocx(koerper),
-    erzeugePdf(koerper),
+    erzeugeDocx(koerper, statusHinweis),
+    erzeugePdf(koerper, statusHinweis),
   ]);
 
   const service = serviceClient();

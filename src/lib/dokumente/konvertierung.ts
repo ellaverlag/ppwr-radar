@@ -150,8 +150,22 @@ export function pdfTauglich(text: string): string {
     .replace(/[\u{1F500}-\u{1FAFF}\u{2600}-\u{27BF}\uFE0F]/gu, "");
 }
 
-export async function erzeugePdf(md: string): Promise<Uint8Array> {
+/**
+ * Fußzeile der erzeugten Dokumente. `statusHinweis` (z. B. „Vorlage
+ * juristisch plausibilisiert“) macht den Prüfstatus der Vorlage im Dokument
+ * sichtbar – neutral formuliert, keine Rechtsberatungs-Aussage.
+ */
+function fusszeilenText(statusHinweis?: string | null): string {
+  const basis = "Erstellt mit PPWR Radar – keine Rechtsberatung";
+  return statusHinweis ? `${basis} · ${statusHinweis}` : basis;
+}
+
+export async function erzeugePdf(
+  md: string,
+  statusHinweis?: string | null
+): Promise<Uint8Array> {
   md = pdfTauglich(md);
+  const fusszeile = fusszeilenText(statusHinweis);
   const pdfMakeMod = await import("pdfmake/build/pdfmake.js");
   const pdfFontsMod = await import("pdfmake/build/vfs_fonts.js");
   const pdfMake = pdfMakeMod.default;
@@ -168,7 +182,7 @@ export async function erzeugePdf(md: string): Promise<Uint8Array> {
       h4: { fontSize: 10.5, bold: true, margin: [0, 6, 0, 3] },
     },
     footer: (aktuelleSeite: number, seiten: number) => ({
-      text: `Erstellt mit PPWR Radar – keine Rechtsberatung · Seite ${aktuelleSeite}/${seiten}`,
+      text: `${fusszeile} · Seite ${aktuelleSeite}/${seiten}`,
       fontSize: 8,
       color: "#767676",
       margin: [40, 0, 40, 0],
@@ -181,7 +195,10 @@ export async function erzeugePdf(md: string): Promise<Uint8Array> {
   });
 }
 
-export async function erzeugeDocx(md: string): Promise<Buffer> {
+export async function erzeugeDocx(
+  md: string,
+  statusHinweis?: string | null
+): Promise<Buffer> {
   const { default: HTMLtoDOCX } = await import("html-to-docx");
   const html = await marked.parse(md);
   const ergebnis = await HTMLtoDOCX(
@@ -191,7 +208,7 @@ export async function erzeugeDocx(md: string): Promise<Buffer> {
       table: { row: { cantSplit: true } },
       font: "Calibri",
       footer: true,
-      footerHTMLString: `<p style="font-size:8pt;color:#767676">Erstellt mit PPWR Radar – keine Rechtsberatung</p>`,
+      footerHTMLString: `<p style="font-size:8pt;color:#767676">${fusszeilenText(statusHinweis)}</p>`,
     }
   );
   return Buffer.isBuffer(ergebnis)

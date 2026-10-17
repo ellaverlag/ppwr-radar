@@ -3,11 +3,19 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/badge";
+import {
+  PruefstatusBadge,
+  type PruefstatusLabels,
+} from "@/components/pruefstatus-badge";
 import { SearchIcon } from "@/components/icons";
 import { KategorieIcon } from "@/components/kategorie-icons";
 import { formatDate } from "@/lib/labels";
 import { anforderungUrl } from "@/lib/wissen-links";
-import type { Kategorie, Verbindlichkeit } from "@/lib/wissensbasis";
+import type {
+  Kategorie,
+  ReviewStatus,
+  Verbindlichkeit,
+} from "@/lib/wissensbasis";
 import { zaehleAuslegungAufruf } from "./actions";
 
 /**
@@ -27,6 +35,7 @@ export interface PraxisFrage {
   kategorie: Kategorie;
   quellen: string[];
   verbindlichkeit: Verbindlichkeit;
+  review_status: ReviewStatus;
   verwandte: { id: string; nr: number | null; titel: string }[];
 }
 
@@ -38,6 +47,7 @@ export interface PraxisLabels {
   alleChip: string;
   kategorien: Record<string, string>;
   verbindlichkeit: Record<string, string>;
+  pruefstatus: PruefstatusLabels;
   fundstellen: string;
   verwandte: string;
   keineTreffer: string;
@@ -260,9 +270,15 @@ export function PraxisfragenListe({
                           </p>
                         </div>
                       )}
-                      <p className="mt-5 font-mono text-mono-sm uppercase text-ink-muted">
-                        {labels.rechtsstand} {formatDate(frage.rechtsstand)}
-                      </p>
+                      <div className="mt-5 flex flex-wrap items-center gap-3">
+                        <p className="font-mono text-mono-sm uppercase text-ink-muted">
+                          {labels.rechtsstand} {formatDate(frage.rechtsstand)}
+                        </p>
+                        <PruefstatusBadge
+                          status={frage.review_status}
+                          labels={labels.pruefstatus}
+                        />
+                      </div>
                       {frage.verwandte.length > 0 && (
                         <div className="mt-5">
                           <p className="text-label uppercase text-ink-muted">

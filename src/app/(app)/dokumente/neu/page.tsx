@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { marked } from "marked";
 import { Badge } from "@/components/badge";
+import { PruefstatusBadge } from "@/components/pruefstatus-badge";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
@@ -61,6 +62,7 @@ export default async function NeuesDokumentPage({
     Object.entries(roh).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v])
   ) as Record<string, string | undefined>;
   const t = await getTranslations("Dokumente");
+  const tLabels = await getTranslations("Labels");
 
   const templates = await ladeVerfuegbareTemplates();
   const admin = istAdmin(zugang.user.email);
@@ -137,8 +139,12 @@ export default async function NeuesDokumentPage({
   // Vorschau rendern (Fehler aus der Erzeugung landen als Query-Param)
   let vorschauHtml: string | null = null;
   let vorschauHinweis: string | null = null;
-  let vorschauStatus: { version: string; rechtsstand: string; entwurf: boolean } | null =
-    null;
+  let vorschauStatus: {
+    version: string;
+    rechtsstand: string;
+    reviewStatus: string;
+    entwurf: boolean;
+  } | null = null;
   let formularFelder: VorschauDaten["formularFelder"] = [];
   let renderFehler: string | null = null;
   if (typ && verpackung) {
@@ -156,7 +162,11 @@ export default async function NeuesDokumentPage({
         vorschauStatus = {
           version: vorschau.templateVersion,
           rechtsstand: vorschau.templateRechtsstand,
-          entwurf: vorschau.reviewStatus !== "cattwyk_freigegeben",
+          reviewStatus: vorschau.reviewStatus,
+          // Nur echte Entwürfe (Preview-Modus) bekommen den gelben Hinweis;
+          // die Zwischenstufe redaktion_geprueft wird über den Statuschip
+          // in der Fußzeile gekennzeichnet.
+          entwurf: vorschau.reviewStatus === "entwurf",
         };
         formularFelder = vorschau.formularFelder;
       }
@@ -390,8 +400,20 @@ export default async function NeuesDokumentPage({
                   dangerouslySetInnerHTML={{ __html: vorschauHtml }}
                 />
                 <LegalCardFooter>
-                  {t(`typen.${typ}`)} · {vorschauStatus?.version} · Rechtsstand{" "}
-                  {formatDate(vorschauStatus?.rechtsstand)}
+                  <span className="flex flex-wrap items-center gap-3">
+                    <span>
+                      {t(`typen.${typ}`)} · {vorschauStatus?.version} · Rechtsstand{" "}
+                      {formatDate(vorschauStatus?.rechtsstand)}
+                    </span>
+                    {vorschauStatus && (
+                      <span className="font-sans normal-case">
+                        <PruefstatusBadge
+                          status={vorschauStatus.reviewStatus}
+                          labels={tLabels.raw("pruefstatus")}
+                        />
+                      </span>
+                    )}
+                  </span>
                 </LegalCardFooter>
               </LegalCard>
 
