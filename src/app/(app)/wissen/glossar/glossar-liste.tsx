@@ -3,6 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/badge";
+import {
+  PruefstatusBadge,
+  type PruefstatusLabels,
+} from "@/components/pruefstatus-badge";
 import { GlossarTypIcon } from "@/components/kategorie-icons";
 import type { GlossarEintrag } from "@/lib/glossar";
 
@@ -19,6 +23,7 @@ export interface GlossarLabels {
   betrifftMichTitle: string;
   zurAnforderung: string;
   zurAntwort: string;
+  pruefstatus: PruefstatusLabels;
 }
 
 export function GlossarListe({
@@ -117,6 +122,12 @@ export function GlossarListe({
                             {eintrag.merkmale}
                           </p>
                         )}
+                        <p className="mt-3">
+                          <PruefstatusBadge
+                            status={eintrag.review_status}
+                            labels={labels.pruefstatus}
+                          />
+                        </p>
                         {(eintrag.quelle ||
                           (eintrag.verweisChips?.length ?? 0) > 0 ||
                           eintrag.href) && (

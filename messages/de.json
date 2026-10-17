@@ -332,6 +332,8 @@
     "comingSoonCta": "Zum Start benachrichtigen lassen"
   },
   "CheckErgebnis": {
+    "inKuerzeTitel": "Ergebnis in Kürze verfügbar",
+    "inKuerzeText": "Die Regeln, auf denen Ihre Einschätzung beruht, werden derzeit redaktionell geprüft. Sobald die Prüfung abgeschlossen ist, steht das Ergebnis hier bereit.",
     "nichtVerfuegbar": "Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
     "zurueckZumCheck": "Zurück zum Check",
     "titel": "Ihre Ersteinschätzung",
@@ -740,6 +742,11 @@
     "verbindlichkeit": {
       "rechtsverbindlich": "Rechtsverbindlich",
       "unverbindliche_auslegung": "Unverbindliche Auslegung"
+    },
+    "pruefstatus": {
+      "cattwyk_freigegeben": "Juristisch plausibilisiert",
+      "redaktion_geprueft": "Redaktionell geprüft, juristische Prüfung läuft",
+      "entwurf": "Entwurf – ungeprüft"
     },
     "verpackungstypen": {
       "alle": "Alle Verpackungsarten",

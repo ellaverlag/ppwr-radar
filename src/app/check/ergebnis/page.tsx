@@ -10,6 +10,7 @@ import {
 import { evaluiereLinie, type RegelRow } from "@/lib/rollen-engine";
 import { ladeAppConfig, ladeRegeln } from "@/lib/rollen-service";
 import { formatDate } from "@/lib/labels";
+import { istAusspielbar } from "@/lib/wissensbasis";
 import { checkNeuStarten } from "../actions";
 import { leseCheckAntworten } from "../check-config";
 
@@ -70,6 +71,47 @@ export default async function CheckErgebnisPage() {
 
   const { unternehmen, linie, taetigkeit } = kontexteAusCheckAntworten(antworten);
   const ergebnis = evaluiereLinie(regeln, unternehmen, linie);
+
+  // Freigabe-Gate: Die Regeln werden (per Service-Role) unabhängig vom
+  // Prüfstatus geladen. Das Ergebnis wird nur gezeigt, wenn jede Regel, auf
+  // der es tatsächlich beruht (Herleitung), ausspielbaren Status hat
+  // (redaktion_geprueft oder cattwyk_freigegeben) – sonst der neutrale
+  // „in Kürze“-Zustand analog zum Coming-Soon-Modus.
+  const statusJeRegel = new Map(regeln.map((r) => [r.regel_id, r.review_status]));
+  const ergebnisAusspielbar = ergebnis.herleitung.every((h) =>
+    istAusspielbar(statusJeRegel.get(h.regel_id))
+  );
+  if (!ergebnisAusspielbar) {
+    return (
+      <>
+        <header className="mb-10 text-center">
+          <h1 className="font-plex text-display-sm tracking-[-0.04em] text-ink">
+            {t("titel")}
+          </h1>
+        </header>
+        <div className="mx-auto max-w-lg rounded border-2 border-primary bg-primary-tint p-8 text-center">
+          <h2 className="font-plex text-headline tracking-[-0.04em] text-ink">
+            {t("inKuerzeTitel")}
+          </h2>
+          <p className="mt-3 text-body text-ink-soft">{t("inKuerzeText")}</p>
+          <Link
+            href="/#vormerken"
+            className="mt-6 inline-flex items-center gap-2 rounded bg-primary px-6 py-3 text-body font-semibold text-white transition-colors hover:bg-primary-dark"
+          >
+            {t("comingSoonCta")} →
+          </Link>
+        </div>
+        <form action={checkNeuStarten} className="mt-8 text-center">
+          <button
+            type="submit"
+            className="text-body-sm font-medium text-ink-muted hover:text-ink"
+          >
+            {t("neuStarten")}
+          </button>
+        </form>
+      </>
+    );
+  }
   const rollen = ergebnis.rollen_set.rollen;
   const pflichten = ergebnis.rollen_set.pflichten;
   const { stufe, unklar } = ersteinschaetzung(ergebnis, taetigkeit);

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
+import { PruefstatusBadge } from "@/components/pruefstatus-badge";
 import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
 import { ArrowBackIcon } from "@/components/icons";
 import { GiltStatusIcon, KategorieIcon } from "@/components/kategorie-icons";
@@ -125,6 +126,10 @@ export default async function AnforderungDetailPage({
           <Badge variant="neutral">
             {t("rechtsstandChip", { datum: formatDate(anforderung.rechtsstand) })}
           </Badge>
+          <PruefstatusBadge
+            status={anforderung.review_status}
+            labels={tLabels.raw("pruefstatus")}
+          />
         </div>
         <h1 className="mt-6 text-display-sm text-ink">
           {anforderung.nr != null && (

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
+import type { PruefstatusLabels } from "@/components/pruefstatus-badge";
 import { PageHeader } from "@/components/page-header";
 import { getAnforderungen, getAuslegungen } from "@/lib/wissensbasis";
 import { WissenTabsNav } from "../tabs-server";
@@ -49,6 +50,7 @@ export default async function PraxisfragenPage() {
     kategorie: a.kategorie,
     quellen: a.quellen,
     verbindlichkeit: a.verbindlichkeit,
+    review_status: a.review_status,
     verwandte: (a.bezug_nr ?? [])
       .map((nr) => nachNr.get(nr))
       .filter((x): x is NonNullable<typeof x> => Boolean(x))
@@ -63,6 +65,7 @@ export default async function PraxisfragenPage() {
     alleChip: t("alleChip"),
     kategorien: t.raw("kategorien") as Record<string, string>,
     verbindlichkeit: tLabels.raw("verbindlichkeit") as Record<string, string>,
+    pruefstatus: tLabels.raw("pruefstatus") as PruefstatusLabels,
     fundstellen: t("fundstellen"),
     verwandte: t("verwandte"),
     keineTreffer: t("keineTreffer"),

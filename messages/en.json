@@ -332,6 +332,8 @@
     "comingSoonCta": "Notify me at launch"
   },
   "CheckErgebnis": {
+    "inKuerzeTitel": "Result available shortly",
+    "inKuerzeText": "The rules your assessment relies on are currently under editorial review. The result will be available here as soon as the review is complete.",
     "nichtVerfuegbar": "Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
     "zurueckZumCheck": "Zurück zum Check",
     "titel": "Ihre Ersteinschätzung",
@@ -740,6 +742,11 @@
     "verbindlichkeit": {
       "rechtsverbindlich": "Rechtsverbindlich",
       "unverbindliche_auslegung": "Unverbindliche Auslegung"
+    },
+    "pruefstatus": {
+      "cattwyk_freigegeben": "Legally reviewed",
+      "redaktion_geprueft": "Editorially reviewed, legal review pending",
+      "entwurf": "Draft – unreviewed"
     },
     "verpackungstypen": {
       "alle": "Alle Verpackungsarten",
