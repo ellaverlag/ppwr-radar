@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Redaktions- und Review-Material (Prüfpakete, Generator-Skripte), kein App-Code:
+    "content/**",
+    "design-reference/**",
   ]),
 ]);
 

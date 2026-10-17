@@ -173,6 +173,11 @@ export default async function LandingPage({
   const leistungen = t.raw("preise.leistungen") as string[];
   const heroRollen = t.raw("hero.karte.rollen") as string[];
   const heroFundstellen = t.raw("hero.karte.fundstellen") as string[];
+  const keSchritte = t.raw("keBand.schritte") as {
+    nr: string;
+    titel: string;
+    text: string;
+  }[];
 
   return (
     <div className={`${landingFontClasses} bg-canvas text-ink`}>
@@ -325,6 +330,41 @@ export default async function LandingPage({
           </span>
         </div>
       </div>
+
+      {/* Ergebnis-Band: Konformitätserklärung als Zielpunkt */}
+      <section id="ergebnis" className="border-b border-line py-16">
+        <div className="mx-auto w-full max-w-[1200px] px-6">
+          <SectionHead
+            eyebrow={t("keBand.eyebrow")}
+            titel={t("keBand.titel")}
+            text={t("keBand.text")}
+          />
+          <ol className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {keSchritte.map((schritt) => (
+              <li
+                key={schritt.nr}
+                className="rounded border border-line bg-canvas p-6"
+              >
+                <span className="font-mono text-mono-sm font-semibold text-primary">
+                  {schritt.nr}
+                </span>
+                <h3 className="mb-2 mt-1 font-plex text-body-lg font-bold tracking-[-0.03em]">
+                  {schritt.titel}
+                </h3>
+                <p className="text-body-sm text-ink-muted">{schritt.text}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded border border-line bg-surface px-6 py-4">
+            <p className="max-w-[70ch] text-body-sm text-ink-muted">
+              {t("keBand.hinweis")}
+            </p>
+            <Link href="/login?next=dashboard" className={`${BTN_PRIMARY} ${BTN_MD}`}>
+              {t("keBand.cta")}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Fünf Säulen */}
       <section id="leistungen" className="py-20">

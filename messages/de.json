@@ -75,18 +75,18 @@
       "rotationsPhrasen": [
         "klärt Ihre Rolle.",
         "zeigt Ihre Pflichten.",
-        "erstellt Ihre Dokumente.",
+        "entwirft Ihre Konformitätserklärung.",
         "ist Ihr Nachschlagewerk.",
         "beantwortet Ihre Fragen."
       ],
-      "text": "Ihr komplettes Compliance-System zur EU-Verpackungsverordnung: von der ersten Rollenklärung bis zum fertigen Dokument – verständlich, mit Fundstelle, immer auf Stand.",
+      "text": "Ihr Compliance-System zur EU-Verpackungsverordnung: von der Rollenklärung über Ihre Pflichten bis zum Entwurf Ihrer EU-Konformitätserklärung – verständlich, mit Fundstelle, immer auf Stand.",
       "ctaPrimaer": "Jetzt starten",
       "ctaSekundaer": "Kostenlos: Bin ich betroffen?",
-      "microcopy": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft",
+      "microcopy": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Jede Aussage mit Fundstelle und Prüfstatus · Juristische Plausibilisierung durch Cattwyk Rechtsanwaltsgesellschaft",
       "karte": {
         "ariaLabel": "Beispiel einer Rollen-Analyse in PPWR Radar",
         "kopf": "Ihre PPWR-Rolle",
-        "stand": "Stand 12.08.2026",
+        "stand": "Stand 17.10.2026",
         "produktlinieLabel": "Produktlinie",
         "produktlinie": "Feinkost im Glas",
         "rollen": [
@@ -137,7 +137,7 @@
         {
           "schritt": "Zum Nachschlagen",
           "titel": "Das große Nachschlagewerk",
-          "text": "Über 200 verifizierte Positionen: 40 Anforderungen in drei Erklärtiefen, 50 Praxisfragen aus der Branche, ein Glossar von A wie Abfüller bis Z wie Zweigniederlassung – durchsuchbar, mit Quelle und Link zum Originaltext.",
+          "text": "Über 200 verifizierte Positionen: 40 Anforderungen in drei Erklärtiefen, über 70 Praxisfragen aus der Branche, ein Glossar von A wie Abfüller bis Z wie Zweigniederlassung – durchsuchbar, mit Quelle und Link zum Originaltext.",
           "tag": "Anforderungen · Praxisfragen · Glossar"
         },
         {
@@ -245,7 +245,15 @@
         },
         {
           "frage": "Woher weiß ich, dass die Inhalte stimmen?",
-          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert, und der Assistent antwortet ausschließlich aus dieser geprüften Basis."
+          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Inhalte werden redaktionell gegen die Primärquellen geprüft und von der Cattwyk Rechtsanwaltsgesellschaft juristisch plausibilisiert; jeder Datensatz zeigt seinen Prüfstatus offen an. Der Assistent antwortet ausschließlich aus dieser Basis und sagt, wenn er etwas nicht weiß."
+        },
+        {
+          "frage": "Wo liegen meine Daten, und was macht die KI damit?",
+          "antwort": "Ihre Profil- und Dokumentdaten liegen in einer Datenbank in der EU (Irland) und werden auf Servern in der EU (Niederlande) verarbeitet. Für den Assistenten werden Ihre Frage und die dazu passenden Datensätze an einen KI-Anbieter übermittelt; nach dessen Vertragsbedingungen werden die Eingaben nicht zum Training von Modellen verwendet, die Übermittlung erfolgt auf Grundlage der EU-Standardvertragsklauseln. Firmenname und Anschrift werden dem Assistenten nicht mitgegeben. Sie können Ihr Konto samt aller Daten jederzeit selbst löschen."
+        },
+        {
+          "frage": "Wir haben hunderte Verpackungseinheiten und viele Lieferanten. Ist Radar dafür gedacht?",
+          "antwort": "PPWR Radar ist der Schritt davor und daneben: Es klärt, welche Rolle Sie haben, welche Pflichten gelten und wie die Konformitätserklärung aussehen muss, und erzeugt die Entwürfe je Produktlinie. Für die Massenverwaltung tausender Verpackungseinheiten mit Lieferantenportal und Nachweis-Upload gibt es spezialisierte Software; wir nennen Ihnen den passenden Weg, statt so zu tun, als könnten wir alles."
         },
         {
           "frage": "Was passiert, wenn sich die Rechtslage ändert?",
@@ -291,6 +299,30 @@
       "emailErfolg": "Vielen Dank – wir melden uns zum Start bei Ihnen.",
       "emailFehler": "Das hat leider nicht geklappt. Bitte prüfen Sie die Adresse und versuchen Sie es erneut.",
       "emailHinweis": "Nur eine E-Mail zum Start – keine Werbung, jederzeit gegenstandslos löschbar."
+    },
+    "keBand": {
+      "eyebrow": "Ihr Ergebnis",
+      "titel": "In 15 Minuten zum Entwurf Ihrer EU-Konformitätserklärung",
+      "text": "Die Konformitätserklärung nach Art. 39 und Anhang VIII PPWR ist das Dokument, das Behörden und Kunden seit dem 12. August 2026 sehen wollen. PPWR Radar führt Sie in drei Schritten dorthin.",
+      "schritte": [
+        {
+          "nr": "1",
+          "titel": "Profil anlegen",
+          "text": "Firma, Produktlinien, Verpackungsarten, Materialien, Lebensmittelkontakt – ohne Vorwissen, mit Erklärung an jeder Frage."
+        },
+        {
+          "nr": "2",
+          "titel": "Rolle und Pflichten sehen",
+          "text": "Das System leitet je Produktlinie her, ob Sie Erzeuger, Hersteller, Importeur oder Vertreiber sind, mit Begründung und Fundstelle, und zeigt, was daraus folgt."
+        },
+        {
+          "nr": "3",
+          "titel": "Entwurf erzeugen",
+          "text": "Konformitätserklärung, Gerüst der technischen Dokumentation, Pflichtenübersicht und Lieferantenanfragen als Word und PDF, vorbefüllt aus Ihrem Profil."
+        }
+      ],
+      "hinweis": "Die Erklärung unterschreiben Sie selbst und tragen die Verantwortung für ihre Richtigkeit. PPWR Radar bescheinigt keine Konformität, es liefert den geprüften Entwurf und die Begründung dazu.",
+      "cta": "Entwurf erstellen"
     }
   },
   "Login": {

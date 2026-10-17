@@ -75,18 +75,18 @@
       "rotationsPhrasen": [
         "klärt Ihre Rolle.",
         "zeigt Ihre Pflichten.",
-        "erstellt Ihre Dokumente.",
+        "drafts your declaration of conformity.",
         "ist Ihr Nachschlagewerk.",
         "beantwortet Ihre Fragen."
       ],
-      "text": "Ihr komplettes Compliance-System zur EU-Verpackungsverordnung: von der ersten Rollenklärung bis zum fertigen Dokument – verständlich, mit Fundstelle, immer auf Stand.",
+      "text": "Your compliance system for the EU Packaging Regulation: from clarifying your role and your obligations to a draft of your EU declaration of conformity – clear, with legal references, always up to date.",
       "ctaPrimaer": "Jetzt starten",
       "ctaSekundaer": "Kostenlos: Bin ich betroffen?",
-      "microcopy": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Juristisch verifiziert von Cattwyk Rechtsanwaltsgesellschaft",
+      "microcopy": "No data project, no quote request – register today, results in 15 minutes · Every statement with legal reference and review status · Legal plausibility review by Cattwyk Rechtsanwaltsgesellschaft",
       "karte": {
         "ariaLabel": "Beispiel einer Rollen-Analyse in PPWR Radar",
         "kopf": "Ihre PPWR-Rolle",
-        "stand": "Stand 12.08.2026",
+        "stand": "As of 17/10/2026",
         "produktlinieLabel": "Produktlinie",
         "produktlinie": "Feinkost im Glas",
         "rollen": [
@@ -245,7 +245,15 @@
         },
         {
           "frage": "Woher weiß ich, dass die Inhalte stimmen?",
-          "antwort": "Jede Aussage ist mit einer exakten Fundstelle in PPWR, VerpackDG oder dem Kommissions-Leitfaden belegt und trägt ein Rechtsstand-Datum. Die Wissensbasis wird von der Cattwyk Rechtsanwaltsgesellschaft juristisch verifiziert, und der Assistent antwortet ausschließlich aus dieser geprüften Basis."
+          "antwort": "Every statement is backed by an exact reference in the PPWR, the VerpackDG or the Commission guidance and carries a legal-status date. Content is editorially checked against the primary sources and reviewed for legal plausibility by Cattwyk Rechtsanwaltsgesellschaft; every record openly shows its review status. The assistant answers exclusively from this base and says so when it does not know."
+        },
+        {
+          "frage": "Where is my data stored, and what does the AI do with it?",
+          "antwort": "Your profile and document data are stored in a database in the EU (Ireland) and processed on servers in the EU (Netherlands). For the assistant, your question and the matching records are sent to an AI provider; under its contractual terms the input is not used to train models, and the transfer is based on the EU standard contractual clauses. Company name and address are not passed to the assistant. You can delete your account and all data yourself at any time."
+        },
+        {
+          "frage": "We have hundreds of packaging units and many suppliers. Is Radar built for that?",
+          "antwort": "PPWR Radar is the step before and alongside: it clarifies your role, the obligations that apply and what the declaration of conformity must look like, and generates the drafts per product line. For managing thousands of packaging units with supplier portals and evidence uploads there is specialised software; we point you to the right path instead of pretending we can do everything."
         },
         {
           "frage": "Was passiert, wenn sich die Rechtslage ändert?",
@@ -291,6 +299,30 @@
       "emailErfolg": "Thank you – we will notify you at launch.",
       "emailFehler": "That did not work. Please check the address and try again.",
       "emailHinweis": "Just one email at launch – no marketing."
+    },
+    "keBand": {
+      "eyebrow": "Your result",
+      "titel": "A draft of your EU declaration of conformity in 15 minutes",
+      "text": "The declaration of conformity under Art. 39 and Annex VIII PPWR is the document authorities and customers have been asking for since 12 August 2026. PPWR Radar takes you there in three steps.",
+      "schritte": [
+        {
+          "nr": "1",
+          "titel": "Create your profile",
+          "text": "Company, product lines, packaging types, materials, food contact – no prior knowledge needed, with an explanation on every question."
+        },
+        {
+          "nr": "2",
+          "titel": "See your role and obligations",
+          "text": "For each product line the system derives whether you are manufacturer, producer, importer or distributor, with reasoning and legal reference, and shows what follows."
+        },
+        {
+          "nr": "3",
+          "titel": "Generate the draft",
+          "text": "Declaration of conformity, technical documentation framework, overview of obligations and supplier requests as Word and PDF, pre-filled from your profile."
+        }
+      ],
+      "hinweis": "You sign the declaration yourself and remain responsible for its accuracy. PPWR Radar does not certify conformity; it delivers the reviewed draft and the reasoning behind it.",
+      "cta": "Create draft"
     }
   },
   "Login": {
