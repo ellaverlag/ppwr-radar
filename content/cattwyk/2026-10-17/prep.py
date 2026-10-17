@@ -149,8 +149,14 @@ tpl = []
 for t in R['templates']:
     tpl.append({'key': t['key'], 'titel': TNAME.get(t['key'], t['key']), 'version': t['version'], 'pins': pins(t['inhalt'])})
 
+hin = []
+for h in R.get('hinweise', []):
+    hin.append({'code': h['code'], 'titel': h['titel'], 'text': h['text'], 'key': h['bedingung_key'],
+                'fundstellen': '; '.join(h.get('fundstellen') or []), 'verweise': ', '.join(h.get('verweis_auslegungen') or []),
+                'flag': h.get('flag') or ''})
+
 out = {
-    'anf_s1': anf_s1, 'anf_s2': anf_s2, 'aus_s1': aus_s1, 'aus_neu': aus_neu, 'aus_pins': aus_pins,
+    'hin': hin, 'anf_s1': anf_s1, 'anf_s2': anf_s2, 'aus_s1': aus_s1, 'aus_neu': aus_neu, 'aus_pins': aus_pins,
     'glo_s1': glo_s1, 'glo_s2': glo_s2, 'def_s1': def_s1, 'def_s2': def_s2, 'reg_s1': reg_s1, 'reg_s2': reg_s2, 'tpl': tpl,
     'stats': {'anf': len(A), 'aus': len(U), 'glo': len(G), 'def': len(R['rollen_definitionen']), 'reg': len(R['rollen_regeln']), 'tpl': len(R['templates'])},
 }

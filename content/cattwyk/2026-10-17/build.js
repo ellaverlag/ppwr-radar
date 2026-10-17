@@ -135,9 +135,20 @@ function pinTabelle(rows) {
   return table(w, out);
 }
 
+function karteHinweis(h) {
+  return [
+    para([run(`${h.code}  `, { bold: true, size: 22, color: BLUE }), run(h.titel, { bold: true, size: 22 })], { before: 240, after: 40, keepNext: true, topBorder: true }),
+    small(`Vereinfachungs-Hinweis · wird dem Nutzer angezeigt, wenn Bedingung „${h.key}“ greift${h.verweise ? " · Verweise: " + h.verweise : ""}`),
+    label("Text (Entwurf):", h.text),
+    label("Fundstellen:", h.fundstellen),
+    new Paragraph({ spacing: { before: 60, after: 60 }, shading: { type: ShadingType.CLEAR, fill: "FFF7E0", color: "auto" }, children: [run("Offener Punkt für die Kanzlei: ", { bold: true, size: 19 }), run((h.flag || "").replace(/^\(neu 10\/2026\)\s*/, "") || "Freigabe des Hinweises.", { size: 19 })] }),
+    entscheidung(), ...anmerkung(),
+  ];
+}
+
 // ---------- build ----------
 const S = P.stats;
-const stufe2Anz = P.aus_neu.length + P.aus_pins.length + P.reg_s2.length + P.def_s2.length;
+const stufe2Anz = P.aus_neu.length + P.aus_pins.length + P.reg_s2.length + P.def_s2.length + P.hin.length;
 const pinsAnz = P.anf_s2.reduce((n, a) => n + a.pins.length, 0) + P.tpl.reduce((n, t) => n + t.pins.length, 0);
 const stufe1Anz = P.def_s1.length + P.reg_s1.length + P.anf_s1.length + P.aus_s1.length + P.glo_s1.length;
 
@@ -227,7 +238,11 @@ children.push(para("Die Rollen-Engine ist das sensibelste Modul: Aus diesen Rege
 P.reg_s2.forEach((r) => children.push(...karteRegel(r)));
 P.def_s2.forEach((d) => children.push(...karteDefinition(d)));
 
-children.push(h2(`B.3 Praxisfragen mit offenem Punkt aus früheren Paketen (${P.aus_pins.length})`));
+children.push(h2(`B.3 Vereinfachungs-Hinweise der Verpackungs-Ebene (${P.hin.length})`));
+children.push(para("Neu seit 17.10.2026: Das System bestimmt Rollen und Pflichten je Verpackung (Regeln D1–D5 in B.2) und zeigt dem Nutzer dazu Hinweise, wie er Pflichten durch Beschaffung oder Verpackungswahl vereinfachen kann, etwa Umschlag statt selbst angewendeter Folie oder Bezug beim deutschen Lieferanten. Jeder Hinweis trägt den festen Satz, dass es sich um einen Hinweis zur Vereinfachung und nicht um eine Empfehlung im Einzelfall handelt. Bitte prüfen: Ist die Aussage so tragfähig, und ist die Abgrenzung zur Rechtsberatung gewahrt?", { size: 19, after: 120 }));
+P.hin.forEach((h) => children.push(...karteHinweis(h)));
+
+children.push(h2(`B.4 Praxisfragen mit offenem Punkt aus früheren Paketen (${P.aus_pins.length})`));
 P.aus_pins.forEach((u, i) => children.push(...karteAuslegung(u, i)));
 
 // Teil C
