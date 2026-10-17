@@ -53,8 +53,23 @@ Wichtig: In Supabase unter **Auth → URL Configuration** muss die Site-URL bzw.
 
 Der gesamte Lesezugriff auf die Wissensbasis läuft über `src/lib/wissensbasis.ts` (Server-only). Zentrale Regel:
 
-- **Standard:** Session-Client des eingeloggten Nutzers, nur Inhalte mit `review_status = 'cattwyk_freigegeben'` und `ausspielen = true`. Die RLS-Policies erlauben Lesen nur für `authenticated` und erzwingen denselben Filter zusätzlich serverseitig; `anon` liest bewusst nichts.
-- **`PREVIEW_MODE=true`:** Service-Role-Client **ohne** diesen Filter – die App zeigt dann auch ungeprüfte Inhalte und blendet einen gelben Banner „Vorschau-Modus – ungeprüfte Inhalte" ein
+- **Standard:** Session-Client des eingeloggten Nutzers, nur Inhalte mit **ausspielbarem Prüfstatus** und `ausspielen = true`. Die RLS-Policies erlauben Lesen nur für `authenticated` und erzwingen denselben Filter zusätzlich serverseitig; `anon` liest bewusst nichts.
+- **`PREVIEW_MODE=true`:** Service-Role-Client **ohne** diesen Filter – die App zeigt dann auch Entwürfe und blendet einen gelben Banner „Vorschau-Modus – ungeprüfte Inhalte" ein
+
+### Prüfstatus und Zwischenstufe
+
+`review_status` kennt drei Stufen: `entwurf` → `redaktion_geprueft` → `cattwyk_freigegeben`.
+Seit Migration 017 sind **zwei** Stufen live ausspielbar (Entscheidung der Redaktion):
+
+| Status | Live sichtbar | Kennzeichnung in der App |
+| --- | --- | --- |
+| `cattwyk_freigegeben` | ja | „Juristisch plausibilisiert" (grüner Chip) |
+| `redaktion_geprueft` | ja – Zwischenstufe, bis die Kanzlei Cattwyk freigibt | „Redaktionell geprüft, juristische Prüfung läuft" (neutraler Chip) |
+| `entwurf` | nein (nur Preview-Modus) | „Entwurf – ungeprüft" (gelb) |
+
+Die ausspielbaren Status sind an genau einer Stelle definiert: `AUSSPIELBARE_STATUS` / `istAusspielbar()` in `src/lib/wissensbasis.ts`; alle Datenbankabfragen filtern mit `.in("review_status", AUSSPIELBARE_STATUS)`. Die RLS-Policies (Migration `017_v2_3_redaktion_geprueft_ausspielen.sql`) spiegeln dieselbe Liste – wer die Stufen ändert, muss beide Stellen anpassen.
+
+Für Nutzer bleibt der jeweilige Status sichtbar: `PruefstatusBadge` (`src/components/pruefstatus-badge.tsx`) erscheint an jeder Anforderungs-Detailseite, in der Praxisfragen-Liste, im Glossar und in der Dokument-Vorschau; erzeugte DOCX/PDF tragen den Vorlagenstatus in der Fußzeile. Der öffentliche Betroffenheits-Check zeigt sein Ergebnis nur, wenn alle Regeln der Herleitung ausspielbaren Status haben, sonst den Zustand „Ergebnis in Kürze verfügbar".
 
 Schema-bedingte Abweichungen: `rollen_definitionen` nutzt `aktiv` statt `ausspielen`; `wizard_fragen` hat keine Review-Spalten und wird immer vollständig gelesen.
 
@@ -66,7 +81,8 @@ SQL-Migrationsdateien liegen in `supabase/migrations/`. Sie werden manuell bzw. 
 
 Vorlagen sind Daten, kein Code: Die vier Generator-Master aus `content/templates/`
 werden nach `generator_templates` importiert (Single Source of Law – live liest der
-Renderer nur `cattwyk_freigegeben` + `aktiv`, im Preview-Modus auch Entwürfe).
+Renderer nur ausspielbare Status (`redaktion_geprueft`, `cattwyk_freigegeben`) +
+`aktiv`, im Preview-Modus auch Entwürfe).
 
 - **Import:** `npm run import:templates` (braucht `SUPABASE_SERVICE_ROLE_KEY`),
   alternativ der Admin-Button unter `/dokumente/neu`, solange keine Vorlagen
