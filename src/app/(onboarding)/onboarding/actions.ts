@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { leseAntwort, parseState, type WizardState } from "@/lib/onboarding";
 import { werteAusUndSpeichere } from "@/lib/rollen-service";
+import { berechneUndSpeichereVerpackungsErgebnisse } from "@/lib/verpackungen-service";
 import { createClient } from "@/lib/supabase/server";
 import { getWizardFragen } from "@/lib/wissensbasis";
 
@@ -179,6 +180,16 @@ export async function onboardingAbschliessen() {
   }
   if (engineFehler) {
     redirect("/onboarding?fehler=engine");
+  }
+
+  // Verpackungs-Ebene: vorhandene Verpackungen (Re-Onboarding) neu bewerten
+  try {
+    await berechneUndSpeichereVerpackungsErgebnisse(profil.id, state);
+  } catch (e) {
+    console.error(
+      "Verpackungs-Engine fehlgeschlagen:",
+      e instanceof Error ? e.message : e
+    );
   }
 
   // Abgeleitete Profilfelder + Abschluss-Flag

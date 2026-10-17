@@ -28,7 +28,8 @@
     "glossar": "Glossar – PPWR Radar",
     "anforderung": "Anforderung – PPWR Radar",
     "status": "Status-Analyse",
-    "verpackungen": "Meine Verpackungen – PPWR Radar"
+    "verpackungen": "Meine Verpackungen – PPWR Radar",
+    "verpackungDetail": "Verpackungen – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -528,7 +529,12 @@
     "statusAnsehen": "Status-Liste ansehen",
     "schritteAlleErledigt": "Aktuell kein offener Schritt bei den bereits geltenden Anforderungen – alles erledigt oder in Bearbeitung. Vormerkungen für später finden Sie in der Status-Analyse.",
     "schrittZurAnforderung": "Details ansehen",
-    "rollenVerwalten": "Verpackungen verwalten →"
+    "rollenVerwalten": "Verpackungen verwalten →",
+    "verpackungenTitel": "Verpackungen je Produktlinie",
+    "verpackungenZeile": "{anzahl, plural, one {# Verpackung angelegt} other {# Verpackungen angelegt}} · {ke} davon mit Konformitätserklärungspflicht · {lucid} mit LUCID-Pflicht",
+    "verpackungenLeer": "Legen Sie die Verpackungen Ihrer Produktlinie an, damit Radar je Verpackung sagt, ob Sie eine Konformitätserklärung oder eine LUCID-Meldung brauchen.",
+    "verpackungenAnlegen": "Verpackungen anlegen →",
+    "verpackungenAnsehen": "Verpackungen ansehen →"
   },
   "Wissen": {
     "titel": "Wissen",
@@ -686,7 +692,12 @@
     "loeschenBestaetigung": "Dokument {nr} endgültig löschen? Die Word- und PDF-Datei werden entfernt; die Nummer wird nicht neu vergeben.",
     "aktualisiertErfolg": "{nr} wurde neu erzeugt (Version {version}).",
     "geloeschtErfolg": "Dokument {nr} wurde gelöscht.",
-    "fehlerLoeschen": "Das Dokument konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    "fehlerLoeschen": "Das Dokument konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+    "schrittEinheit": "2b. Verpackung mit Erzeugerrolle wählen (optional)",
+    "einheitHinweis": "Nur Verpackungen, für die Radar die Erzeugerrolle ermittelt hat. Bezeichnung, Typ und Material des Dokuments kommen dann aus dieser Verpackung.",
+    "einheitKeine": "Für diese Produktlinie ist keine Verpackung mit Erzeugerrolle angelegt – das Dokument bezieht sich auf die Produktlinie.",
+    "einheitOhne": "Ohne Verpackungsbezug (Produktlinie)",
+    "einheitAnlegen": "Verpackungen anlegen →"
   },
   "Webinare": {
     "titel": "Webinare",
@@ -807,7 +818,8 @@
     },
     "entlastungen": {
       "lieferant_als_erzeuger": "Kleinstunternehmen-Ausnahme: Ihr Verpackungslieferant gilt als Erzeuger – Sie sind insoweit entlastet.",
-      "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus."
+      "kein_hersteller_export": "Exportmengen in Drittländer lösen keine EPR-Pflichten in Deutschland aus.",
+      "epr_beim_lieferanten": "Erzeuger und Hersteller dieser Verpackung ist Ihr Lieferant – Sie prüfen seine Registrierung."
     },
     "materialien": {
       "kunststoff": "Kunststoff",
@@ -815,6 +827,81 @@
       "metall": "Metall",
       "papier_karton": "Papier/Karton",
       "verbund": "Verbundmaterial"
+    },
+    "verpackung": {
+      "art": {
+        "verkauf": "Verkaufsverpackung",
+        "um": "Umverpackung",
+        "transport": "Transport-/Versandverpackung",
+        "ecommerce": "E-Commerce-Verpackung",
+        "service": "Serviceverpackung",
+        "primaerproduktion": "Primärproduktionsverpackung"
+      },
+      "artErklaerung": {
+        "verkauf": "Die Verpackung, in der das Produkt beim Endkunden ankommt – z. B. Glas, Flasche, die Folie um die einzelne Zeitschrift.",
+        "um": "Fasst mehrere Verkaufseinheiten – z. B. der Tray um 12 Joghurts. NICHT die Palette.",
+        "transport": "Schützt beim Transport zwischen Betrieben oder zum Kunden und wird vor dem Gebrauch entfernt – z. B. Palette, Umkarton, Versandumschlag.",
+        "ecommerce": "Der Versandkarton oder -umschlag beim Direktversand an Endkunden – z. B. der Karton einer Online-Bestellung.",
+        "service": "Wird erst beim Verkauf befüllt – z. B. Tüte an der Theke, Becher, Tragetasche.",
+        "primaerproduktion": "Verpackung für unverarbeitete Erzeugnisse der Primärproduktion – z. B. Steige, Sack, Netz."
+      },
+      "form": {
+        "formstabil": "Formstabil",
+        "flexibel": "Flexibel"
+      },
+      "formErklaerung": {
+        "formstabil": "Karton, Umschlag, Dose, Glas, Flasche – die Verpackung hat ihre Form, wenn Sie sie bekommen.",
+        "flexibel": "Folie, Beutel, Umreifung, Stretchfolie – die Verpackung entsteht erst beim Anwenden."
+      },
+      "bezug": {
+        "fertig_gekauft": "Fertig gekauft und unverändert verwendet",
+        "selbst_zusammengefuegt": "Selbst aus Teilen zusammengefügt",
+        "selbst_hergestellt": "Selbst hergestellt oder selbst angewendet",
+        "lohnfertigung": "Durch Dienstleister im Auftrag"
+      },
+      "bezugErklaerung": {
+        "fertig_gekauft": "Sie kaufen die Verpackung fertig vom Lieferanten und verändern sie nicht – z. B. ein fertiger Umschlag, ein Karton, ein Glas.",
+        "selbst_zusammengefuegt": "Sie richten Kartons auf und verkleben sie, schneiden zu oder kombinieren Teile zur Versandverpackung.",
+        "selbst_hergestellt": "Sie produzieren die Verpackung selbst oder wenden sie an – z. B. Folie einschweißen, Palette wickeln, Bündel umreifen.",
+        "lohnfertigung": "Druckerei, Konfektionär oder Lohnabfüller bringt die Verpackung in Ihrem Auftrag an oder befüllt sie."
+      },
+      "lieferantSitz": {
+        "DE": "Deutschland",
+        "EU": "Anderer EU-Staat",
+        "drittland": "Drittland"
+      },
+      "lieferantSitzHilfe": "Nur bei fertig gekaufter Verpackung oder Lohnfertigung – wo sitzt der Lieferant bzw. Dienstleister?",
+      "marke": {
+        "eigene": "Eigene Marke",
+        "fremde": "Fremde Marke",
+        "keine": "Keine Marke"
+      },
+      "markeHilfe": "Trägt die Verpackung selbst (nicht das Produkt) Ihren Namen oder Ihr Logo?",
+      "materialHilfe": "Freitext, z. B. Papier/Karton, PE-Folie, Glas. Erscheint in Dokumenten als Materialangabe.",
+      "lebensmittelkontakt": "Lebensmittelkontakt",
+      "mehrweg": "Mehrwegverpackung"
+    },
+    "verpackungPflichten": {
+      "konformitaetserklaerung": "EU-Konformitätserklärung",
+      "konformitaetsbewertung": "Konformitätsbewertung",
+      "technische_dokumentation": "Technische Dokumentation",
+      "erzeugerkennzeichnung": "Erzeugerkennzeichnung",
+      "stoffe_schwermetalle": "Stoffanforderungen / Schwermetalle",
+      "pfas": "PFAS-Beschränkung (Lebensmittelkontakt)",
+      "lucid_registrierung": "Registrierung im Verpackungsregister LUCID",
+      "systembeteiligung": "Systembeteiligung",
+      "datenmeldung": "Datenmeldung an die ZSVR",
+      "lieferant_pruefen": "Registrierung des Lieferanten prüfen",
+      "importeurspflichten": "Importeurspflichten (Art. 18)",
+      "leerraum_2030": "Leerraumquote (max. 50 %)",
+      "umweltaussagen": "Umweltaussagen auf der Verpackung",
+      "bevollmaechtigter_ehv": "Bevollmächtigter für die erweiterte Herstellerverantwortung",
+      "mehrweg_anforderungen": "Anforderungen an Mehrwegverpackung"
+    },
+    "gilt": {
+      "ja": "Gilt",
+      "nein": "Gilt nicht",
+      "unklar": "Offen"
     }
   },
   "Vorzimmer": {
@@ -918,7 +1005,8 @@
     "keineTreffer": "Nach aktuellem Stand trifft keine der ausgespielten Anforderungen auf Ihr Profil zu.",
     "fussnote": "Die Zuordnung folgt Ihren Rollen und Verpackungsarten aus dem Onboarding. Materialspezifische Anforderungen zeigen wir vorsorglich mit an, da Materialien im Profil nicht erfasst werden.",
     "filterHinweis": "Gefiltert: Offen – gilt bereits ({anzahl})",
-    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen"
+    "filterAlle": "Alle {gesamt} zutreffenden Anforderungen anzeigen",
+    "betrifftVerpackungen": "Betrifft {anzahl, plural, one {# Verpackung} other {# Verpackungen}} Ihrer Produktlinien."
   },
   "Verpackungen": {
     "titel": "Meine Verpackungen",
@@ -982,6 +1070,70 @@
     "kurznamePlaceholder": "Feinkost im Glas",
     "beschreibungLabel": "Beschreibung der Verpackung",
     "beschreibungHilfe": "Je mehr Sie beschreiben, desto besser können Assistant und Analyse helfen – Aufbau, Materialien, Beschichtung, Verschluss, Füllgut, typische Mengen. Kein Zeichenlimit.",
-    "beschreibungAnzeigen": "Beschreibung"
+    "beschreibungAnzeigen": "Beschreibung",
+    "einheitenLink": "{anzahl, plural, =0 {Verpackungen anlegen} one {# Verpackung} other {# Verpackungen}} →",
+    "detailTitel": "Verpackungen: {name}",
+    "detailBeschreibung": "Jede Verpackung dieser Produktlinie bekommt ihr eigenes Rollen-Set und ihre Pflichten-Matrix – Folie und Versandumschlag können unterschiedlich eingeordnet werden.",
+    "detailZurueck": "← Zu den Produktlinien",
+    "einheitenTitel": "Verpackungen dieser Produktlinie",
+    "einheitenLeer": "Noch keine Verpackungen angelegt. Legen Sie an, was diese Produktlinie umhüllt – z. B. Versandumschlag, Schrumpffolie, Karton.",
+    "einheitenSpalteBezeichnung": "Verpackung",
+    "einheitenSpalteMerkmale": "Art · Form · Bezug",
+    "einheitenSpalteRollen": "Rollen für diese Verpackung",
+    "einheitenSpalteAktionen": "Aktionen",
+    "einheitKeinErgebnis": "Noch kein Ergebnis",
+    "einheitStillgelegt": "Stillgelegt",
+    "einheitBearbeiten": "Bearbeiten",
+    "einheitStilllegen": "Stilllegen",
+    "einheitStilllegenBestaetigung": "Verpackung „{name}“ stilllegen? Sie fällt aus den Zählungen; ihr Ergebnis bleibt einsehbar.",
+    "einheitReaktivieren": "Reaktivieren",
+    "einheitErgebnisAnzeigen": "Ergebnis",
+    "formularTitelNeu": "Verpackung hinzufügen",
+    "formularTitelBearbeiten": "Verpackung bearbeiten: {name}",
+    "formularBezeichnung": "Bezeichnung",
+    "formularBezeichnungPlaceholder": "Versandumschlag C4",
+    "formularArt": "Art der Verpackung",
+    "formularForm": "Form",
+    "formularBezug": "Woher kommt die Verpackung?",
+    "formularLieferantSitz": "Sitz des Lieferanten / Dienstleisters",
+    "formularMarke": "Marke auf der Verpackung",
+    "formularMaterial": "Material",
+    "formularSpeichern": "Verpackung speichern",
+    "formularAbbrechen": "Abbrechen",
+    "formularHinweis": "Nach dem Speichern bestimmt Radar Rollen und Pflichten für genau diese Verpackung.",
+    "einheitFehler": {
+      "bezeichnung": "Bitte geben Sie eine Bezeichnung an.",
+      "auswahl": "Bitte prüfen Sie Art, Form, Bezug und Marke.",
+      "lieferant": "Bitte geben Sie an, wo der Lieferant bzw. Dienstleister sitzt.",
+      "speichern": "Die Verpackung konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+      "limit": "Maximal 30 Verpackungen je Produktlinie möglich."
+    },
+    "einheitGespeichert": "Verpackung „{name}“ wurde gespeichert und ausgewertet.",
+    "ergebnisseTitel": "Ergebnis je Verpackung",
+    "einheitVorbehalt": "Vorbehalt (!)",
+    "ergebnisVerpackungen": "Verpackungen dieser Linie anlegen →"
+  },
+  "VerpackungErgebnis": {
+    "verpackung": "Verpackung",
+    "rollenTitel": "Rollen für diese Verpackung",
+    "keineRolle": "Keine Rolle ermittelt",
+    "herleitungTitel": "Herleitung",
+    "regel": "Regel {id}",
+    "entzugPrefix": "→ Liegt beim Lieferanten: {rollen}",
+    "pflichtenTitel": "Pflichten-Matrix",
+    "spaltePflicht": "Pflicht",
+    "spalteGilt": "Gilt für diese Verpackung",
+    "spalteWarum": "Warum",
+    "spalteMehr": "Mehr",
+    "mehrLink": "Anforderung →",
+    "hinweiseTitel": "Ideen zur Vereinfachung",
+    "hinweisSatz": "Hinweis zur Vereinfachung, keine Empfehlung für Ihren Einzelfall.",
+    "hinweisVerweise": "Praxisfragen:",
+    "hinweiseLeer": "Für diese Verpackung liegen derzeit keine freigegebenen Hinweise vor.",
+    "unklarTitel": "Rolle hängt vom Vertrag mit dem Dienstleister ab",
+    "unklarText": "Bei Lohnfertigung entscheidet die Vertragsgestaltung, wer Erzeuger und Hersteller dieser Verpackung ist. Radar gibt hier keine Rolle vor. Welche Punkte im Vertrag geklärt sein müssen, zeigen die Praxisfragen A01 und A02.",
+    "unklarLink": "Praxisfragen A01 / A02 →",
+    "vorbehalt": "Vorbehaltlich juristischer Verifikation",
+    "fussZeile": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung"
   }
 }

@@ -15,6 +15,7 @@ import {
   werteLinieAusUndSpeichere,
 } from "@/lib/rollen-service";
 import { createClient } from "@/lib/supabase/server";
+import { berechneUndSpeichereVerpackungsErgebnisse } from "@/lib/verpackungen-service";
 import { getWizardFragen } from "@/lib/wissensbasis";
 import { erforderePaket } from "@/lib/zugang";
 
@@ -283,6 +284,17 @@ export async function linieAbschliessen(formData: FormData) {
       e instanceof Error ? e.message : e
     );
     redirect(`/verpackungen/wizard?linie=${linie}&fehler=engine`);
+  }
+
+  // Verpackungs-Ebene: Ergebnisse je Verpackung dieser Linie neu berechnen
+  // (der Linien-Kontext ist Teil jeder Verpackungs-Herleitung).
+  try {
+    await berechneUndSpeichereVerpackungsErgebnisse(profil.id, state, verpackungId);
+  } catch (e) {
+    console.error(
+      "Verpackungs-Engine fehlgeschlagen:",
+      e instanceof Error ? e.message : e
+    );
   }
 
   // Ändert sich das Rollen-Set, tragen bestehende Dokumente der Linie das

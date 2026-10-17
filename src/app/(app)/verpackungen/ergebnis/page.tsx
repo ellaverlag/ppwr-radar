@@ -34,6 +34,13 @@ export default async function VerpackungsErgebnisPage({
     .maybeSingle();
   if (!profil) redirect("/verpackungen");
 
+  const { data: linie } = await supabase
+    .from("profil_verpackungen")
+    .select("id")
+    .eq("profil_id", profil.id)
+    .eq("bezeichnung", name)
+    .maybeSingle();
+
   const { data: ergebnis } = await supabase
     .from("rollen_ergebnisse")
     .select("produktlinie, rollen_set, herleitung")
@@ -83,6 +90,14 @@ export default async function VerpackungsErgebnisPage({
         >
           {t("ergebnisZurUebersicht")}
         </Link>
+        {linie && (
+          <Link
+            href={`/verpackungen/${linie.id as string}`}
+            className="text-body-sm font-medium text-legal hover:underline"
+          >
+            {t("ergebnisVerpackungen")}
+          </Link>
+        )}
         <Link
           href="/dokumente/neu"
           className="text-body-sm font-medium text-legal hover:underline"

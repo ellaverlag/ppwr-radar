@@ -18,6 +18,10 @@ import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { anforderungUrl } from "@/lib/wissen-links";
 import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
 import { createClient } from "@/lib/supabase/server";
+import {
+  ladeVerpackungsUebersicht,
+  type VerpackungsUebersicht,
+} from "@/lib/verpackungen-service";
 import { pruefeZugang } from "@/lib/zugang";
 import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
 import { Vorzimmer } from "./vorzimmer";
@@ -77,6 +81,12 @@ export default async function DashboardPage({
   // wird sie im „Dokument erstellen“-Link vorgewählt (sonst wählt der
   // Nutzer im Generator selbst).
   let eindeutigeVerpackungId: string | null = null;
+  // Verpackungs-Ebene: aktive Linien mit Zählung ihrer Verpackungen
+  let linienMitVerpackungen: {
+    id: string;
+    bezeichnung: string;
+    uebersicht: VerpackungsUebersicht | null;
+  }[] = [];
   if (profil?.onboarding_abgeschlossen) {
     // Rollen-Karte zeigt alle AKTIVEN Linien (aktuelle Ergebnisse);
     // stillgelegte Linien fallen heraus.
@@ -100,6 +110,14 @@ export default async function DashboardPage({
     ergebnisse = ((data ?? []) as ErgebnisZeile[]).filter((zeile) =>
       aktiveNamen.has(zeile.produktlinie)
     );
+    const uebersicht = await ladeVerpackungsUebersicht(profil.id).catch(
+      () => new Map<string, VerpackungsUebersicht>()
+    );
+    linienMitVerpackungen = aktive.map((zeile) => ({
+      id: zeile.id as string,
+      bezeichnung: zeile.bezeichnung as string,
+      uebersicht: uebersicht.get(zeile.id as string) ?? null,
+    }));
   }
   const onboardingFertig = Boolean(profil?.onboarding_abgeschlossen);
   const analyse = onboardingFertig ? await ladeStatusAnalyse() : null;
@@ -445,6 +463,50 @@ export default async function DashboardPage({
               </ol>
             )
           ) : null}
+          {linienMitVerpackungen.length > 0 && (
+            <div className="mt-8 border-t border-line-strong pt-6">
+              <h3 className="text-label uppercase text-ink-muted">
+                {t("verpackungenTitel")}
+              </h3>
+              <ul className="mt-3 space-y-3">
+                {linienMitVerpackungen.map((linie) => (
+                  <li key={linie.id} className="text-body-sm">
+                    <span className="font-bold text-ink">{linie.bezeichnung}</span>
+                    {linie.uebersicht ? (
+                      <>
+                        <span className="text-ink-muted">
+                          {" · "}
+                          {t("verpackungenZeile", {
+                            anzahl: linie.uebersicht.anzahl,
+                            ke: linie.uebersicht.mitKonformitaetserklaerung,
+                            lucid: linie.uebersicht.mitLucid,
+                          })}
+                        </span>{" "}
+                        <Link
+                          href={`/verpackungen/${linie.id}`}
+                          className="font-medium text-legal hover:underline"
+                        >
+                          {t("verpackungenAnsehen")}
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <span className="block text-ink-muted">
+                          {t("verpackungenLeer")}
+                        </span>
+                        <Link
+                          href={`/verpackungen/${linie.id}`}
+                          className="font-medium text-legal hover:underline"
+                        >
+                          {t("verpackungenAnlegen")}
+                        </Link>
+                      </>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {analyse && analyse.zahlen.gesamt > 0 && analyse.zahlen.kritisch > 0 && (
             <Link
               href="/dashboard/status?filter=offen"

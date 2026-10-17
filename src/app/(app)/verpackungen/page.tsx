@@ -9,6 +9,7 @@ import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { OPTION_KEYS, parseOptionen, parseState } from "@/lib/onboarding";
 import type { RollenSet } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
+import { ladeAlleVerpackungen } from "@/lib/verpackungen-service";
 import { getWizardFragen } from "@/lib/wissensbasis";
 import { erforderePaket } from "@/lib/zugang";
 import {
@@ -97,6 +98,16 @@ export default async function VerpackungenPage({
     ]);
 
   const verpackungen = (zeilen ?? []) as VerpackungZeile[];
+
+  // Verpackungs-Ebene: Anzahl aktiver Verpackungen je Produktlinie
+  const einheitenJeLinie = new Map<string, number>();
+  for (const einheit of await ladeAlleVerpackungen(profil.id).catch(() => [])) {
+    if (einheit.status !== "aktiv") continue;
+    einheitenJeLinie.set(
+      einheit.produktlinie_id,
+      (einheitenJeLinie.get(einheit.produktlinie_id) ?? 0) + 1
+    );
+  }
 
   // Anzeige-Labels der Verpackungsarten aus der F05-Frage (kein zweites Vokabular)
   const f05 = fragen.find((f) => f.frage_id === "F05");
@@ -268,6 +279,14 @@ export default async function VerpackungenPage({
                         })}
                       </p>
                     )}
+                    <Link
+                      href={`/verpackungen/${zeile.id}`}
+                      className="mt-2 inline-block text-body-sm font-medium text-legal hover:underline"
+                    >
+                      {t("einheitenLink", {
+                        anzahl: einheitenJeLinie.get(zeile.id) ?? 0,
+                      })}
+                    </Link>
                   </div>
                   <div className="flex flex-wrap items-center gap-1.5 md:col-span-3">
                     {rollenSet ? (

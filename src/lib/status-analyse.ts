@@ -1,5 +1,5 @@
 import { parseState, type Antwort } from "@/lib/onboarding";
-import type { RollenSet } from "@/lib/rollen-engine";
+import type { PflichtEintrag, RollenSet } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
 import { getAnforderungen, type Anforderung } from "@/lib/wissensbasis";
 
@@ -69,6 +69,12 @@ export interface ZutreffendeAnforderung {
   grund: ZutreffenGrund;
   status: Bearbeitungsstatus;
   notiz: string | null;
+  /**
+   * Verpackungs-Ebene: Anzahl aktiver Verpackungen, in deren Pflichten-Matrix
+   * diese Anforderung mit gilt = ja steht; null, wenn keine Verpackungen
+   * angelegt sind (dann keine Anreicherung).
+   */
+  betrifftVerpackungen: number | null;
 }
 
 export interface StatusAnalyse {
@@ -212,6 +218,7 @@ export async function ladeStatusAnalyse(): Promise<StatusAnalyse | null> {
     { data: statusZeilen },
     { data: verpackungen },
     anforderungen,
+    { data: einheitErgebnisse },
   ] = await Promise.all([
     supabase
       .from("rollen_ergebnisse")
@@ -227,7 +234,26 @@ export async function ladeStatusAnalyse(): Promise<StatusAnalyse | null> {
       .select("bezeichnung, status")
       .eq("profil_id", profil.id),
     getAnforderungen(),
+    // Verpackungs-Ebene: aktuelle Ergebnisse aktiver Verpackungen (Own-Row-RLS)
+    supabase
+      .from("verpackung_ergebnisse")
+      .select("pflichten, verpackungen!inner(status)")
+      .eq("profil_id", profil.id)
+      .eq("aktuell", true)
+      .eq("verpackungen.status", "aktiv"),
   ]);
+
+  // Anreicherung „betrifft n Verpackungen“: Treffer je Anforderungs-Nr.
+  const verpackungenJeNr = new Map<number, number>();
+  for (const zeile of einheitErgebnisse ?? []) {
+    const pflichten = zeile.pflichten as PflichtEintrag[] | null;
+    for (const p of pflichten ?? []) {
+      if (p.gilt === "ja" && p.anforderung_nr != null) {
+        verpackungenJeNr.set(p.anforderung_nr, (verpackungenJeNr.get(p.anforderung_nr) ?? 0) + 1);
+      }
+    }
+  }
+  const hatVerpackungen = (einheitErgebnisse ?? []).length > 0;
 
   // Nur aktive Linien speisen die Analyse; stillgelegte fallen heraus.
   const aktiveNamen = new Set(
@@ -265,6 +291,9 @@ export async function ladeStatusAnalyse(): Promise<StatusAnalyse | null> {
       grund,
       status: gespeichert?.status ?? "offen",
       notiz: gespeichert?.notiz ?? null,
+      betrifftVerpackungen: hatVerpackungen
+        ? verpackungenJeNr.get(anforderung.nr) ?? 0
+        : null,
     });
   }
   zutreffend.sort(sortiereNachDringlichkeit);

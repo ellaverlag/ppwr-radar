@@ -8,7 +8,8 @@
  * Ergebnisse übernimmt lib/rollen-service.ts.
  */
 
-export const ENGINE_VERSION = "v0.91";
+/** v0.91 (Rollen-Engine A–C, Z1) + Verpackungsregeln D1–D5 (Verpackungs-Ebene). */
+export const ENGINE_VERSION = "v0.92";
 
 // ---------------------------------------------------------------------------
 // Eingaben
@@ -72,6 +73,52 @@ export interface RollenSet {
 export interface LinienErgebnis {
   produktlinie: string;
   rollen_set: RollenSet;
+  herleitung: HerleitungsEintrag[];
+}
+
+// ---------------------------------------------------------------------------
+// Verpackungs-Ebene (v2.4): eine Produktlinie hat 0..n Verpackungen, je
+// Verpackung ein eigenes Rollen-Set (Regeln A–C auf dem abgeleiteten
+// Linien-Kontext + Regeln D1–D5) und eine Pflichten-Matrix.
+// ---------------------------------------------------------------------------
+
+export type VerpackungArt =
+  | "verkauf"
+  | "um"
+  | "transport"
+  | "ecommerce"
+  | "service"
+  | "primaerproduktion";
+
+export interface VerpackungKontext {
+  bezeichnung: string;
+  art: VerpackungArt;
+  form: "formstabil" | "flexibel";
+  bezug:
+    | "fertig_gekauft"
+    | "selbst_zusammengefuegt"
+    | "selbst_hergestellt"
+    | "lohnfertigung";
+  lieferantSitz: "DE" | "EU" | "drittland" | null;
+  marke: "eigene" | "fremde" | "keine";
+  lebensmittelkontakt: boolean;
+  mehrweg: boolean;
+}
+
+export interface PflichtEintrag {
+  key: string;
+  /** Deutsches Anzeige-Label (Fallback; die UI löst Labels.verpackungPflichten.* auf). */
+  label: string;
+  gilt: "ja" | "nein" | "unklar";
+  anforderung_nr: number | null;
+  grund: string;
+}
+
+export interface VerpackungErgebnis {
+  bezeichnung: string;
+  rollen_set: RollenSet;
+  pflichten: PflichtEintrag[];
+  hinweisKeys: string[];
   herleitung: HerleitungsEintrag[];
 }
 
@@ -298,11 +345,23 @@ const REGELN: Record<string, { wenn: (ctx: Ctx) => boolean; dann: Wirkung }> = {
 // Engine
 // ---------------------------------------------------------------------------
 
-export function evaluiereLinie(
+interface Lauf {
+  ctx: Ctx;
+  herleitung: HerleitungsEintrag[];
+  sortiert: RegelRow[];
+  anwenden: (regel: RegelRow) => void;
+}
+
+function istVorbehalt(regel: RegelRow): boolean {
+  return regel.flag === "!" && regel.review_status !== "cattwyk_freigegeben";
+}
+
+/** Gemeinsamer Regel-Lauf (A–C) für Linie und abgeleiteten Verpackungs-Kontext. */
+function starteLauf(
   regeln: RegelRow[],
   unternehmen: UnternehmenKontext,
   linie: LinienKontext
-): LinienErgebnis {
+): Lauf {
   const ctx: Ctx = {
     u: unternehmen,
     l: linie,
@@ -338,7 +397,7 @@ export function evaluiereLinie(
       erlaeuterung: regel.erlaeuterung,
       fundstelle_primaer: regel.fundstelle_primaer,
       fundstelle_sekundaer: regel.fundstelle_sekundaer,
-      vorbehalt: regel.flag === "!" && regel.review_status !== "cattwyk_freigegeben",
+      vorbehalt: istVorbehalt(regel),
     });
   };
 
@@ -350,8 +409,15 @@ export function evaluiereLinie(
     .filter((r) => ["A5", "B6", "C6"].includes(r.regel_id))
     .forEach(anwenden);
 
-  // Normalisierung: Vertreiber ist per Definition (Art. 3 Abs. 1 Nr. 18)
-  // ausgeschlossen, sobald Erzeuger- oder Importeur-Rolle vorliegt.
+  normalisiereVertreiber(ctx, herleitung);
+  return { ctx, herleitung, sortiert, anwenden };
+}
+
+/**
+ * Normalisierung: Vertreiber ist per Definition (Art. 3 Abs. 1 Nr. 18)
+ * ausgeschlossen, sobald Erzeuger- oder Importeur-Rolle vorliegt.
+ */
+function normalisiereVertreiber(ctx: Ctx, herleitung: HerleitungsEintrag[]) {
   if (
     ctx.rollen.has("vertreiber") &&
     (ctx.rollen.has("erzeuger") || ctx.rollen.has("importeur"))
@@ -361,6 +427,14 @@ export function evaluiereLinie(
     if (idx >= 0) herleitung.splice(idx, 1);
     ctx.gefeuert.delete("C2");
   }
+}
+
+export function evaluiereLinie(
+  regeln: RegelRow[],
+  unternehmen: UnternehmenKontext,
+  linie: LinienKontext
+): LinienErgebnis {
+  const { ctx, herleitung } = starteLauf(regeln, unternehmen, linie);
 
   const unklar = linie.ersteBereitstellung === "unklar";
   const vorbehalt = herleitung.some((h) => h.vorbehalt);
@@ -374,6 +448,468 @@ export function evaluiereLinie(
       unklar,
       vorbehalt,
     },
+    herleitung,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Verpackungs-Ebene
+// ---------------------------------------------------------------------------
+
+const D1_ARTEN: VerpackungArt[] = [
+  "transport",
+  "ecommerce",
+  "service",
+  "primaerproduktion",
+];
+const D2_ARTEN: VerpackungArt[] = ["transport", "ecommerce"];
+
+/**
+ * Aus Linie + Verpackung den Linien-Kontext ableiten, auf dem die Regeln
+ * A–C je Verpackung laufen. Die Verpackung präzisiert Art, Tätigkeit,
+ * Marke, Lieferantensitz und Erst-Bereitstellung; alles Übrige (Vertriebs-
+ * weg, Endabnehmer, Dienstleistungen) kommt aus der Linie.
+ */
+export function leiteLinienKontextAb(
+  linie: LinienKontext,
+  v: VerpackungKontext
+): LinienKontext {
+  // Leere Verpackung (Transport/E-Commerce/Service/Primärproduktion):
+  // Hersteller-Anker ist die Erst-Bereitstellung der LEEREN Verpackung
+  // (Nr. 15 lit. a) – fertig gekauft in DE liegt sie beim Lieferanten.
+  // Verkaufs-/Umverpackung: wer befüllt/versiegelt und erstmals bereitstellt,
+  // ist Erzeuger (A1) und Hersteller (B2) – auch bei fertig gekauften
+  // Gläsern, Flaschen, Faltschachteln.
+  const leereArt = D1_ARTEN.includes(v.art);
+
+  const taetigkeit = linie.taetigkeit.filter((t) => {
+    // Befüllen betrifft nur Verkaufs-/Umverpackung.
+    if (t === "befuellt_versiegelt") return !leereArt;
+    // Physische Herstellung ergibt sich je Verpackung aus dem Bezug.
+    if (t === "stellt_verpackung_physisch_her") return false;
+    return true;
+  });
+  if (v.bezug === "selbst_hergestellt") {
+    taetigkeit.push("stellt_verpackung_physisch_her");
+  }
+
+  let ersteBereitstellung: LinienKontext["ersteBereitstellung"];
+  switch (v.bezug) {
+    case "fertig_gekauft":
+      if (!leereArt) {
+        ersteBereitstellung = "ja";
+      } else {
+        ersteBereitstellung =
+          v.lieferantSitz === "DE"
+            ? "vorgelagert"
+            : v.lieferantSitz == null
+              ? linie.ersteBereitstellung
+              : "ja";
+      }
+      break;
+    case "lohnfertigung":
+      ersteBereitstellung = "unklar";
+      break;
+    default:
+      ersteBereitstellung = "ja";
+  }
+
+  return {
+    ...linie,
+    verpackungsart: [v.art],
+    taetigkeit,
+    marke: v.marke,
+    lieferantSitz: v.lieferantSitz,
+    ersteBereitstellung,
+    lebensmittelkontakt: v.lebensmittelkontakt,
+  };
+}
+
+interface VCtx extends Ctx {
+  v: VerpackungKontext;
+}
+
+/**
+ * Regeln D1–D5 (Block „verpackung“). Texte/Fundstellen kommen aus
+ * rollen_regeln; hier stehen nur die typisierten WENN-Bedingungen und die
+ * Wirkung. `entzug` dokumentiert Rollen, die für DIESE Verpackung beim
+ * Lieferanten liegen (D1) – die einzige Stelle, an der die Engine eine
+ * zuvor vergebene Rolle wieder nimmt.
+ */
+const D_REGELN: Record<
+  string,
+  {
+    wenn: (ctx: VCtx) => boolean;
+    dann: Wirkung & { entzug?: string[]; unklar?: boolean; vorbehaltImmer?: boolean };
+  }
+> = {
+  // Fertig bezogene formstabile Transport-/E-Commerce-/Service-/Primär-
+  // produktionsverpackung eines DE-Lieferanten: Erzeuger und Hersteller ist
+  // der Lieferant. Auf diese Arten beschränkt (D1_ARTEN) – nie Verkaufs-/
+  // Umverpackung. Die DB-WENN-Bedingung enthält seit 17.10.2026 auch
+  // „UND verpackung.marke != eigene“ (sonst A2/A5) – hier identisch.
+  D1: {
+    wenn: (ctx) =>
+      D1_ARTEN.includes(ctx.v.art) &&
+      ctx.v.form === "formstabil" &&
+      ctx.v.bezug === "fertig_gekauft" &&
+      ctx.v.lieferantSitz === "DE" &&
+      ctx.u.sitz === "DE" &&
+      ctx.v.marke !== "eigene",
+    dann: {
+      entlastungen: ["epr_beim_lieferanten"],
+      rollen: ["vertreiber"],
+      entzug: ["hersteller", "erzeuger"],
+    },
+  },
+  // Flexible Verpackung, selbst angewendet (Folie, Umreifung)
+  D2: {
+    wenn: (ctx) =>
+      D2_ARTEN.includes(ctx.v.art) &&
+      ctx.v.form === "flexibel" &&
+      (ctx.v.bezug === "selbst_hergestellt" ||
+        ctx.v.bezug === "selbst_zusammengefuegt") &&
+      ctx.u.sitz === "DE",
+    dann: { rollen: ["erzeuger", "hersteller"] },
+  },
+  // Formstabile Versandverpackung aus Teilen zusammengefügt – stets Vorbehalt
+  D3: {
+    wenn: (ctx) =>
+      D2_ARTEN.includes(ctx.v.art) &&
+      ctx.v.form === "formstabil" &&
+      ctx.v.bezug === "selbst_zusammengefuegt" &&
+      ctx.u.sitz === "DE",
+    dann: { rollen: ["erzeuger", "hersteller"], vorbehaltImmer: true },
+  },
+  // Leere Verpackung aus EU/Drittland bezogen, erstmals in DE bereitgestellt
+  D4: {
+    wenn: (ctx) =>
+      D1_ARTEN.includes(ctx.v.art) &&
+      ctx.v.bezug === "fertig_gekauft" &&
+      (ctx.v.lieferantSitz === "EU" || ctx.v.lieferantSitz === "drittland") &&
+      ctx.u.sitz === "DE",
+    dann: { rollen: ["hersteller"] },
+  },
+  // Lohnfertigung: Rollen hängen vom Vertrag ab – keine Rolle, unklar
+  D5: {
+    wenn: (ctx) => ctx.v.bezug === "lohnfertigung",
+    dann: { unklar: true },
+  },
+};
+
+/** Pflichten-Matrix je Verpackung. Labels/Gründe bewusst deutsch (wie Dokumente). */
+export function bauePflichtenMatrix(
+  rollen: Set<string>,
+  pflichtenSet: Set<string>,
+  v: VerpackungKontext,
+  linie: LinienKontext,
+  unklar: boolean
+): PflichtEintrag[] {
+  const erzeuger = rollen.has("erzeuger");
+  const hersteller = rollen.has("hersteller");
+  const importeur = rollen.has("importeur");
+  const vertreiber = rollen.has("vertreiber");
+  const anEndkunden =
+    hat(linie.taetigkeit, "liefert_an_endabnehmer") ||
+    hat(linie.vertriebsweg, "online_endkunden_DE", "online_endkunden_EU");
+
+  const rollenabhaengig = (
+    key: string,
+    label: string,
+    nr: number,
+    gilt: "ja" | "nein",
+    grundJa: string,
+    grundNein: string
+  ): PflichtEintrag => ({
+    key,
+    label,
+    anforderung_nr: nr,
+    gilt: unklar ? "unklar" : gilt,
+    grund: unklar
+      ? "Rolle hängt vom Vertrag mit dem Dienstleister ab."
+      : gilt === "ja"
+        ? grundJa
+        : grundNein,
+  });
+
+  const systembeteiligungArten: VerpackungArt[] = [
+    "verkauf",
+    "um",
+    "ecommerce",
+    "service",
+    "transport",
+  ];
+  let systembeteiligung: PflichtEintrag;
+  if (unklar) {
+    systembeteiligung = rollenabhaengig(
+      "systembeteiligung",
+      "Systembeteiligung",
+      32,
+      "nein",
+      "",
+      ""
+    );
+  } else if (!hersteller || !systembeteiligungArten.includes(v.art)) {
+    systembeteiligung = {
+      key: "systembeteiligung",
+      label: "Systembeteiligung",
+      anforderung_nr: 32,
+      gilt: "nein",
+      grund: hersteller
+        ? "Verpackungsart ohne Systembeteiligungspflicht."
+        : "Keine Herstellerrolle für diese Verpackung.",
+    };
+  } else if (v.art === "transport") {
+    systembeteiligung = {
+      key: "systembeteiligung",
+      label: "Systembeteiligung",
+      anforderung_nr: 32,
+      gilt: anEndkunden ? "ja" : "unklar",
+      grund: anEndkunden
+        ? "Transportverpackung, die beim Versand an Endkunden anfällt, ist systembeteiligungspflichtig (ZSVR-Katalog)."
+        : "Transportverpackung ist nur systembeteiligungspflichtig, wenn sie typischerweise beim privaten Endverbraucher anfällt (ZSVR-Katalog prüfen).",
+    };
+  } else {
+    systembeteiligung = {
+      key: "systembeteiligung",
+      label: "Systembeteiligung",
+      anforderung_nr: 32,
+      gilt: "ja",
+      grund: "Herstellerrolle für systembeteiligungspflichtige Verpackung.",
+    };
+  }
+
+  return [
+    rollenabhaengig(
+      "konformitaetserklaerung",
+      "EU-Konformitätserklärung",
+      6,
+      erzeuger ? "ja" : "nein",
+      "Erzeugerrolle für diese Verpackung.",
+      "Keine Erzeugerrolle – die Erklärung stellt der Erzeuger der Verpackung aus."
+    ),
+    rollenabhaengig(
+      "konformitaetsbewertung",
+      "Konformitätsbewertung",
+      4,
+      erzeuger ? "ja" : "nein",
+      "Erzeugerrolle für diese Verpackung.",
+      "Keine Erzeugerrolle für diese Verpackung."
+    ),
+    rollenabhaengig(
+      "technische_dokumentation",
+      "Technische Dokumentation",
+      5,
+      erzeuger ? "ja" : "nein",
+      "Erzeugerrolle für diese Verpackung.",
+      "Keine Erzeugerrolle für diese Verpackung."
+    ),
+    rollenabhaengig(
+      "erzeugerkennzeichnung",
+      "Erzeugerkennzeichnung",
+      7,
+      erzeuger ? "ja" : "nein",
+      "Erzeugerrolle für diese Verpackung.",
+      "Keine Erzeugerrolle für diese Verpackung."
+    ),
+    {
+      key: "stoffe_schwermetalle",
+      label: "Stoffanforderungen / Schwermetalle",
+      anforderung_nr: 1,
+      gilt: "ja",
+      grund: unklar
+        ? "Gilt für jede Verpackung; Nachweis je nach Rolle selbst führen oder vom Lieferanten einholen."
+        : erzeuger
+          ? "Erzeugerrolle: Einhaltung nachweisen (Konformitätsbewertung)."
+          : "Nachweis vom Lieferanten einholen.",
+    },
+    {
+      key: "pfas",
+      label: "PFAS-Beschränkung (Lebensmittelkontakt)",
+      anforderung_nr: 2,
+      gilt: v.lebensmittelkontakt ? "ja" : "nein",
+      grund: v.lebensmittelkontakt
+        ? "Verpackung mit Lebensmittelkontakt."
+        : "Kein Lebensmittelkontakt angegeben.",
+    },
+    rollenabhaengig(
+      "lucid_registrierung",
+      "Registrierung im Verpackungsregister LUCID",
+      31,
+      hersteller ? "ja" : "nein",
+      "Herstellerrolle für diese Verpackung.",
+      "Keine Herstellerrolle für diese Verpackung."
+    ),
+    systembeteiligung,
+    rollenabhaengig(
+      "datenmeldung",
+      "Datenmeldung an die ZSVR",
+      33,
+      hersteller ? "ja" : "nein",
+      "Herstellerrolle für diese Verpackung.",
+      "Keine Herstellerrolle für diese Verpackung."
+    ),
+    rollenabhaengig(
+      "lieferant_pruefen",
+      "Registrierung des Lieferanten prüfen",
+      38,
+      vertreiber && !hersteller ? "ja" : "nein",
+      "Vertreiberrolle: Hersteller dieser Verpackung ist der Lieferant.",
+      vertreiber
+        ? "Sie sind selbst Hersteller dieser Verpackung."
+        : "Keine Vertreiberrolle für diese Verpackung."
+    ),
+    rollenabhaengig(
+      "importeurspflichten",
+      "Importeurspflichten (Art. 18)",
+      37,
+      importeur ? "ja" : "nein",
+      "Importeurrolle für diese Verpackung.",
+      "Keine Importeurrolle für diese Verpackung."
+    ),
+    {
+      key: "leerraum_2030",
+      label: "Leerraumquote (max. 50 %)",
+      anforderung_nr: 18,
+      gilt: ["um", "transport", "ecommerce"].includes(v.art) ? "ja" : "nein",
+      grund: ["um", "transport", "ecommerce"].includes(v.art)
+        ? "Gilt ab 01.01.2030 für Um-, Transport- und E-Commerce-Verpackung."
+        : "Nur für Um-, Transport- und E-Commerce-Verpackung.",
+    },
+    {
+      key: "umweltaussagen",
+      label: "Umweltaussagen auf der Verpackung",
+      anforderung_nr: 23,
+      gilt: "ja",
+      grund: "Gilt für jede Verpackung mit Umweltaussagen.",
+    },
+    rollenabhaengig(
+      "bevollmaechtigter_ehv",
+      "Bevollmächtigter für die erweiterte Herstellerverantwortung",
+      9,
+      pflichtenSet.has("bevollmaechtigter_ehv") ? "ja" : "nein",
+      "Herstellerrolle ohne Niederlassung in Deutschland.",
+      "Keine Pflicht aus dem Rollen-Set."
+    ),
+    {
+      key: "mehrweg_anforderungen",
+      label: "Anforderungen an Mehrwegverpackung",
+      anforderung_nr: 3,
+      gilt: v.mehrweg ? "ja" : "nein",
+      grund: v.mehrweg ? "Als Mehrweg angelegt." : "Nicht als Mehrweg angelegt.",
+    },
+  ];
+}
+
+export function evaluiereVerpackung(
+  regeln: RegelRow[],
+  unternehmen: UnternehmenKontext,
+  linie: LinienKontext,
+  verpackung: VerpackungKontext,
+  anzahlVerpackungenInLinie = 1
+): VerpackungErgebnis {
+  const abgeleitet = leiteLinienKontextAb(linie, verpackung);
+  const lauf = starteLauf(regeln, unternehmen, abgeleitet);
+  const ctx: VCtx = Object.assign(lauf.ctx, { v: verpackung });
+  const { herleitung } = lauf;
+  let unklar = false;
+
+  // D-Regeln nach Priorität (70–78) anwenden
+  lauf.sortiert
+    .filter((r) => r.regel_id in D_REGELN)
+    .forEach((regel) => {
+      const impl = D_REGELN[regel.regel_id];
+      if (ctx.gefeuert.has(regel.regel_id) || !impl.wenn(ctx)) return;
+      ctx.gefeuert.add(regel.regel_id);
+
+      impl.dann.entzug?.forEach((r) => ctx.rollen.delete(r));
+      if (impl.dann.rollen) {
+        for (const r of impl.dann.rollen) {
+          if (
+            r === "vertreiber" &&
+            (ctx.rollen.has("erzeuger") || ctx.rollen.has("importeur"))
+          ) {
+            continue;
+          }
+          ctx.rollen.add(r);
+        }
+      }
+      impl.dann.pflichten?.forEach((p) => ctx.pflichten.add(p));
+      impl.dann.entlastungen?.forEach((e) => ctx.entlastungen.add(e));
+      if (impl.dann.unklar) unklar = true;
+
+      herleitung.push({
+        regel_id: regel.regel_id,
+        ergebnis: [
+          ...(impl.dann.rollen ?? []),
+          ...(impl.dann.pflichten ?? []),
+          ...(impl.dann.entlastungen ?? []),
+          ...(impl.dann.entzug ?? []).map((r) => `entzug:${r}`),
+        ],
+        erlaeuterung: regel.erlaeuterung,
+        fundstelle_primaer: regel.fundstelle_primaer,
+        fundstelle_sekundaer: regel.fundstelle_sekundaer,
+        vorbehalt: impl.dann.vorbehaltImmer || istVorbehalt(regel),
+      });
+    });
+
+  // Rechtsfolgen-Kaskade erneut (B6/C6 können durch D-Rollen greifen)
+  lauf.sortiert
+    .filter((r) => ["B6", "C6"].includes(r.regel_id))
+    .forEach(lauf.anwenden);
+  normalisiereVertreiber(ctx, herleitung);
+
+  if (unklar) {
+    // D5: Das System gibt keine Rolle vor.
+    ctx.rollen.clear();
+    ctx.pflichten.clear();
+  }
+
+  const vorbehalt = herleitung.some((h) => h.vorbehalt);
+  const pflichten = bauePflichtenMatrix(
+    ctx.rollen,
+    ctx.pflichten,
+    verpackung,
+    abgeleitet,
+    unklar
+  );
+
+  const hinweisKeys: string[] = [];
+  if (ctx.gefeuert.has("D2") && verpackung.form === "flexibel") {
+    hinweisKeys.push("folie_selbst_angewendet");
+  }
+  if (ctx.gefeuert.has("D4")) hinweisKeys.push("lieferant_ausland_formstabil");
+  if (ctx.gefeuert.has("D3")) hinweisKeys.push("selbst_zusammengefuegt");
+  if (
+    unternehmen.kleinstunternehmen &&
+    verpackung.marke === "eigene" &&
+    verpackung.lieferantSitz !== null &&
+    verpackung.lieferantSitz !== "DE"
+  ) {
+    hinweisKeys.push("kleinst_lieferant_eu");
+  }
+  if (["um", "transport", "ecommerce"].includes(verpackung.art)) {
+    hinweisKeys.push("transport_leerraum");
+  }
+  if (ctx.gefeuert.has("D1")) hinweisKeys.push("vertreiber_lieferant_pruefen");
+  if (ctx.rollen.has("erzeuger")) {
+    if (anzahlVerpackungenInLinie > 1) {
+      hinweisKeys.push("erzeuger_mehrere_bestandteile");
+    }
+    hinweisKeys.push("erzeuger_lagerware");
+  }
+
+  return {
+    bezeichnung: verpackung.bezeichnung,
+    rollen_set: {
+      rollen: [...ctx.rollen],
+      pflichten: [...ctx.pflichten],
+      entlastungen: [...ctx.entlastungen],
+      unklar,
+      vorbehalt,
+    },
+    pflichten,
+    hinweisKeys,
     herleitung,
   };
 }
