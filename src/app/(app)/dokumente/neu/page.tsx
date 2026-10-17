@@ -8,6 +8,8 @@ import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import {
+  EINHEIT_KEY,
+  EINHEIT_TYPEN,
   NUTZER_FELDER,
   type NutzerEingaben,
 } from "@/lib/dokumente/nutzer-felder";
@@ -20,6 +22,11 @@ import {
 } from "@/lib/dokumente/service";
 import { RendererFehler } from "@/lib/dokumente/renderer";
 import { createClient } from "@/lib/supabase/server";
+import {
+  ladeVerpackungen,
+  ladeVerpackungsErgebnisse,
+  type VerpackungZeile,
+} from "@/lib/verpackungen-service";
 import { erforderePaket, istAdmin } from "@/lib/zugang";
 import {
   dokumentErstellen,
@@ -102,6 +109,12 @@ export default async function NeuesDokumentPage({
       const wert = params[`f_${feld.key}`] ?? gespeichert[feld.key];
       if (wert && wert.trim()) eingaben[feld.key] = wert.trim();
     }
+    // Verpackungs-Ebene: gewählte Verpackung (?einheit=…) bzw. gespeicherte
+    const einheit =
+      params.einheit ?? params[`f_${EINHEIT_KEY}`] ?? gespeichert[EINHEIT_KEY];
+    if (einheit && einheit.trim() && EINHEIT_TYPEN.includes(typ)) {
+      eingaben[EINHEIT_KEY] = einheit.trim();
+    }
   }
   const { data: profil } = await supabase
     .from("profile")
@@ -135,6 +148,34 @@ export default async function NeuesDokumentPage({
       .maybeSingle();
     verpackung = einzeln ?? null;
   }
+
+  // Verpackungs-Ebene (nur KE/TD): Verpackungen der Linie mit Erzeugerrolle
+  let einheiten: VerpackungZeile[] = [];
+  if (typ && verpackung && EINHEIT_TYPEN.includes(typ)) {
+    const alle = (await ladeVerpackungen(verpackung.id).catch(() => [])).filter(
+      (v) => v.status === "aktiv"
+    );
+    const ergebnisse = await ladeVerpackungsErgebnisse(alle.map((v) => v.id)).catch(
+      () => new Map()
+    );
+    einheiten = alle.filter((v) => ergebnisse.get(v.id)?.rollen.includes("erzeuger"));
+    // Nur eine Verpackung übernehmen, die (noch) zur Auswahl gehört
+    if (eingaben[EINHEIT_KEY] && !einheiten.some((v) => v.id === eingaben[EINHEIT_KEY])) {
+      const { data: einzeln } = await supabase
+        .from("verpackungen")
+        .select("id")
+        .eq("id", eingaben[EINHEIT_KEY])
+        .eq("produktlinie_id", verpackung.id)
+        .maybeSingle();
+      if (!einzeln) delete eingaben[EINHEIT_KEY];
+    }
+  }
+  const gewaehlteEinheit = eingaben[EINHEIT_KEY] ?? null;
+  const einheitUrl = (einheitId: string | null) => {
+    const p = new URLSearchParams({ typ: typ ?? "", verpackung: verpackung?.id ?? "" });
+    if (einheitId) p.set("einheit", einheitId);
+    return `/dokumente/neu?${p.toString()}`;
+  };
 
   // Vorschau rendern (Fehler aus der Erzeugung landen als Query-Param)
   let vorschauHtml: string | null = null;
@@ -300,11 +341,56 @@ export default async function NeuesDokumentPage({
         </section>
       )}
 
+      {/* Schritt 2b: Verpackung der Verpackungs-Ebene (nur KE/TD) */}
+      {typ && verpackung && EINHEIT_TYPEN.includes(typ) && (
+        <section className="mb-10">
+          <h2 className="mb-2 text-label uppercase text-ink-muted">
+            {t("schrittEinheit")}
+          </h2>
+          <p className="mb-4 text-body-sm text-ink-muted">{t("einheitHinweis")}</p>
+          {einheiten.length === 0 ? (
+            <LegalCard>
+              <div className="p-6">
+                <p className="text-body text-ink-muted">{t("einheitKeine")}</p>
+                <Link
+                  href={`/verpackungen/${verpackung.id}`}
+                  className="mt-3 inline-block text-body-sm font-medium text-legal hover:underline"
+                >
+                  {t("einheitAnlegen")}
+                </Link>
+              </div>
+            </LegalCard>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              <Link href={einheitUrl(null)} className={kartenKlasse(gewaehlteEinheit == null)}>
+                <span className="block text-body font-bold text-ink">{t("einheitOhne")}</span>
+              </Link>
+              {einheiten.map((v) => (
+                <Link
+                  key={v.id}
+                  href={einheitUrl(v.id)}
+                  className={kartenKlasse(gewaehlteEinheit === v.id)}
+                >
+                  <span className="block text-body font-bold text-ink">{v.bezeichnung}</span>
+                  <span className="mt-1 block text-body-sm text-ink-muted">
+                    {tLabels(`verpackung.art.${v.art}`)}
+                    {v.material ? ` · ${v.material}` : ""}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
       {/* Schritt 3+4: Angaben vervollständigen, Vorschau, Erstellen */}
       {typ && verpackung && (
         <form action={dokumentErstellen}>
           <input type="hidden" name="typ" value={typ} />
           <input type="hidden" name="verpackung" value={verpackung.id} />
+          {gewaehlteEinheit && (
+            <input type="hidden" name={`f_${EINHEIT_KEY}`} value={gewaehlteEinheit} />
+          )}
           {bearbeitetes && (
             <input type="hidden" name="dokument" value={bearbeitetes.id} />
           )}

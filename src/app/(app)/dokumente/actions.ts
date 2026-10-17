@@ -6,6 +6,8 @@ import { redirect } from "next/navigation";
 import { createClient as createBareClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import {
+  EINHEIT_KEY,
+  EINHEIT_TYPEN,
   NUTZER_FELDER,
   type NutzerEingaben,
 } from "@/lib/dokumente/nutzer-felder";
@@ -26,6 +28,10 @@ function leseEingaben(formData: FormData, key: TemplateKey): NutzerEingaben {
     if (typeof wert === "string" && wert.trim()) {
       eingaben[feld.key] = wert.trim();
     }
+  }
+  const einheit = formData.get(`f_${EINHEIT_KEY}`);
+  if (typeof einheit === "string" && einheit.trim() && EINHEIT_TYPEN.includes(key)) {
+    eingaben[EINHEIT_KEY] = einheit.trim();
   }
   return eingaben;
 }

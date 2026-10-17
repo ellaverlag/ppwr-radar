@@ -90,6 +90,15 @@ export interface VerpackungZeile {
   lieferanten: unknown;
 }
 
+/** Gewählte Verpackung der Verpackungs-Ebene (überschreibt Linien-Angaben). */
+export interface EinheitZeile {
+  bezeichnung: string;
+  art: string;
+  material: string | null;
+  lebensmittelkontakt: boolean;
+  mehrweg: boolean;
+}
+
 export interface RollenErgebnisZeile {
   produktlinie: string;
   rollen_set: RollenSet;
@@ -182,6 +191,7 @@ function rollenFelder(ergebnis: RollenErgebnisZeile | null): FeldMap {
 export function baueFelder({
   profil,
   verpackung,
+  einheit = null,
   rollenErgebnis,
   docNummer,
   templateVersion,
@@ -190,6 +200,7 @@ export function baueFelder({
 }: {
   profil: ProfilZeile;
   verpackung: VerpackungZeile;
+  einheit?: EinheitZeile | null;
   rollenErgebnis: RollenErgebnisZeile | null;
   docNummer: string;
   templateVersion: string;
@@ -197,8 +208,12 @@ export function baueFelder({
   cattwykHinweis: string | null;
 }): FeldMap {
   const materialLabel =
-    verpackung.materialien.filter(Boolean).join(", ") ||
+    (einheit?.material?.trim() || verpackung.materialien.filter(Boolean).join(", ")) ||
     "____________________ [NUTZER-PFLICHT: Material angeben]";
+  const bezeichnung = einheit?.bezeichnung ?? verpackung.bezeichnung;
+  const typ = einheit?.art ?? verpackung.verpackungstyp;
+  const lebensmittelkontakt = einheit?.lebensmittelkontakt ?? verpackung.lebensmittelkontakt;
+  const mehrweg = einheit?.mehrweg ?? verpackung.mehrweg;
 
   return {
     // profil.*
@@ -231,19 +246,17 @@ export function baueFelder({
 
     // verpackung.*
     "verpackung.doc_nummer": docNummer,
-    "verpackung.bezeichnung": verpackung.bezeichnung,
+    "verpackung.bezeichnung": bezeichnung,
     "verpackung.produktlinie":
       verpackung.produktlinie ?? verpackung.bezeichnung,
     "verpackung.eindeutige_kennung": oder(verpackung.eindeutige_kennung),
     "verpackung.fuellgut": oder(verpackung.fuellgut),
-    "verpackung.typ_label": typLabel(verpackung.verpackungstyp),
+    "verpackung.typ_label": typLabel(typ),
     "verpackung.material_label": materialLabel,
-    "verpackung.lebensmittelkontakt": verpackung.lebensmittelkontakt,
-    "verpackung.lebensmittelkontakt_label": verpackung.lebensmittelkontakt
-      ? "Ja"
-      : "Nein",
-    "verpackung.mehrweg": verpackung.mehrweg,
-    "verpackung.mehrweg_label": verpackung.mehrweg ? "Ja" : "Nein",
+    "verpackung.lebensmittelkontakt": lebensmittelkontakt,
+    "verpackung.lebensmittelkontakt_label": lebensmittelkontakt ? "Ja" : "Nein",
+    "verpackung.mehrweg": mehrweg,
+    "verpackung.mehrweg_label": mehrweg ? "Ja" : "Nein",
     "verpackung.zusatzangaben": verpackung.zusatzangaben ?? "",
     "verpackung.techdoku_referenz": oder(
       verpackung.techdoku_referenz,

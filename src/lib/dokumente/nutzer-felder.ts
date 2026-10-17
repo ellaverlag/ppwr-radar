@@ -28,6 +28,16 @@ export interface NutzerFeld {
 
 export type NutzerEingaben = Record<string, string>;
 
+/**
+ * Verpackungs-Ebene: Schlüssel in nutzer_eingaben, unter dem die gewählte
+ * Verpackung (verpackungen.id) eines KE-/TD-Dokuments abgelegt wird. Bewusst
+ * keine FK – dokumente.verpackung_id bleibt die Produktlinie
+ * (profil_verpackungen). Bezeichnung, Typ und Material des Dokuments kommen
+ * dann aus dieser Verpackung.
+ */
+export const EINHEIT_KEY = "verpackungseinheit_id";
+export const EINHEIT_TYPEN: TemplateKey[] = ["konformitaetserklaerung", "techdoku"];
+
 export const NUTZER_FELDER: Record<TemplateKey, NutzerFeld[]> = {
   konformitaetserklaerung: [
     {
@@ -264,5 +274,7 @@ export function bereinigeEingaben(
     const wert = (eingaben[feld.key] ?? "").trim();
     if (wert) ergebnis[feld.key] = wert;
   }
+  const einheit = (eingaben[EINHEIT_KEY] ?? "").trim();
+  if (einheit && EINHEIT_TYPEN.includes(key)) ergebnis[EINHEIT_KEY] = einheit;
   return ergebnis;
 }

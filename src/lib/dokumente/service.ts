@@ -4,12 +4,15 @@ import { createClient as createBareClient } from "@supabase/supabase-js";
 import { erzeugeDocx, erzeugePdf } from "@/lib/dokumente/konvertierung";
 import {
   baueFelder,
+  type EinheitZeile,
   type ProfilZeile,
   type RollenErgebnisZeile,
   type VerpackungZeile,
 } from "@/lib/dokumente/felder";
 import {
   bereinigeEingaben,
+  EINHEIT_KEY,
+  EINHEIT_TYPEN,
   mergeAnkerEingaben,
   overlayEingaben,
   sichtbareNutzerFelder,
@@ -173,10 +176,12 @@ export interface VorschauDaten {
 export async function ladeDatenFuerDokument(
   userId: string,
   key: TemplateKey,
-  verpackungId: string
+  verpackungId: string,
+  einheitId?: string | null
 ): Promise<{
   profil: ProfilZeile & { id: string };
   verpackung: VerpackungZeile;
+  einheit: EinheitZeile | null;
   rollenErgebnis: RollenErgebnisZeile | null;
   template: GeneratorTemplate;
   cattwykHinweis: string | null;
@@ -207,6 +212,19 @@ export async function ladeDatenFuerDokument(
     .eq("produktlinie", verpackung.produktlinie ?? verpackung.bezeichnung)
     .maybeSingle();
 
+  // Verpackungs-Ebene (nur KE/TD): gewählte Verpackung muss zur Linie gehören
+  let einheit: EinheitZeile | null = null;
+  if (einheitId && EINHEIT_TYPEN.includes(key)) {
+    const { data } = await supabase
+      .from("verpackungen")
+      .select("bezeichnung, art, material, lebensmittelkontakt, mehrweg")
+      .eq("id", einheitId)
+      .eq("profil_id", profil.id)
+      .eq("produktlinie_id", verpackungId)
+      .maybeSingle();
+    einheit = (data as EinheitZeile | null) ?? null;
+  }
+
   const { data: config } = await supabase
     .from("app_config")
     .select("value")
@@ -216,6 +234,7 @@ export async function ladeDatenFuerDokument(
   return {
     profil: profil as ProfilZeile & { id: string },
     verpackung: verpackung as VerpackungZeile,
+    einheit,
     rollenErgebnis: (ergebnis as RollenErgebnisZeile | null) ?? null,
     template,
     cattwykHinweis: (config?.value as string | undefined) ?? null,
@@ -229,7 +248,12 @@ export async function rendereVorschau(
   eingaben: NutzerEingaben = {},
   docNummerFest?: string
 ): Promise<VorschauDaten | null> {
-  const daten = await ladeDatenFuerDokument(userId, key, verpackungId);
+  const daten = await ladeDatenFuerDokument(
+    userId,
+    key,
+    verpackungId,
+    eingaben[EINHEIT_KEY]
+  );
   if (!daten) return null;
   const docNummer =
     docNummerFest ??
@@ -237,6 +261,7 @@ export async function rendereVorschau(
   const rohFelder = baueFelder({
     profil: daten.profil,
     verpackung: daten.verpackung,
+    einheit: daten.einheit,
     rollenErgebnis: daten.rollenErgebnis,
     docNummer: docNummerFest
       ? docNummer
@@ -267,7 +292,12 @@ export async function erzeugeUndSpeichereDokument(
   eingaben: NutzerEingaben = {},
   bestehendesDokumentId?: string
 ): Promise<{ docNummer: string; version: number }> {
-  const daten = await ladeDatenFuerDokument(userId, key, verpackungId);
+  const daten = await ladeDatenFuerDokument(
+    userId,
+    key,
+    verpackungId,
+    eingaben[EINHEIT_KEY]
+  );
   if (!daten) throw new Error("Vorlage oder Verpackung nicht verfügbar.");
 
   const supabaseFruh = await createClient();
@@ -293,6 +323,7 @@ export async function erzeugeUndSpeichereDokument(
   const rohFelder = baueFelder({
     profil: daten.profil,
     verpackung: daten.verpackung,
+    einheit: daten.einheit,
     rollenErgebnis: daten.rollenErgebnis,
     docNummer,
     templateVersion: daten.template.version,
