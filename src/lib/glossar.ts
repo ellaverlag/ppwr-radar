@@ -13,9 +13,11 @@ import {
 import { createClient as createSessionClient } from "@/lib/supabase/server";
 import type { RollenSet } from "@/lib/rollen-engine";
 import {
+  AUSSPIELBARE_STATUS,
   getAnforderungen,
   getAuslegungen,
   getRollenDefinitionen,
+  type ReviewStatus,
 } from "@/lib/wissensbasis";
 
 /**
@@ -61,6 +63,8 @@ export interface GlossarEintrag {
   verweisChips?: { label: string; href: string }[];
   /** Profil vorhanden und Matching greift. */
   betrifft_mich: boolean;
+  /** Prüfstatus des Quelldatensatzes (Statuskennzeichnung in der Liste). */
+  review_status: ReviewStatus;
 }
 
 /** anforderungen.betrifft_rollen nutzt teils Kurzformen der rolle_ids. */
@@ -84,7 +88,7 @@ const alsSuchtext = (...teile: (string | null | undefined)[]) =>
 /**
  * Praxis-Glossar „Verpackungen & Materialien“ aus glossar_lemmata
  * (60 Lemmata: Objekte, Materialien, Begriffe). Lesepfad wie überall:
- * live Session-Client (RLS: freigegeben + ausspielen), im Preview-Modus
+ * live Session-Client (RLS: ausspielbarer Status + ausspielen), im Preview-Modus
  * Service-Role inkl. Entwürfen. Fail-soft: Fehler/leer → keine Einträge,
  * der Typ-Filter bleibt ausgeblendet.
  */
@@ -99,6 +103,7 @@ interface LemmaZeile {
   verweis_anforderungen: number[] | null;
   verweis_auslegungen: string[] | null;
   verweis_rollen: string[] | null;
+  review_status: ReviewStatus;
 }
 
 async function lemmataClient(): Promise<SupabaseClient> {
@@ -122,7 +127,7 @@ async function ladeLemmata(
     let query = client.from("glossar_lemmata").select("*").order("nr");
     if (!isPreviewMode()) {
       query = query
-        .eq("review_status", "cattwyk_freigegeben")
+        .in("review_status", AUSSPIELBARE_STATUS)
         .eq("ausspielen", true);
     }
     const { data, error } = await query;
@@ -190,6 +195,7 @@ async function ladeLemmata(
         merkmale: lemma.merkmale,
         verweisChips: chips,
         betrifft_mich: false,
+        review_status: lemma.review_status,
       };
     });
   } catch {
@@ -212,7 +218,7 @@ export async function ladeBegriffsLemmata(): Promise<
       .eq("typ", "begriff");
     if (!isPreviewMode()) {
       query = query
-        .eq("review_status", "cattwyk_freigegeben")
+        .in("review_status", AUSSPIELBARE_STATUS)
         .eq("ausspielen", true);
     }
     const { data, error } = await query;
@@ -290,6 +296,7 @@ export async function ladeGlossar(): Promise<{
       antwort: null,
       code: null,
       betrifft_mich: hatProfil && nutzerRollen.has(r.rolle_id),
+      review_status: r.review_status,
     });
   }
 
@@ -312,6 +319,7 @@ export async function ladeGlossar(): Promise<{
       antwort: null,
       code: null,
       betrifft_mich: betrifft,
+      review_status: a.review_status,
     });
   }
 
@@ -335,6 +343,7 @@ export async function ladeGlossar(): Promise<{
       antwort: a.antwort,
       code: a.code,
       betrifft_mich: betrifft,
+      review_status: a.review_status,
     });
   }
 

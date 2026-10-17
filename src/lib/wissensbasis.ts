@@ -8,13 +8,18 @@ import { createClient as createSessionClient } from "@/lib/supabase/server";
  * Zentrale Datenzugriffs-Schicht für die Wissensbasis
  * (anforderungen, auslegungen, rollen_definitionen, wizard_fragen).
  *
- * Zentrale Regel: Standardmäßig werden nur freigegebene Inhalte gelesen
- * (review_status = 'cattwyk_freigegeben' AND ausspielen = true) – über den
+ * Zentrale Regel: Standardmäßig werden nur ausspielbare Inhalte gelesen
+ * (review_status IN AUSSPIELBARE_STATUS AND ausspielen = true) – über den
  * Session-Client des eingeloggten Nutzers; die RLS-Policies erlauben
  * Lesen ausschließlich für `authenticated` und erzwingen denselben Filter
- * serverseitig. Nur wenn PREVIEW_MODE=true, wird stattdessen der
- * Service-Role-Client ohne diesen Filter verwendet, damit die Redaktion
- * ungeprüfte Inhalte in der App sehen kann.
+ * serverseitig (Migration 017). Nur wenn PREVIEW_MODE=true, wird stattdessen
+ * der Service-Role-Client ohne diesen Filter verwendet, damit die Redaktion
+ * auch Entwürfe in der App sehen kann.
+ *
+ * Ausspielbar sind zwei Stufen: 'cattwyk_freigegeben' (juristisch
+ * plausibilisiert) und – als Zwischenstufe, bis die Kanzlei freigibt –
+ * 'redaktion_geprueft'. Der jeweilige Status wird dem Nutzer am Datensatz
+ * angezeigt (PruefstatusBadge). 'entwurf' ist live nie sichtbar.
  *
  * Abweichungen je Tabelle (Schema-bedingt):
  * - rollen_definitionen hat kein `ausspielen`, dafür `aktiv`
@@ -158,7 +163,19 @@ export function tatbestandText(
 // Client
 // ---------------------------------------------------------------------------
 
-const FREIGEGEBEN: ReviewStatus = "cattwyk_freigegeben";
+/**
+ * Status, die live ausgespielt werden dürfen – muss mit den RLS-Policies
+ * (Migration 017) übereinstimmen. Reihenfolge: von „geprüft“ zu „freigegeben“.
+ */
+export const AUSSPIELBARE_STATUS: ReviewStatus[] = [
+  "redaktion_geprueft",
+  "cattwyk_freigegeben",
+];
+
+/** True, wenn ein Datensatz mit diesem Status live sichtbar sein darf. */
+export function istAusspielbar(status: string | null | undefined): boolean {
+  return (AUSSPIELBARE_STATUS as string[]).includes(status ?? "");
+}
 
 async function wissensbasisClient(): Promise<SupabaseClient> {
   if (isPreviewMode()) {
@@ -186,7 +203,7 @@ export async function getAnforderungen(): Promise<Anforderung[]> {
     .order("nr", { ascending: true, nullsFirst: false });
 
   if (!isPreviewMode()) {
-    query = query.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+    query = query.in("review_status", AUSSPIELBARE_STATUS).eq("ausspielen", true);
   }
 
   const { data, error } = await query;
@@ -208,7 +225,7 @@ export async function getAnforderung(ref: string): Promise<Anforderung | null> {
   query = alsNr != null ? query.eq("nr", alsNr) : query.eq("id", ref);
 
   if (!isPreviewMode()) {
-    query = query.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+    query = query.in("review_status", AUSSPIELBARE_STATUS).eq("ausspielen", true);
   }
 
   const { data, error } = await query.maybeSingle();
@@ -226,7 +243,7 @@ export async function getAuslegungen(search?: string): Promise<Auslegung[]> {
     .order("nr", { ascending: true, nullsFirst: false });
 
   if (!isPreviewMode()) {
-    query = query.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+    query = query.in("review_status", AUSSPIELBARE_STATUS).eq("ausspielen", true);
   }
 
   const term = search?.trim();
@@ -252,7 +269,7 @@ export async function getRollenDefinitionen(): Promise<RollenDefinition[]> {
     .order("rolle_id", { ascending: true });
 
   if (!isPreviewMode()) {
-    query = query.eq("review_status", FREIGEGEBEN).eq("aktiv", true);
+    query = query.in("review_status", AUSSPIELBARE_STATUS).eq("aktiv", true);
   }
 
   const { data, error } = await query;
@@ -277,7 +294,7 @@ export interface SuchTreffer {
  * Postgres-Volltextsuche (websearch_to_tsquery, Konfiguration german) über
  * anforderungen, auslegungen und rollen_definitionen. Die DB-Funktion läuft
  * als SECURITY INVOKER: über den Session-Client greifen die RLS-Policies
- * (nur Freigegebenes), im PREVIEW_MODE sieht der Service-Role-Client alles –
+ * (nur Ausspielbares), im PREVIEW_MODE sieht der Service-Role-Client alles –
  * derselbe Datenpfad wie bei den Gettern oben.
  */
 export async function sucheWissensbasis(
@@ -318,15 +335,15 @@ export async function sucheWissensbasisIlike(
 
   let anfQuery = client.from("anforderungen").select("id");
   if (freigabe) {
-    anfQuery = anfQuery.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+    anfQuery = anfQuery.in("review_status", AUSSPIELBARE_STATUS).eq("ausspielen", true);
   }
   let ausQuery = client.from("auslegungen").select("id");
   if (freigabe) {
-    ausQuery = ausQuery.eq("review_status", FREIGEGEBEN).eq("ausspielen", true);
+    ausQuery = ausQuery.in("review_status", AUSSPIELBARE_STATUS).eq("ausspielen", true);
   }
   let rolQuery = client.from("rollen_definitionen").select("rolle_id");
   if (freigabe) {
-    rolQuery = rolQuery.eq("review_status", FREIGEGEBEN).eq("aktiv", true);
+    rolQuery = rolQuery.in("review_status", AUSSPIELBARE_STATUS).eq("aktiv", true);
   }
 
   const [anf, aus, rol] = await Promise.all([
