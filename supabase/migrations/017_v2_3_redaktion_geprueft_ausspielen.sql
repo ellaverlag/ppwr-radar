@@ -32,74 +32,30 @@
 --   chk_freigabe_braucht_text (002) → Constraint bindet nur die Freigabe
 --                          durch Cattwyk an vorhandene Texte, kein Lesefilter.
 --
--- glossar_lemmata: Die Tabelle wird von der App gelesen, ist aber in keiner
--- versionierten Migration (001–016) angelegt – Name und Form ihrer
--- bestehenden Policy sind hier nicht bekannt. Da permissive Policies per OR
--- kombiniert werden, reicht eine ZUSÄTZLICHE Policy, um die Zwischenstufe
--- freizuschalten; die bestehende Policy bleibt unangetastet. Der Block läuft
--- nur, wenn die Tabelle existiert.
+-- glossar_lemmata: Die Tabelle ist in keiner versionierten Migration (001–016)
+-- angelegt (direkt in Supabase erstellt). Ihre Policy "freigegebene lemmata"
+-- wurde am 17.10.2026 in pg_policies verifiziert und wird hier ersetzt.
+--
+-- Eingespielt am 17.10.2026 über die Supabase-MCP-Schnittstelle (tabellenweise).
 -- ============================================================
 
--- ---------- anforderungen ----------
-drop policy if exists "freigegebene anforderungen" on anforderungen;
-create policy "freigegebene anforderungen" on anforderungen
-  for select to authenticated
-  using (
-    review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-    and ausspielen = true
-  );
+-- Umsetzung per ALTER POLICY (idempotent, kein DROP nötig – die Policy-Namen
+-- wurden am 17.10.2026 in pg_policies verifiziert).
 
--- ---------- auslegungen ----------
-drop policy if exists "freigegebene auslegungen" on auslegungen;
-create policy "freigegebene auslegungen" on auslegungen
-  for select to authenticated
-  using (
-    review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-    and ausspielen
-  );
+alter policy "freigegebene anforderungen" on anforderungen
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and ausspielen = true);
 
--- ---------- rollen_definitionen ----------
-drop policy if exists "freigegebene rollen" on rollen_definitionen;
-drop policy if exists "freigegebene rollen_definitionen" on rollen_definitionen;
-create policy "freigegebene rollen_definitionen" on rollen_definitionen
-  for select to authenticated
-  using (
-    review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-    and aktiv
-  );
+alter policy "freigegebene auslegungen" on auslegungen
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and ausspielen);
 
--- ---------- rollen_regeln ----------
-drop policy if exists "freigegebene regeln" on rollen_regeln;
-drop policy if exists "freigegebene rollen_regeln" on rollen_regeln;
-create policy "freigegebene rollen_regeln" on rollen_regeln
-  for select to authenticated
-  using (
-    review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-    and aktiv
-  );
+alter policy "freigegebene rollen_definitionen" on rollen_definitionen
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and aktiv);
 
--- ---------- generator_templates ----------
-drop policy if exists "freigegebene templates" on generator_templates;
-create policy "freigegebene templates" on generator_templates
-  for select to authenticated
-  using (
-    review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-    and aktiv
-  );
+alter policy "freigegebene rollen_regeln" on rollen_regeln
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and aktiv);
 
--- ---------- glossar_lemmata (nur wenn vorhanden) ----------
-do $$
-begin
-  if to_regclass('public.glossar_lemmata') is not null then
-    execute 'alter table glossar_lemmata enable row level security';
-    execute 'drop policy if exists "ausspielbare glossar_lemmata" on glossar_lemmata';
-    execute $p$
-      create policy "ausspielbare glossar_lemmata" on glossar_lemmata
-        for select to authenticated
-        using (
-          review_status in ('redaktion_geprueft', 'cattwyk_freigegeben')
-          and ausspielen = true
-        )
-    $p$;
-  end if;
-end $$;
+alter policy "freigegebene templates" on generator_templates
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and aktiv);
+
+alter policy "freigegebene lemmata" on glossar_lemmata
+  using (review_status in ('redaktion_geprueft', 'cattwyk_freigegeben') and ausspielen);
