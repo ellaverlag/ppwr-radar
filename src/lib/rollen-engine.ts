@@ -8,7 +8,8 @@
  * Ergebnisse übernimmt lib/rollen-service.ts.
  */
 
-export const ENGINE_VERSION = "v0.91";
+/** v0.91 (Rollen-Engine A–C, Z1) + Verpackungsregeln D1–D5 (Verpackungs-Ebene). */
+export const ENGINE_VERSION = "v0.92";
 
 // ---------------------------------------------------------------------------
 // Eingaben
@@ -473,12 +474,17 @@ export function leiteLinienKontextAb(
   linie: LinienKontext,
   v: VerpackungKontext
 ): LinienKontext {
+  // Leere Verpackung (Transport/E-Commerce/Service/Primärproduktion):
+  // Hersteller-Anker ist die Erst-Bereitstellung der LEEREN Verpackung
+  // (Nr. 15 lit. a) – fertig gekauft in DE liegt sie beim Lieferanten.
+  // Verkaufs-/Umverpackung: wer befüllt/versiegelt und erstmals bereitstellt,
+  // ist Erzeuger (A1) und Hersteller (B2) – auch bei fertig gekauften
+  // Gläsern, Flaschen, Faltschachteln.
+  const leereArt = D1_ARTEN.includes(v.art);
+
   const taetigkeit = linie.taetigkeit.filter((t) => {
-    // Befüllen betrifft nur Verkaufs-/Umverpackung, die nicht fertig
-    // bezogen und unverändert verwendet wird.
-    if (t === "befuellt_versiegelt") {
-      return (v.art === "verkauf" || v.art === "um") && v.bezug !== "fertig_gekauft";
-    }
+    // Befüllen betrifft nur Verkaufs-/Umverpackung.
+    if (t === "befuellt_versiegelt") return !leereArt;
     // Physische Herstellung ergibt sich je Verpackung aus dem Bezug.
     if (t === "stellt_verpackung_physisch_her") return false;
     return true;
@@ -490,12 +496,16 @@ export function leiteLinienKontextAb(
   let ersteBereitstellung: LinienKontext["ersteBereitstellung"];
   switch (v.bezug) {
     case "fertig_gekauft":
-      ersteBereitstellung =
-        v.lieferantSitz === "DE"
-          ? "vorgelagert"
-          : v.lieferantSitz == null
-            ? linie.ersteBereitstellung
-            : "ja";
+      if (!leereArt) {
+        ersteBereitstellung = "ja";
+      } else {
+        ersteBereitstellung =
+          v.lieferantSitz === "DE"
+            ? "vorgelagert"
+            : v.lieferantSitz == null
+              ? linie.ersteBereitstellung
+              : "ja";
+      }
       break;
     case "lohnfertigung":
       ersteBereitstellung = "unklar";
@@ -533,9 +543,11 @@ const D_REGELN: Record<
     dann: Wirkung & { entzug?: string[]; unklar?: boolean; vorbehaltImmer?: boolean };
   }
 > = {
-  // Fertig bezogene formstabile Transport-/Service-/Primärproduktions-
-  // verpackung eines DE-Lieferanten: Erzeuger und Hersteller ist der
-  // Lieferant. Laut Erläuterung nur ohne eigene Marke (sonst A2/A5).
+  // Fertig bezogene formstabile Transport-/E-Commerce-/Service-/Primär-
+  // produktionsverpackung eines DE-Lieferanten: Erzeuger und Hersteller ist
+  // der Lieferant. Auf diese Arten beschränkt (D1_ARTEN) – nie Verkaufs-/
+  // Umverpackung. Die DB-WENN-Bedingung enthält seit 17.10.2026 auch
+  // „UND verpackung.marke != eigene“ (sonst A2/A5) – hier identisch.
   D1: {
     wenn: (ctx) =>
       D1_ARTEN.includes(ctx.v.art) &&

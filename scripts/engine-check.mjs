@@ -129,5 +129,39 @@ console.log(`   unklar=${lohn.rollen_set.unklar}, Rollen: ${lohn.rollen_set.roll
 erwarte(lohn.rollen_set.unklar && lohn.rollen_set.rollen.length === 0, "D5: unklar ohne Rollen");
 erwarte(pflicht(lohn, "konformitaetserklaerung") === "unklar", "D5: KE unklar");
 
+// Verkaufsverpackung fertig gekauft: Abfüller bleibt Erzeuger (A1) + Hersteller (B2)
+const glasLinie = {
+  ...linie,
+  name: "Feinkost im Glas",
+  verpackungsart: ["verkauf"],
+  taetigkeit: ["befuellt_versiegelt", "liefert_an_endabnehmer"],
+  vertriebsweg: ["stationaer_b2b_DE"],
+};
+const glas = evaluiereVerpackung(regeln, unternehmen, glasLinie, {
+  ...basis,
+  bezeichnung: "Schraubglas",
+  art: "verkauf",
+  form: "formstabil",
+  bezug: "fertig_gekauft",
+  lieferantSitz: "DE",
+  marke: "eigene",
+});
+console.log(`\nSchraubglas (verkauf, formstabil, fertig_gekauft, DE, eigene Marke) – Linie „Feinkost im Glas“`);
+console.log(`   Rollen:      ${glas.rollen_set.rollen.join(", ") || "–"}${glas.rollen_set.vorbehalt ? "  [Vorbehalt]" : ""}`);
+console.log(`   Regeln:      ${glas.herleitung.map((h) => h.regel_id).join(" → ")}`);
+console.log(
+  `   Pflichten:   ${glas.pflichten
+    .filter((p) => p.gilt !== "nein")
+    .map((p) => `${p.key}=${p.gilt}`)
+    .join(", ")}`
+);
+{
+  const rollen = new Set(glas.rollen_set.rollen);
+  erwarte(rollen.has("erzeuger") && rollen.has("hersteller"), "Glas: erzeuger + hersteller");
+  erwarte(pflicht(glas, "konformitaetserklaerung") === "ja", "Glas: KE ja");
+  erwarte(pflicht(glas, "lucid_registrierung") === "ja", "Glas: LUCID ja");
+  erwarte(!glas.herleitung.some((h) => h.regel_id === "D1"), "Glas: D1 feuert nicht");
+}
+
 console.log(fehler === 0 ? "\nEngine-Check bestanden." : `\nEngine-Check: ${fehler} Abweichung(en).`);
 process.exit(fehler === 0 ? 0 : 1);
