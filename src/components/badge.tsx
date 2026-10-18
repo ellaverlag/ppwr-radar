@@ -8,6 +8,9 @@ const VARIANTS = {
   blue: "border-legal text-legal",
   gold: "border-gold text-gold-ink bg-gold/10",
   red: "border-danger text-danger",
+  // Gefüllte Varianten für Zustände, die auf einen Blick erkennbar sein müssen (Pflichten-Matrix)
+  blueFilled: "border-legal bg-legal text-white font-semibold",
+  goldFilled: "border-gold bg-gold text-ink font-semibold",
 } as const;
 
 export function Badge({

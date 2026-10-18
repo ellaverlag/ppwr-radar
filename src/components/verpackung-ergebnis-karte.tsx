@@ -59,7 +59,38 @@ export async function VerpackungErgebnisKarte({
       ? tLabels(`verpackungPflichten.${p.key}`)
       : p.label;
   const giltVariant = (gilt: PflichtEintrag["gilt"]) =>
-    gilt === "ja" ? "blue" : gilt === "unklar" ? "gold" : "neutral";
+    gilt === "ja" ? "blueFilled" : gilt === "unklar" ? "goldFilled" : "neutral";
+  // Was gilt (und was unklar ist) steht oben; was entfällt, wandert in einen Aufklapper.
+  const pflichtenAktiv = pflichten.filter((p) => p.gilt !== "nein");
+  const pflichtenEntfallen = pflichten.filter((p) => p.gilt === "nein");
+  const pflichtZeile = (p: PflichtEintrag) => {
+    const id = p.anforderung_nr != null ? anforderungIdNachNr.get(p.anforderung_nr) : undefined;
+    const akzent =
+      p.gilt === "ja" ? "border-l-4 border-legal" : p.gilt === "unklar" ? "border-l-4 border-gold" : "border-l-4 border-transparent";
+    return (
+      <tr key={p.key} className={p.gilt === "nein" ? "text-ink-muted" : "text-ink"}>
+        <td className={`py-2.5 pl-3 pr-4 align-top font-medium ${akzent}`}>{pflichtLabel(p)}</td>
+        <td className="py-2.5 pr-4 align-top">
+          <Badge variant={giltVariant(p.gilt)}>{tLabels(`gilt.${p.gilt}`)}</Badge>
+        </td>
+        <td className="py-2.5 pr-4 align-top text-ink-muted">{p.grund}</td>
+        <td className="py-2.5 align-top">
+          {id ? (
+            <a
+              href={anforderungUrl(id)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="whitespace-nowrap font-medium text-legal hover:underline"
+            >
+              {t("mehrLink")} ↗
+            </a>
+          ) : p.anforderung_nr != null ? (
+            <span className="font-mono text-mono-sm text-ink-muted">#{p.anforderung_nr}</span>
+          ) : null}
+        </td>
+      </tr>
+    );
+  };
 
   const merkmale = [
     tLabels(`verpackung.art.${verpackung.art}`),
@@ -178,46 +209,40 @@ export async function VerpackungErgebnisKarte({
           {/* Pflichten-Matrix */}
           <section className="mt-8">
             <h3 className="text-label uppercase text-ink-muted">{t("pflichtenTitel")}</h3>
+            <p className="mt-1 text-body-sm text-ink-muted">{t("pflichtenIntro")}</p>
             <div className="mt-3 overflow-x-auto">
               <table className="w-full text-left text-body-sm">
                 <thead>
                   <tr className="border-b border-line-strong text-label uppercase text-ink-muted">
-                    <th className="py-2 pr-4 font-medium">{t("spaltePflicht")}</th>
+                    <th className="py-2 pl-3 pr-4 font-medium">{t("spaltePflicht")}</th>
                     <th className="py-2 pr-4 font-medium">{t("spalteGilt")}</th>
                     <th className="py-2 pr-4 font-medium">{t("spalteWarum")}</th>
                     <th className="py-2 font-medium">{t("spalteMehr")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-line">
-                  {pflichten.map((p) => {
-                    const id = p.anforderung_nr != null ? anforderungIdNachNr.get(p.anforderung_nr) : undefined;
-                    return (
-                      <tr key={p.key} className={p.gilt === "nein" ? "text-ink-muted" : "text-ink"}>
-                        <td className="py-2 pr-4 align-top font-medium">{pflichtLabel(p)}</td>
-                        <td className="py-2 pr-4 align-top">
-                          <Badge variant={giltVariant(p.gilt)}>{tLabels(`gilt.${p.gilt}`)}</Badge>
-                        </td>
-                        <td className="py-2 pr-4 align-top text-ink-muted">{p.grund}</td>
-                        <td className="py-2 align-top">
-                          {id ? (
-                            <Link
-                              href={anforderungUrl(id)}
-                              className="whitespace-nowrap font-medium text-legal hover:underline"
-                            >
-                              {t("mehrLink")}
-                            </Link>
-                          ) : p.anforderung_nr != null ? (
-                            <span className="font-mono text-mono-sm text-ink-muted">
-                              #{p.anforderung_nr}
-                            </span>
-                          ) : null}
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {pflichtenAktiv.length === 0 ? (
+                    <tr>
+                      <td colSpan={4} className="py-3 pl-3 text-ink-muted">{t("keinePflichten")}</td>
+                    </tr>
+                  ) : (
+                    pflichtenAktiv.map(pflichtZeile)
+                  )}
                 </tbody>
               </table>
             </div>
+            {pflichtenEntfallen.length > 0 && (
+              <details className="mt-3 rounded border border-line bg-surface">
+                <summary className="cursor-pointer list-none px-4 py-2.5 text-body-sm font-medium text-ink-muted [&::-webkit-details-marker]:hidden">
+                  {t("entfallenTitel", { n: pflichtenEntfallen.length })} ▾
+                </summary>
+                <div className="overflow-x-auto border-t border-line px-1">
+                  <table className="w-full text-left text-body-sm">
+                    <tbody className="divide-y divide-line">{pflichtenEntfallen.map(pflichtZeile)}</tbody>
+                  </table>
+                </div>
+              </details>
+            )}
           </section>
 
           {/* Ideen zur Vereinfachung */}
@@ -245,9 +270,9 @@ export async function VerpackungErgebnisKarte({
                       <p className="mt-2 flex flex-wrap items-center gap-2 text-body-sm text-ink-muted">
                         <span>{t("hinweisVerweise")}</span>
                         {h.verweis_auslegungen.map((code) => (
-                          <Link key={code} href={praxisfrageUrl(code)} className="hover:underline">
+                          <a key={code} href={praxisfrageUrl(code)} target="_blank" rel="noopener noreferrer" className="hover:underline">
                             <Badge variant="neutral">{code}</Badge>
-                          </Link>
+                          </a>
                         ))}
                       </p>
                     )}

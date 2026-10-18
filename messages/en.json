@@ -1134,6 +1134,9 @@
     "unklarText": "Bei Lohnfertigung entscheidet die Vertragsgestaltung, wer Erzeuger und Hersteller dieser Verpackung ist. Radar gibt hier keine Rolle vor. Welche Punkte im Vertrag geklärt sein müssen, zeigen die Praxisfragen A01 und A02.",
     "unklarLink": "Praxisfragen A01 / A02 →",
     "vorbehalt": "Vorbehaltlich juristischer Verifikation",
-    "fussZeile": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung"
+    "fussZeile": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung",
+    "pflichtenIntro": "Listed first is what applies to this packaging or still needs clarification. What does not apply is below, collapsed.",
+    "keinePflichten": "Based on the current state, none of the reviewed obligations applies to this packaging.",
+    "entfallenTitel": "{n} obligations do not apply to this packaging – show"
   }
 }
