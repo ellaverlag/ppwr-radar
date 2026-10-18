@@ -1138,5 +1138,11 @@
     "pflichtenIntro": "Listed first is what applies to this packaging or still needs clarification. What does not apply is below, collapsed.",
     "keinePflichten": "Based on the current state, none of the reviewed obligations applies to this packaging.",
     "entfallenTitel": "{n} obligations do not apply to this packaging – show"
+  },
+  "Einblick": {
+    "anforderung": "Requirement",
+    "praxisfrage": "Practice question",
+    "schliessen": "Close",
+    "imWissenOeffnen": "Open in knowledge base"
   }
 }

@@ -1138,5 +1138,11 @@
     "pflichtenIntro": "Oben steht, was für diese Verpackung gilt oder noch zu klären ist. Was entfällt, finden Sie darunter zum Aufklappen.",
     "keinePflichten": "Für diese Verpackung greift nach dem aktuellen Stand keine der geprüften Pflichten.",
     "entfallenTitel": "{n} Pflichten entfallen für diese Verpackung – anzeigen"
+  },
+  "Einblick": {
+    "anforderung": "Anforderung",
+    "praxisfrage": "Praxisfrage",
+    "schliessen": "Schließen",
+    "imWissenOeffnen": "Im Wissen-Bereich öffnen"
   }
 }

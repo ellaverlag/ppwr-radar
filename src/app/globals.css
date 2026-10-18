@@ -186,3 +186,23 @@ html {
     animation: none !important;
   }
 }
+
+/* Einblick-Schiebefenster: von rechts hereingleiten. */
+@keyframes einblick-slide-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.einblick-panel {
+  animation: einblick-slide-in 180ms ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .einblick-panel {
+    animation: none;
+  }
+}

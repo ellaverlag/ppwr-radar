@@ -6,7 +6,13 @@ import { LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
 import type { HerleitungsEintrag, PflichtEintrag } from "@/lib/rollen-engine";
 import type { EntlastungsHinweis, VerpackungZeile } from "@/lib/verpackungen-service";
-import { anforderungUrl, praxisfrageUrl } from "@/lib/wissen-links";
+import { EinblickLink } from "@/components/einblick-link";
+import {
+  anforderungEinblickUrl,
+  anforderungUrl,
+  praxisfrageEinblickUrl,
+  praxisfrageUrl,
+} from "@/lib/wissen-links";
 
 /**
  * Ergebnis-Karte einer VERPACKUNG (Stil wie rollen-ergebnis-karte.tsx):
@@ -43,6 +49,11 @@ export async function VerpackungErgebnisKarte({
 }) {
   const t = await getTranslations("VerpackungErgebnis");
   const tLabels = await getTranslations("Labels");
+  const tEinblick = await getTranslations("Einblick");
+  const einblickLabels = {
+    schliessen: tEinblick("schliessen"),
+    imWissenOeffnen: tEinblick("imWissenOeffnen"),
+  };
 
   const rollenLabel = (rolle: string) =>
     begriffe[rolle]?.begriff_de ??
@@ -76,14 +87,15 @@ export async function VerpackungErgebnisKarte({
         <td className="py-2.5 pr-4 align-top text-ink-muted">{p.grund}</td>
         <td className="py-2.5 align-top">
           {id ? (
-            <a
+            <EinblickLink
               href={anforderungUrl(id)}
-              target="_blank"
-              rel="noopener noreferrer"
+              einblickHref={anforderungEinblickUrl(id)}
+              titel={`${tEinblick("anforderung")}${p.anforderung_nr != null ? ` #${p.anforderung_nr}` : ""}`}
+              labels={einblickLabels}
               className="whitespace-nowrap font-medium text-legal hover:underline"
             >
-              {t("mehrLink")} ↗
-            </a>
+              {t("mehrLink")}
+            </EinblickLink>
           ) : p.anforderung_nr != null ? (
             <span className="font-mono text-mono-sm text-ink-muted">#{p.anforderung_nr}</span>
           ) : null}
@@ -270,9 +282,16 @@ export async function VerpackungErgebnisKarte({
                       <p className="mt-2 flex flex-wrap items-center gap-2 text-body-sm text-ink-muted">
                         <span>{t("hinweisVerweise")}</span>
                         {h.verweis_auslegungen.map((code) => (
-                          <a key={code} href={praxisfrageUrl(code)} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                          <EinblickLink
+                            key={code}
+                            href={praxisfrageUrl(code)}
+                            einblickHref={praxisfrageEinblickUrl(code)}
+                            titel={`${tEinblick("praxisfrage")} ${code}`}
+                            labels={einblickLabels}
+                            className="hover:underline"
+                          >
                             <Badge variant="neutral">{code}</Badge>
-                          </a>
+                          </EinblickLink>
                         ))}
                       </p>
                     )}

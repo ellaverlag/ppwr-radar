@@ -33,3 +33,15 @@ export function praxisfrageUrl(
 export function glossarBegriffUrl(begriff: string): string {
   return `/wissen/glossar?q=${encodeURIComponent(begriff)}`;
 }
+
+/**
+ * Einblick-Varianten (ohne App-Rahmen) für das Schiebefenster auf den
+ * Ergebnis-Seiten – gleiche Inhalte, gleiche Zugangsprüfung.
+ */
+export function anforderungEinblickUrl(ziel: string | number): string {
+  return `/einblick/anforderungen/${ziel}`;
+}
+
+export function praxisfrageEinblickUrl(code: string): string {
+  return `/einblick/praxisfragen/${encodeURIComponent(code)}`;
+}
