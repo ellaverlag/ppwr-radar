@@ -29,7 +29,8 @@
     "anforderung": "Anforderung – PPWR Radar",
     "status": "Status analysis",
     "verpackungen": "Meine Verpackungen – PPWR Radar",
-    "verpackungDetail": "Verpackungen – PPWR Radar"
+    "verpackungDetail": "Verpackungen – PPWR Radar",
+    "updates": "Updates – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -46,7 +47,8 @@
     "dokumente": "Meine Dokumente",
     "assistant": "Assistant",
     "wissen": "Wissen",
-    "webinare": "Webinare"
+    "webinare": "Webinare",
+    "updates": "Updates"
   },
   "AppLayout": {
     "footerCopyright": "© 2026 PPWR Radar",
@@ -521,7 +523,7 @@
         "chip": "Betrifft Ihre Produktlinien"
       }
     ],
-    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe",
+    "radarFooter": "Items from the weekly legal monitoring",
     "statusZutreffend": "Applicable requirements",
     "statusErledigt": "Done",
     "statusKritisch": "Open – already in force",
@@ -1144,5 +1146,28 @@
     "praxisfrage": "Practice question",
     "schliessen": "Close",
     "imWissenOeffnen": "Open in knowledge base"
+  },
+  "Updates": {
+    "titel": "Updates",
+    "beschreibung": "What is moving on PPWR and VerpackDG – from PPWR Radar's weekly legal monitoring. Every item with source, classification and legal reference; interpretation lives in the linked practice questions.",
+    "zaehler": "{anzahl} items",
+    "letzterLauf": "Last monitoring run: {datum}",
+    "leer": "No items yet – monitoring runs weekly.",
+    "alleUpdates": "All updates",
+    "standFooter": "Weekly legal monitoring · last run {datum} · items are information, not legal advice",
+    "footer": "Sources: EUR-Lex, European Commission, European Parliament, Council, ZSVR, BMUKN, UBA · weekly monitoring · the current legal position is always in the knowledge base",
+    "rechtslageUnveraendert": "The applicable law is unchanged by this.",
+    "anforderungLink": "Requirement #{nr}",
+    "praxisfrageLink": "Practice question {code}",
+    "quelleLink": "Source",
+    "einordnung": {
+      "rechtsverbindlich": "Legally binding",
+      "unverbindliche_auslegung": "Non-binding interpretation",
+      "behoerdeninformation": "Authority information",
+      "verfahren": "Procedure – not adopted",
+      "gericht": "Court decision",
+      "verbandsmeinung": "Association view",
+      "stand": "Monitoring status"
+    }
   }
 }

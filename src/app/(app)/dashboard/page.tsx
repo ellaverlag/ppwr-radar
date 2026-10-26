@@ -13,7 +13,12 @@ import {
 } from "@/components/ui";
 import type { RollenSet } from "@/lib/rollen-engine";
 import { formatDate } from "@/lib/labels";
-import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
+import {
+  ladeLetztenMonitoringStand,
+  ladePpwrNews,
+  ladePpwrVideos,
+  ladeRadarMeldungen,
+} from "@/lib/radar";
 import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { anforderungUrl } from "@/lib/wissen-links";
 import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
@@ -143,8 +148,9 @@ export default async function DashboardPage({
     )
     .slice(0, 3);
 
-  const [memos, news, videos] = await Promise.all([
-    ladeUpdateMemos(),
+  const [meldungen, letzterStand, news, videos] = await Promise.all([
+    ladeRadarMeldungen(5, true),
+    ladeLetztenMonitoringStand(),
     ladePpwrNews(),
     ladePpwrVideos(),
   ]);
@@ -542,7 +548,7 @@ export default async function DashboardPage({
       </LegalCard>
 
       {/* Radar-Änderungslog + PJ-Inhalte */}
-      <AenderungslogKarte memos={memos} gesperrt={false} />
+      <AenderungslogKarte meldungen={meldungen} letzterStand={letzterStand} gesperrt={false} />
       <AktuellesBereich news={news} videos={videos} />
     </>
   );

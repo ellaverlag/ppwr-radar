@@ -29,7 +29,8 @@
     "anforderung": "Anforderung – PPWR Radar",
     "status": "Status-Analyse",
     "verpackungen": "Meine Verpackungen – PPWR Radar",
-    "verpackungDetail": "Verpackungen – PPWR Radar"
+    "verpackungDetail": "Verpackungen – PPWR Radar",
+    "updates": "Updates – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -46,7 +47,8 @@
     "dokumente": "Meine Dokumente",
     "assistant": "Assistant",
     "wissen": "Wissen",
-    "webinare": "Webinare"
+    "webinare": "Webinare",
+    "updates": "Updates"
   },
   "AppLayout": {
     "footerCopyright": "© 2026 PPWR Radar",
@@ -521,7 +523,7 @@
         "chip": "Betrifft Ihre Produktlinien"
       }
     ],
-    "radarFooter": "Update-Memos erscheinen hier nach redaktioneller Freigabe",
+    "radarFooter": "Meldungen aus dem wöchentlichen Rechtsmonitoring",
     "statusZutreffend": "Zutreffende Anforderungen",
     "statusErledigt": "Erledigt",
     "statusKritisch": "Offen – gilt bereits",
@@ -1144,5 +1146,28 @@
     "praxisfrage": "Praxisfrage",
     "schliessen": "Schließen",
     "imWissenOeffnen": "Im Wissen-Bereich öffnen"
+  },
+  "Updates": {
+    "titel": "Updates",
+    "beschreibung": "Was sich bei PPWR und VerpackDG bewegt – aus dem wöchentlichen Rechtsmonitoring von PPWR Radar. Jede Meldung mit Quelle, Einordnung und Fundstelle; die Auslegung steht in den verlinkten Praxisfragen.",
+    "zaehler": "{anzahl} Meldungen",
+    "letzterLauf": "Letzter Monitoring-Lauf: {datum}",
+    "leer": "Noch keine Meldungen – das Monitoring läuft wöchentlich.",
+    "alleUpdates": "Alle Updates",
+    "standFooter": "Rechtsmonitoring wöchentlich · letzter Lauf {datum} · Meldungen sind Information, keine Rechtsberatung",
+    "footer": "Quellen: EUR-Lex, EU-Kommission, Europäisches Parlament, Rat, ZSVR, BMUKN, UBA · Monitoring wöchentlich · Stand der Rechtslage immer in der Wissensbasis",
+    "rechtslageUnveraendert": "Geltende Rechtslage dadurch unverändert.",
+    "anforderungLink": "Anforderung #{nr}",
+    "praxisfrageLink": "Praxisfrage {code}",
+    "quelleLink": "Quelle",
+    "einordnung": {
+      "rechtsverbindlich": "Rechtsverbindlich",
+      "unverbindliche_auslegung": "Unverbindliche Auslegung",
+      "behoerdeninformation": "Behördeninformation",
+      "verfahren": "Verfahren – nicht erlassen",
+      "gericht": "Gerichtsentscheidung",
+      "verbandsmeinung": "Verbandsmeinung",
+      "stand": "Monitoring-Stand"
+    }
   }
 }

@@ -4,7 +4,12 @@ import { LockIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter, TrafficDot } from "@/components/ui";
 import { uebernehmeCheckErgebnis } from "@/lib/check-uebernahme";
 import { formatDate } from "@/lib/labels";
-import { ladePpwrNews, ladePpwrVideos, ladeUpdateMemos } from "@/lib/radar";
+import {
+  ladeLetztenMonitoringStand,
+  ladePpwrNews,
+  ladePpwrVideos,
+  ladeRadarMeldungen,
+} from "@/lib/radar";
 import { AenderungslogKarte, AktuellesBereich } from "./radar-module";
 import { checkoutStarten, zahlungVerwalten } from "./actions";
 
@@ -57,8 +62,9 @@ export async function Vorzimmer({
   const schritte = t.raw("schritte") as { titel: string; text: string }[];
   const tCheck = await getTranslations("CheckErgebnis");
   const tLabels = await getTranslations("Labels");
-  const [memos, news, videos, einschaetzung] = await Promise.all([
-    ladeUpdateMemos(),
+  const [meldungen, letzterStand, news, videos, einschaetzung] = await Promise.all([
+    ladeRadarMeldungen(5, true),
+    ladeLetztenMonitoringStand(),
     ladePpwrNews(),
     ladePpwrVideos(),
     uebernehmeCheckErgebnis(userId),
@@ -299,7 +305,7 @@ export async function Vorzimmer({
       </LegalCard>
 
       {/* Radar-Änderungslog (nur Titel) + öffentliche PJ-Inhalte */}
-      <AenderungslogKarte memos={memos} gesperrt />
+      <AenderungslogKarte meldungen={meldungen} letzterStand={letzterStand} gesperrt />
       <AktuellesBereich news={news} videos={videos} />
     </>
   );

@@ -2,72 +2,81 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Badge } from "@/components/badge";
 import { LockIcon, OpenInNewIcon, VideoIcon } from "@/components/icons";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
-import type { PjNews, PjVideo, UpdateMemo } from "@/lib/radar";
+import type { PjNews, PjVideo, RadarMeldung } from "@/lib/radar";
+import { RadarMeldungEintrag } from "@/components/radar-meldung";
+import { getAnforderungen } from "@/lib/wissensbasis";
 
 /**
- * Radar-Module des Dashboards: Änderungslog (update_memos) sowie News und
+ * Radar-Module des Dashboards: Update-Ticker (radar_meldungen) sowie News und
  * Videos von packaging-journal.de. Werden vom vollen Dashboard und vom
  * Vorzimmer gemeinsam genutzt – im gesperrten Zustand zeigt das Änderungslog
  * nur Titel, der Detail-Link führt zur Freischalten-Karte (#freischalten).
  */
 
 export async function AenderungslogKarte({
-  memos,
+  meldungen,
+  letzterStand,
   gesperrt,
 }: {
-  memos: UpdateMemo[];
+  meldungen: RadarMeldung[];
+  letzterStand: string | null;
   gesperrt: boolean;
 }) {
   const t = await getTranslations("Dashboard");
   const tr = await getTranslations("Radar");
+  const tu = await getTranslations("Updates");
+  const anforderungen = gesperrt ? [] : await getAnforderungen().catch(() => []);
+  const anforderungIdNachNr = new Map(
+    anforderungen.filter((a) => a.nr != null).map((a) => [a.nr as number, a.id])
+  );
 
   return (
     <LegalCard className="mt-6">
       <div className="flex-1 p-6">
-        <h2 className="mb-8 flex items-center gap-2 text-headline text-ink">
-          {gesperrt && <LockIcon className="h-5 w-5 text-ink-muted" />}
-          <span>{t("radarTitel")}</span>
-        </h2>
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="flex items-center gap-2 text-headline text-ink">
+            {gesperrt && <LockIcon className="h-5 w-5 text-ink-muted" />}
+            <span>{t("radarTitel")}</span>
+          </h2>
+          {!gesperrt && (
+            <Link href="/updates" className="text-body-sm font-medium text-legal hover:underline">
+              {tu("alleUpdates")} →
+            </Link>
+          )}
+        </div>
 
-        {memos.length === 0 ? (
+        {meldungen.length === 0 ? (
           <p className="text-body text-ink-muted">{tr("leer")}</p>
         ) : (
           <ol className="space-y-6 border-l border-line-strong pl-6">
-            {memos.map((memo) => (
-              <li key={memo.id}>
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="font-mono text-mono-sm text-ink-muted">
-                    {formatDate(memo.veroeffentlicht_am)}
-                  </span>
-                  {memo.quelle && <Badge variant="blue">{memo.quelle}</Badge>}
-                </div>
-                <h3 className="mt-1 text-body-lg font-bold text-ink">
-                  {memo.titel}
-                </h3>
-                {gesperrt ? (
-                  <Link
-                    href="#freischalten"
-                    className="mt-1 inline-block text-body-sm font-medium text-legal hover:underline"
-                  >
-                    {tr("detailsGesperrt")}
-                  </Link>
-                ) : (
-                  memo.memo_text && (
-                    <p className="mt-1 whitespace-pre-line text-body-sm text-ink-muted">
-                      {memo.memo_text}
-                    </p>
-                  )
-                )}
-              </li>
+            {meldungen.map((m) => (
+              <RadarMeldungEintrag
+                key={m.id}
+                meldung={m}
+                anforderungIdNachNr={anforderungIdNachNr}
+                kompakt
+                nurTitel={gesperrt}
+              />
             ))}
           </ol>
         )}
+        {gesperrt && meldungen.length > 0 && (
+          <Link
+            href="#freischalten"
+            className="mt-6 inline-block text-body-sm font-medium text-legal hover:underline"
+          >
+            {tr("detailsGesperrt")}
+          </Link>
+        )}
       </div>
-      <LegalCardFooter>{t("radarFooter")}</LegalCardFooter>
+      <LegalCardFooter>
+        {letzterStand
+          ? tu("standFooter", { datum: formatDate(letzterStand) })
+          : t("radarFooter")}
+      </LegalCardFooter>
     </LegalCard>
   );
 }

@@ -62,6 +62,72 @@ export async function ladeUpdateMemos(limit = 5): Promise<UpdateMemo[]> {
   }));
 }
 
+
+// ---------------------------------------------------------------------------
+// Radar-Meldungen (Update-Ticker aus dem wöchentlichen Rechtsmonitoring)
+// ---------------------------------------------------------------------------
+
+export type Einordnung =
+  | "rechtsverbindlich"
+  | "unverbindliche_auslegung"
+  | "behoerdeninformation"
+  | "verfahren"
+  | "gericht"
+  | "verbandsmeinung"
+  | "stand";
+
+export interface RadarMeldung {
+  id: string;
+  datum: string;
+  titel: string;
+  text: string;
+  quelle: string;
+  quelle_url: string | null;
+  einordnung: Einordnung;
+  fundstellen: string[];
+  bezug_nr: number[];
+  verweis_auslegungen: string[];
+  rechtslage_unveraendert: boolean;
+  review_status: string;
+}
+
+/**
+ * Meldungen, neueste zuerst. `nurEreignisse` blendet die reinen
+ * Wochenlauf-Stände („geprüft, nichts Neues“) aus – fürs Dashboard, wo der
+ * Platz knapp ist; die Updates-Seite zeigt alles.
+ */
+export async function ladeRadarMeldungen(
+  limit = 50,
+  nurEreignisse = false
+): Promise<RadarMeldung[]> {
+  const supabase = await createClient();
+  let q = supabase
+    .from("radar_meldungen")
+    .select(
+      "id, datum, titel, text, quelle, quelle_url, einordnung, fundstellen, bezug_nr, verweis_auslegungen, rechtslage_unveraendert, review_status"
+    )
+    .order("datum", { ascending: false })
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (nurEreignisse) q = q.neq("einordnung", "stand");
+  const { data, error } = await q;
+  if (error || !data) return [];
+  return data as RadarMeldung[];
+}
+
+/** Datum des jüngsten Monitoring-Laufs (Meldung mit einordnung „stand“). */
+export async function ladeLetztenMonitoringStand(): Promise<string | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("radar_meldungen")
+    .select("datum")
+    .eq("einordnung", "stand")
+    .order("datum", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  return data?.datum ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // packaging-journal.de – News & Videos
 // ---------------------------------------------------------------------------
