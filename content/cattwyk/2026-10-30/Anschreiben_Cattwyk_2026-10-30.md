@@ -1,33 +1,38 @@
-**Betreff:** PPWR Radar – wir gehen an den Start: Bitte um juristische Plausibilisierung unserer Wissensbasis
+**Betreff:** PPWR Radar – jetzt geht es los: unsere Partnerschaft, das erste Prüfpaket und die Bitte um euren Check
 
 Liebe Julia, liebe Franziska,
 
-lange nichts gehört von uns zum PPWR Radar – das Projekt lag seit August auf Eis, jetzt nehmen wir es wieder auf und wollen in den nächsten Wochen live gehen. Dafür brauchen wir euch.
+lange nichts gehört von uns zum PPWR Radar – das Projekt lag seit August auf Eis, jetzt nehmen wir es wieder auf und wollen in den nächsten Wochen live gehen. Bevor es um das Paket im Anhang geht, noch einmal die Grundidee in drei Sätzen, damit wir dasselbe Bild haben.
 
-**Worum es geht.** Der PPWR Radar erklärt Unternehmen, welche Rolle sie nach der PPWR und dem VerpackDG haben (Erzeuger, Hersteller, Importeur, Vertreiber), welche Pflichten daraus folgen und was sie konkret tun müssen – mit Fundstelle an jeder Aussage. Das Produkt erklärt, ordnet ein, priorisiert und erstellt Entwürfe; es berät nicht. Eure Rolle ist die juristische Plausibilisierung: Stimmt die Aussage, stimmt die Fundstelle, ist die Grenze richtig gezogen. Freigegebene Inhalte erscheinen im Produkt mit dem Hinweis „juristisch plausibilisiert durch Cattwyk“.
+**Die Grundidee.** Der PPWR Radar ist ein neutrales Werkzeug des packaging journal. Es beantwortet Unternehmen die groben Fragen zur PPWR und zum VerpackDG – welche Rolle habe ich, welche Pflichten folgen daraus, was muss ich wann tun – und hilft bei den ersten Schritten (Pflichtenübersicht, Entwurf einer Konformitätserklärung, Lieferantenanfragen). Es erklärt, ordnet ein, priorisiert und erstellt Entwürfe; es berät nicht und übernimmt keine Verantwortung für den Einzelfall. Das steht als Disclaimer an jeder Stelle, an der es darauf ankommt.
 
-**Was im Anhang liegt.**
+**Eure Rolle.** Cattwyk ist der Rechtspartner des PPWR Radar – und zwar der einzige:
 
-1. **Prüfpaket (PDF und Word, 59 Seiten, Rechtsstand 30.10.2026).** Es ist so gebaut, dass ihr so wenig Zeit wie möglich braucht:
-   - *Prioritäten* (Seiten 3–6): sieben Punkte, an denen Kommission, ZSVR oder unser Datenbestand auseinanderliegen – das ist der Stoff für eine gemeinsame Session.
-   - *Teil A – Sammelfreigabe:* 121 Datensätze ohne offenen Punkt, eine Zeile je Datensatz, Freigabe blockweise per Haken (etwa 60–90 Minuten Querlesen).
-   - *Teil B – Einzelprüfung:* 65 Karten mit je einer konkreten Frage und drei Kästchen (freigeben / ändern / streichen), darunter 20 neue Praxisfragen zur Rechtsentwicklung seit Juli.
-   - *Teil C – Fundstellen-Bestätigungen:* 68 Stellen, an denen wir eine Norm oder einen Absatz mit (!) als unsicher markiert haben.
-   - *Teil D – Gesamtfreigabe.*
-2. **Beilage Delta-Recherchen** (17.10., 19.10., 26.10.2026): alles, was sich seit Juli rechtlich und behördlich bewegt hat, mit Quellen – Kommissions-FAQ 2. Edition, Berichtigung der deutschen PPWR-Fassung, ZSVR-Veröffentlichungen, Mindeststandard 2026, Rechtsprechung, laufende EU-Verfahren.
-3. **Neuer KMU-Leitfaden der Kommission** „PPWR and small businesses: What do I need to know?“ vom 19.10.2026 (KH-01-26-088-EN-N). Er ist für uns wichtig, weil er an zwei Stellen von der ZSVR-Lesart abweicht (Versandaufkleber, neutrale Transportverpackung) und zur Konformitätserklärung sagt, sie müsse „derzeit nur“ Art. 5 abdecken. Dazu haben wir konkrete Fragen (Prioritäten P1.1, P1.4, P1.7).
+- Überall, wo das System sagt „hier braucht es rechtliche Beratung“ (Grenzfälle, Divergenzen zwischen Kommission und ZSVR, individuelle Risikoentscheidungen), wird Cattwyk genannt und der Kontakt vermittelt.
+- Freigegebene Inhalte tragen den Hinweis „juristisch plausibilisiert durch Cattwyk Rechtsanwaltsgesellschaft“.
+- In der Außenwerbung – Startseite, Newsletter, Artikel im packaging journal, Webinare – steht Cattwyk als Rechtspartner. Das ist unsere Leistung an euch: Sichtbarkeit bei genau der Zielgruppe, die gerade ratlos vor der PPWR steht, und qualifizierte Anfragen, die das Tool vorsortiert hat.
 
-**Was wir uns wünschen.**
+**Eure Leistung an uns**, so wie wir sie uns vorstellen – sagt bitte, wo ihr das anders seht:
 
-- **Eine Videosession von 90 Minuten**, in der wir die Prioritätenliste und Teil B gemeinsam durchgehen. Wir setzen die Entscheidungen dabei live im System. Mögliche Termine schlage ich gern vor – sagt mir, welche Wochen bei euch gehen.
-- **Teil A und Teil C** könnt ihr vorab oder danach erledigen, in Word (Kästchen anklicken, Anmerkung in die Zeile) oder im PDF (kommentieren oder ausdrucken).
-- Wenn euch beim Lesen etwas grundsätzlich falsch vorkommt, lieber früh ein kurzer Anruf als eine lange Mail.
+1. **Der Anfangscheck**, das ist das Paket im Anhang (einmalig, der größte Brocken).
+2. **Regelmäßige kleine Nachprüfpakete.** Unser Rechtsmonitoring läuft wöchentlich; was sich ändert, bündeln wir und legen es euch als kurzes Paket vor – wir schlagen **monatlich** vor, in ruhigen Monaten entfällt es. Erfahrungsgemäß sind das zwei bis fünf Datensätze, eine halbe Stunde Lesezeit.
+3. **Vier Q&A-Webinare im Jahr**, eins pro Quartal, exklusiv für registrierte Kunden des Radars: Wir sammeln vorab die Fragen aus dem Tool, ihr beantwortet sie live (60 Minuten), wir moderieren. Die Aufzeichnung bleibt den Kunden im Tool erhalten.
 
-**Was seit dem Sommer dazugekommen ist**, damit ihr es einordnen könnt: Das System bestimmt Rollen und Pflichten jetzt je Verpackung statt nur je Produktlinie (Regeln D1–D5), zeigt dazu Hinweise zur Vereinfachung (z. B. Umschlag statt selbst angewendeter Folie) und hat seit dieser Woche einen Update-Ticker, der die Funde unseres wöchentlichen Rechtsmonitorings als datierte Meldungen mit Quelle und Einordnung ausspielt. Auslegung bleibt den Praxisfragen vorbehalten, die erst nach eurer Prüfung sichtbar werden. Ob diese Trennung aus eurer Sicht trägt, ist eine der Querschnittsfragen im Paket.
+Wenn ihr das so mittragt, schreiben wir es kurz als Vereinbarung auf – ich mache gern einen Entwurf.
 
-Bis zur Freigabe spielen wir redaktionell geprüfte Inhalte mit dem Hinweis „juristische Prüfung läuft“ aus; eure Nennung auf der Startseite („juristische Plausibilisierung durch Cattwyk Rechtsanwaltsgesellschaft“) bleibt in der Zwischenstufe, wenn euch das recht ist – auch das steht als Frage im Paket.
+**Zum Paket im Anhang (Rechtsstand 30.10.2026).** Es ist so gebaut, dass ihr so wenig Zeit wie möglich braucht:
 
-Ich weiß, dass das ein Brocken ist. Deshalb die Struktur mit Sammelfreigabe und Prioritäten: Wenn ihr nur die Prioritätenliste und Teil B.1 lest, haben wir schon das Wichtigste. Alles Weitere besprechen wir in der Session.
+- *Prioritäten* (Seiten 3–6): sieben Punkte, an denen Kommission, ZSVR oder unser Datenbestand auseinanderliegen und wir eine Entscheidung brauchen, welche Lesart der Radar für Deutschland ausspielt.
+- *Teil A – Sammelfreigabe:* 121 Datensätze ohne offenen Punkt, eine Zeile je Datensatz, Freigabe blockweise per Haken (60–90 Minuten Querlesen).
+- *Teil B – Einzelprüfung:* 65 Karten mit je einer konkreten Frage und drei Kästchen (freigeben / ändern / streichen), darunter 20 neue Praxisfragen zur Rechtsentwicklung seit Juli.
+- *Teil C – Fundstellen-Bestätigungen:* 68 Stellen, an denen wir eine Norm oder einen Absatz mit (!) als unsicher markiert haben.
+- *Teil D – Gesamtfreigabe.*
+
+Dazu die **Beilage mit den drei Delta-Recherchen** (17.10., 19.10., 26.10.) – alles, was sich seit Juli bewegt hat, mit Quellen – und der **neue KMU-Leitfaden der Kommission** vom 19.10.2026. Der ist für uns wichtig, weil er beim Versandaufkleber und bei neutraler Transportverpackung von der ZSVR-Lesart abweicht und zur Konformitätserklärung sagt, sie müsse „derzeit nur“ Art. 5 abdecken (Prioritäten P1.1, P1.4, P1.7).
+
+**Wie ihr zurückmeldet.** Alles geht schriftlich: in Word Kästchen anklicken und Anmerkungen in die Zeile schreiben, oder im PDF kommentieren. Für die sieben Prioritäten-Punkte bieten wir zusätzlich einen **Call von 60 Minuten** an – dort geht es jeweils um die Wahl zwischen zwei vertretbaren Lesarten, das bespricht sich leichter, als es sich in ein Kästchen schreiben lässt. Wenn ihr lieber auch das schriftlich macht, ist das genauso recht: Dann genügt je Punkt ein Satz, welche Lesart wir ausspielen sollen und mit welchem Hinweis.
+
+Ich weiß, dass das ein Brocken ist. Wenn ihr nur die Prioritätenliste und Teil B.1 lest, haben wir das Wichtigste; der Rest kann in Etappen kommen. Sagt mir gern, bis wann ihr es realistisch schafft – danach planen wir den Launch.
 
 Vielen Dank – ich freue mich, dass es jetzt losgeht.
 
