@@ -76,11 +76,11 @@
       "titelFix1": "Die PPWR gilt.",
       "titelFix2": "PPWR Radar",
       "rotationsPhrasen": [
-        "klärt Ihre Rolle.",
-        "zeigt Ihre Pflichten.",
+        "clarifies your role.",
+        "shows your obligations.",
         "drafts your declaration of conformity.",
-        "ist Ihr Nachschlagewerk.",
-        "beantwortet Ihre Fragen."
+        "checks the legal position every week.",
+        "answers your questions."
       ],
       "text": "Your compliance system for the EU Packaging Regulation: from clarifying your role and your obligations to a draft of your EU declaration of conformity – clear, with legal references, always up to date.",
       "ctaPrimaer": "Jetzt starten",
@@ -112,7 +112,7 @@
       "partner": "Cattwyk Rechtsanwaltsgesellschaft",
       "fundstelleVor": "Über",
       "fundstelle": "200 Fundstellen",
-      "fundstelleNach": ", laufend aktualisiert"
+      "fundstelleNach": ", checked weekly"
     },
     "leistungen": {
       "eyebrow": "Was PPWR Radar leistet",
@@ -150,9 +150,9 @@
           "tag": "geschult auf Gesetzestexte · mit Quelle · ehrliche Grenze"
         }
       ],
-      "nachsatzVor": "Und darüber:",
-      "nachsatzFett": "Radar-Updates",
-      "nachsatz": "halten alles aktuell – neue Rechtsakte und Leitlinien fließen geprüft ein, betroffene Nutzer werden benachrichtigt, veraltete Dokumente werden markiert."
+      "nachsatzVor": "And on top:",
+      "nachsatzFett": "Weekly legal monitoring.",
+      "nachsatz": "Every week we check EUR-Lex, the Commission, Parliament and Council, ZSVR, BMUKN, UBA and the courts for anything moving on the PPWR and the VerpackDG. What we find appears on Fridays in the update ticker on your dashboard and in the monitoring newsletter – exclusively for subscribers. Affected content is updated after review, outdated documents are flagged."
     },
     "problem": {
       "eyebrow": "Warum das reicht",
@@ -199,7 +199,7 @@
     "preise": {
       "eyebrow": "Preise",
       "titel": "Ein Paket. Das ganze System. Zwölf Monate aktuell.",
-      "text": "Alle fünf Werkzeuge, alle Updates – zum Launch zum Einführungspreis.",
+      "text": "All five tools, weekly legal monitoring, all updates – at the launch price.",
       "launchBadge": "Launch-Angebot",
       "paketName": "PPWR|ready Paket",
       "preisWaehrung": "€",
@@ -207,12 +207,13 @@
       "preisZeile1": "im ersten Jahr · zzgl. USt.",
       "preisZeile2": "danach automatische Verlängerung 290 €/Jahr zzgl. USt., jederzeit zum Laufzeitende kündbar · später regulär 690 €",
       "leistungen": [
-        "Rollen-Klärung je Produktlinie mit Fundstelle",
-        "Individuelle Status-Analyse mit Fristen & nächsten Schritten",
-        "Dokumenten-Generator (4 Vorlagen, Word & PDF)",
-        "Nachschlagewerk: Anforderungen, Praxisfragen, Glossar",
-        "KI-Spezialist mit Profilbezug und Quellenangabe",
-        "12 Monate Radar-Updates & regelmäßige Webinare mit Q&A-Runden mit unseren Fachanwältinnen"
+        "Role clarification per product line with legal reference",
+        "Individual status analysis with deadlines & next steps",
+        "Document generator (4 templates, Word & PDF)",
+        "Reference library: requirements, practice questions, glossary",
+        "AI specialist with profile context and source citations",
+        "Weekly legal monitoring: update ticker on the dashboard and exclusive monitoring newsletter for subscribers",
+        "Four Q&A webinars a year with our legal partners at Cattwyk"
       ],
       "ctaPaket": "Jetzt PPWR|ready werden",
       "festpreisZeile": "Transparenter Festpreis. Kein Angebotsprozess, keine Setup-Gebühr.",
@@ -224,7 +225,7 @@
       "verlaengerungName": "Radar-Verlängerung",
       "verlaengerungPreis": "290",
       "verlaengerungEinheit": "/Jahr",
-      "verlaengerungText": "Nach dem ersten Jahr bleiben Updates, Assistent und Webinare aktuell. Ihre Dokumente behalten Sie in jedem Fall.",
+      "verlaengerungText": "After the first year, monitoring, newsletter, assistant and webinars stay up to date. You keep your documents in any case.",
       "verlaengerungChip": "im Paket enthalten",
       "stripeHinweis": "// Preise verstehen sich netto zzgl. gesetzlicher USt. · Angebot richtet sich an Unternehmen · Zahlung über Stripe"
     },

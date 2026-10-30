@@ -79,7 +79,7 @@
         "klärt Ihre Rolle.",
         "zeigt Ihre Pflichten.",
         "entwirft Ihre Konformitätserklärung.",
-        "ist Ihr Nachschlagewerk.",
+        "prüft jede Woche die Rechtslage.",
         "beantwortet Ihre Fragen."
       ],
       "text": "Ihr Compliance-System zur EU-Verpackungsverordnung: von der Rollenklärung über Ihre Pflichten bis zum Entwurf Ihrer EU-Konformitätserklärung – verständlich, mit Fundstelle, immer auf Stand.",
@@ -112,7 +112,7 @@
       "partner": "Cattwyk Rechtsanwaltsgesellschaft",
       "fundstelleVor": "Über",
       "fundstelle": "200 Fundstellen",
-      "fundstelleNach": ", laufend aktualisiert"
+      "fundstelleNach": ", wöchentlich geprüft"
     },
     "leistungen": {
       "eyebrow": "Was PPWR Radar leistet",
@@ -151,8 +151,8 @@
         }
       ],
       "nachsatzVor": "Und darüber:",
-      "nachsatzFett": "Radar-Updates",
-      "nachsatz": "halten alles aktuell – neue Rechtsakte und Leitlinien fließen geprüft ein, betroffene Nutzer werden benachrichtigt, veraltete Dokumente werden markiert."
+      "nachsatzFett": "Wöchentliches Rechtsmonitoring.",
+      "nachsatz": "Jede Woche prüfen wir EUR-Lex, Kommission, Parlament und Rat, ZSVR, BMUKN, UBA und die Rechtsprechung auf alles, was sich zur PPWR und zum VerpackDG bewegt. Was wir finden, steht freitags im Update-Ticker Ihres Dashboards und im Monitoring-Newsletter – exklusiv für Abonnenten. Betroffene Inhalte werden geprüft aktualisiert, veraltete Dokumente markiert."
     },
     "problem": {
       "eyebrow": "Warum das reicht",
@@ -199,7 +199,7 @@
     "preise": {
       "eyebrow": "Preise",
       "titel": "Ein Paket. Das ganze System. Zwölf Monate aktuell.",
-      "text": "Alle fünf Werkzeuge, alle Updates – zum Launch zum Einführungspreis.",
+      "text": "Alle fünf Werkzeuge, wöchentliches Rechtsmonitoring, alle Updates – zum Launch zum Einführungspreis.",
       "launchBadge": "Launch-Angebot",
       "paketName": "PPWR|ready Paket",
       "preisWaehrung": "€",
@@ -212,7 +212,8 @@
         "Dokumenten-Generator (4 Vorlagen, Word & PDF)",
         "Nachschlagewerk: Anforderungen, Praxisfragen, Glossar",
         "KI-Spezialist mit Profilbezug und Quellenangabe",
-        "12 Monate Radar-Updates & regelmäßige Webinare mit Q&A-Runden mit unseren Fachanwältinnen"
+        "Wöchentliches Rechtsmonitoring: Update-Ticker im Dashboard und exklusiver Monitoring-Newsletter für Abonnenten",
+        "Vier Q&A-Webinare im Jahr mit unseren Rechtspartnerinnen von Cattwyk"
       ],
       "ctaPaket": "Jetzt PPWR|ready werden",
       "festpreisZeile": "Transparenter Festpreis. Kein Angebotsprozess, keine Setup-Gebühr.",
@@ -224,7 +225,7 @@
       "verlaengerungName": "Radar-Verlängerung",
       "verlaengerungPreis": "290",
       "verlaengerungEinheit": "/Jahr",
-      "verlaengerungText": "Nach dem ersten Jahr bleiben Updates, Assistent und Webinare aktuell. Ihre Dokumente behalten Sie in jedem Fall.",
+      "verlaengerungText": "Nach dem ersten Jahr bleiben Monitoring, Newsletter, Assistent und Webinare aktuell. Ihre Dokumente behalten Sie in jedem Fall.",
       "verlaengerungChip": "im Paket enthalten",
       "stripeHinweis": "// Preise verstehen sich netto zzgl. gesetzlicher USt. · Angebot richtet sich an Unternehmen · Zahlung über Stripe"
     },
