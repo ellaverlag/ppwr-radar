@@ -14,6 +14,8 @@ export default function robots(): MetadataRoute.Robots {
           "/check/ergebnis",
           "/onboarding",
           "/dashboard",
+          "/updates",
+          "/einblick",
           "/dokumente",
           "/assistant",
           "/wissen",

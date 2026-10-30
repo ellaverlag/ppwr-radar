@@ -6,6 +6,7 @@ import {
   ChatIcon,
   DashboardIcon,
   DocumentIcon,
+  MegaphoneIcon,
   PackageIcon,
   SchoolIcon,
   VideoIcon,
@@ -13,6 +14,7 @@ import {
 
 const NAV_ICONS = {
   "/dashboard": DashboardIcon,
+  "/updates": MegaphoneIcon,
   "/verpackungen": PackageIcon,
   "/dokumente": DocumentIcon,
   "/assistant": ChatIcon,
