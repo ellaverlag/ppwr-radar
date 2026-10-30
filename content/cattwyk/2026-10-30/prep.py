@@ -147,7 +147,7 @@ TNAME = {'konformitaetserklaerung': 'Template 1 – EU-Konformitätserklärung (
          'pflichtenuebersicht': 'Template 3 – Pflichtenübersicht je Produktlinie', 'lieferantenanfragen': 'Template 4 – Lieferantenanfragen (Art. 16)'}
 tpl = []
 for t in R['templates']:
-    tpl.append({'key': t['key'], 'titel': TNAME.get(t['key'], t['key']), 'version': t['version'], 'pins': pins(t['inhalt'])})
+    tpl.append({'key': t['key'], 'titel': TNAME.get(t['key'], t['key']), 'version': t['version'], 'pins': pins(t['inhalt']), 'inhalt': t['inhalt']})
 
 hin = []
 for h in R.get('hinweise', []):
@@ -155,11 +155,21 @@ for h in R.get('hinweise', []):
                 'fundstellen': '; '.join(h.get('fundstellen') or []), 'verweise': ', '.join(h.get('verweis_auslegungen') or []),
                 'flag': h.get('flag') or ''})
 
+wiz = []
+for w in sorted(R.get('wizard_fragen', []), key=lambda x: x['reihenfolge']):
+    wiz.append({'code': w['frage_id'], 'ebene': w['ebene'], 'frage': w['frage_text'], 'typ': w['antwort_typ'],
+                'optionen': w.get('antwort_optionen') or '', 'variable': w.get('ziel_variable') or '',
+                'bedingung': w.get('bedingung_anzeige') or '', 'regeln': w.get('gespeiste_regeln') or '', 'hinweis': w.get('hinweis_ui') or ''})
+texte = json.load(open('data/texte.json', encoding='utf-8'))
+assistant = open('data/assistant_prompt.txt', encoding='utf-8').read()
+
 out = {
+    'wiz': wiz, 'texte': texte, 'assistant': assistant,
     'hin': hin, 'anf_s1': anf_s1, 'anf_s2': anf_s2, 'aus_s1': aus_s1, 'aus_neu': aus_neu, 'aus_pins': aus_pins,
     'glo_s1': glo_s1, 'glo_s2': glo_s2, 'def_s1': def_s1, 'def_s2': def_s2, 'reg_s1': reg_s1, 'reg_s2': reg_s2, 'tpl': tpl,
     'stats': {'anf': len(A), 'aus': len(U), 'glo': len(G), 'def': len(R['rollen_definitionen']), 'reg': len(R['rollen_regeln']), 'tpl': len(R['templates'])},
 }
+out['raw'] = {'A': A, 'U': U, 'G': G, 'R': R}
 json.dump(out, open('prep.json', 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print({k: len(v) for k, v in out.items() if isinstance(v, list)})
 print('Template-Pins:', sum(len(t['pins']) for t in tpl))

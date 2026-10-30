@@ -20,13 +20,14 @@ lange nichts gehört von uns zum PPWR Radar – das Projekt lag seit August auf 
 
 Wenn ihr das so mittragt, schreiben wir es kurz als Vereinbarung auf – ich mache gern einen Entwurf.
 
-**Zum Paket im Anhang (Rechtsstand 30.10.2026).** Es ist so gebaut, dass ihr so wenig Zeit wie möglich braucht:
+**Zum Paket im Anhang (Rechtsstand 30.10.2026).** Es ist vollständig – jeder Datensatz, der im Produkt ausgespielt wird, ist entweder im Prüfpaket oder im Anhang „Volltexte“ enthalten – und so gebaut, dass ihr so wenig Zeit wie möglich braucht:
 
 - *Prioritäten* (Seiten 3–6): sieben Punkte, an denen Kommission, ZSVR oder unser Datenbestand auseinanderliegen und wir eine Entscheidung brauchen, welche Lesart der Radar für Deutschland ausspielt.
 - *Teil A – Sammelfreigabe:* 121 Datensätze ohne offenen Punkt, eine Zeile je Datensatz, Freigabe blockweise per Haken (60–90 Minuten Querlesen).
-- *Teil B – Einzelprüfung:* 65 Karten mit je einer konkreten Frage und drei Kästchen (freigeben / ändern / streichen), darunter 20 neue Praxisfragen zur Rechtsentwicklung seit Juli.
+- *Teil B – Einzelprüfung:* 69 Karten mit je einer konkreten Frage und drei Kästchen (freigeben / ändern / streichen), Antworten im Volltext: 20 Praxisfragen zur Rechtsentwicklung seit Juli, 21 ältere Praxisfragen mit offenem Punkt, 16 Regeln und Definitionen der Rollen-Engine, 8 Vereinfachungs-Hinweise, die vier Dokumentvorlagen (Konformitätserklärung, Technische Dokumentation, Pflichtenübersicht, Lieferantenanfragen) im Volltext, dazu der Onboarding-Fragebogen, alle Disclaimer-Texte mit eurer Nennung und die Regeln des KI-Assistenten.
 - *Teil C – Fundstellen-Bestätigungen:* 68 Stellen, an denen wir eine Norm oder einen Absatz mit (!) als unsicher markiert haben.
 - *Teil D – Gesamtfreigabe.*
+- *Anhang „Volltexte“* (eigene Datei, 84 Seiten): jeder Datensatz vollständig, gleiche Codes – zum Nachschlagen, wenn eine Kernaussage in Teil A nicht reicht. Keine Pflichtlektüre.
 
 Dazu die **Beilage mit den drei Delta-Recherchen** (17.10., 19.10., 26.10.) – alles, was sich seit Juli bewegt hat, mit Quellen – und der **neue KMU-Leitfaden der Kommission** vom 19.10.2026. Der ist für uns wichtig, weil er beim Versandaufkleber und bei neutraler Transportverpackung von der ZSVR-Lesart abweicht und zur Konformitätserklärung sagt, sie müsse „derzeit nur“ Art. 5 abdecken (Prioritäten P1.1, P1.4, P1.7).
 
@@ -44,5 +45,6 @@ packaging journal · ella Verlag und Medien GmbH
 
 Anhänge:
 – Cattwyk_Pruefpaket_PPWR-Radar_2026-10-30.pdf (und .docx zum Ausfüllen)
+– Anhang_Volltexte_Wissensbasis_2026-10-30.pdf
 – Beilage_Delta-Recherchen_2026-10-30.pdf
 – KH-01-26-088-EN-N_PPWR-and-small-businesses.pdf

@@ -1,0 +1,138 @@
+[
+ {
+  "key": "Meta.landing.description",
+  "text": "Die PPWR gilt. PPWR Radar zeigt Ihnen, was das für Ihre Verpackungen bedeutet – Ihre Rolle, Ihre Pflichten, Ihre Dokumente. Verifiziert von Cattwyk Rechtsanwaltsgesellschaft."
+ },
+ {
+  "key": "Meta.checkErgebnis",
+  "text": "Ihre Ersteinschätzung – PPWR Radar"
+ },
+ {
+  "key": "Landing.hero.text",
+  "text": "Ihr Compliance-System zur EU-Verpackungsverordnung: von der Rollenklärung über Ihre Pflichten bis zum Entwurf Ihrer EU-Konformitätserklärung – verständlich, mit Fundstelle, immer auf Stand."
+ },
+ {
+  "key": "Landing.hero.microcopy",
+  "text": "Kein Datenprojekt, keine Angebotsanfrage – heute registrieren, in 15 Minuten Ergebnisse · Jede Aussage mit Fundstelle und Prüfstatus · Juristische Plausibilisierung durch Cattwyk Rechtsanwaltsgesellschaft"
+ },
+ {
+  "key": "Landing.trust.partner",
+  "text": "Cattwyk Rechtsanwaltsgesellschaft"
+ },
+ {
+  "key": "Landing.footer.beschreibung",
+  "text": "PPWR Radar ist ein Produkt des packaging journal (ella Verlag und Medien GmbH). Juristischer Partner: Cattwyk Rechtsanwaltsgesellschaft."
+ },
+ {
+  "key": "Landing.footer.disclaimer",
+  "text": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender. © 2026 packaging journal"
+ },
+ {
+  "key": "Landing.keBand.titel",
+  "text": "In 15 Minuten zum Entwurf Ihrer EU-Konformitätserklärung"
+ },
+ {
+  "key": "Landing.keBand.hinweis",
+  "text": "Die Erklärung unterschreiben Sie selbst und tragen die Verantwortung für ihre Richtigkeit. PPWR Radar bescheinigt keine Konformität, es liefert den geprüften Entwurf und die Begründung dazu."
+ },
+ {
+  "key": "Landing.keBand.cta",
+  "text": "Entwurf erstellen"
+ },
+ {
+  "key": "Check.footer",
+  "text": "Kostenlos · Keine Registrierung · Ersteinschätzung, keine Rechtsberatung"
+ },
+ {
+  "key": "Check.untertitel",
+  "text": "{anzahl} Fragen, 2 Minuten – Ihre kostenlose Ersteinschätzung."
+ },
+ {
+  "key": "CheckErgebnis.titel",
+  "text": "Ihre Ersteinschätzung"
+ },
+ {
+  "key": "CheckErgebnis.eskalationFallback",
+  "text": "Ihre Angaben lassen keine eindeutige Einordnung zu. Genau für solche Fälle bieten wir ein Erstgespräch mit unseren Compliance-Experten der Cattwyk Rechtsanwaltsgesellschaft an."
+ },
+ {
+  "key": "Onboarding.footer",
+  "text": "Einordnung auf Basis Ihrer Angaben · keine Rechtsberatung"
+ },
+ {
+  "key": "OnboardingErgebnis.vorbehalt",
+  "text": "Vorbehaltlich juristischer Verifikation"
+ },
+ {
+  "key": "OnboardingErgebnis.fussZeile",
+  "text": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung"
+ },
+ {
+  "key": "Wissen.beschreibungAnforderungen",
+  "text": "Die Anforderungen der EU-Verpackungsverordnung (PPWR) – redaktionell aufbereitet und juristisch geprüft."
+ },
+ {
+  "key": "Auslegungen.intro",
+  "text": "Typische Praxisfragen aus der Verpackungswelt – von unserer Redaktion beantwortet, mit exakter Fundstelle und juristisch verifiziert. Keine offizielle FAQ der EU-Kommission; deren Auslegungen fließen gekennzeichnet ein."
+ },
+ {
+  "key": "Dokumente.beschreibung",
+  "text": "Ihre erzeugten Compliance-Dokumente – aus den juristisch geprüften Vorlagen, vorbefüllt mit Ihrem Profil."
+ },
+ {
+  "key": "Dokumente.keineVorlagenAdmin",
+  "text": "Als Admin können Sie die Vorlagen-Master (v0.1, Entwurf) jetzt in die Datenbank importieren:"
+ },
+ {
+  "key": "Dokumente.entwurfHinweis",
+  "text": "Diese Vorlage ist ein Entwurf (v0.1) und noch nicht juristisch freigegeben."
+ },
+ {
+  "key": "Assistant.disclaimer",
+  "text": "Keine Rechtsberatung · Antwort aus der geprüften Wissensbasis des PPWR Radar"
+ },
+ {
+  "key": "Assistant.pdf.disclaimer",
+  "text": "PPWR Radar erklärt, ordnet ein, priorisiert und erstellt Entwürfe. Es stellt keine Rechtsberatung dar und begründet kein Mandatsverhältnis. Die inhaltliche Verantwortung für die aus generierten Entwürfen übernommenen Angaben liegt beim Verwender."
+ },
+ {
+  "key": "Labels.giltStatus.entwurf_eu",
+  "text": "EU-Entwurf"
+ },
+ {
+  "key": "Labels.pruefstatus.cattwyk_freigegeben",
+  "text": "Juristisch plausibilisiert"
+ },
+ {
+  "key": "Labels.pruefstatus.redaktion_geprueft",
+  "text": "Redaktionell geprüft, juristische Prüfung läuft"
+ },
+ {
+  "key": "Labels.pruefstatus.entwurf",
+  "text": "Entwurf – ungeprüft"
+ },
+ {
+  "key": "Vorzimmer.ersteinschaetzungTitel",
+  "text": "Ihre Ersteinschätzung aus dem Betroffenheits-Check"
+ },
+ {
+  "key": "Vorzimmer.ersteinschaetzungFooter",
+  "text": "Ersteinschätzung vom {datum} · keine Rechtsberatung"
+ },
+ {
+  "key": "Praxisfragen.editorial",
+  "text": "Fragen, wie sie uns aus der Verpackungsbranche erreichen – beantwortet von der Redaktion, mit exakter Fundstelle, juristisch verifiziert. Wo eine Antwort auf einer Auslegung der EU-Kommission beruht, ist das gekennzeichnet."
+ },
+ {
+  "key": "VerpackungErgebnis.vorbehalt",
+  "text": "Vorbehaltlich juristischer Verifikation"
+ },
+ {
+  "key": "VerpackungErgebnis.fussZeile",
+  "text": "Engine {version} · Rechtsstand {datum} · Einordnung, keine Rechtsberatung"
+ },
+ {
+  "key": "Updates.standFooter",
+  "text": "Rechtsmonitoring wöchentlich · letzter Lauf {datum} · Meldungen sind Information, keine Rechtsberatung"
+ }
+]

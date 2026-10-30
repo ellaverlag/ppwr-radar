@@ -99,7 +99,7 @@ function karteAuslegung(u, i) {
     para([run(`${u.code}  `, { bold: true, size: 22, color: BLUE }), run(u.titel, { bold: true, size: 22 })], { before: 240, after: 40, keepNext: true, topBorder: true }),
     small(`${u.block} · ${u.kategorie} · ${u.verbindlichkeit}${u.bezug ? " · Bezug: " + u.bezug : ""}`),
     label("Frage aus der Praxis:", u.frage),
-    label("Unsere Antwort (Entwurf):", u.antwort_kurz),
+    label("Unsere Antwort (Entwurf, vollständig):", u.antwort),
     label("Fundstellen:", u.fundstellen),
     new Paragraph({ spacing: { before: 60, after: 60 }, shading: { type: ShadingType.CLEAR, fill: "FFF7E0", color: "auto" }, children: [run("Offener Punkt für die Kanzlei: ", { bold: true, size: 19 }), run(u.flag.replace(/^\(neu 10\/2026\)\s*/, "") || "Freigabe der Aussage und der Fundstellen.", { size: 19 })] }),
     entscheidung(), ...anmerkung(),
@@ -148,7 +148,7 @@ function karteHinweis(h) {
 
 // ---------- build ----------
 const S = P.stats;
-const stufe2Anz = P.aus_neu.length + P.aus_pins.length + P.reg_s2.length + P.def_s2.length + P.hin.length;
+const stufe2Anz = P.aus_neu.length + P.aus_pins.length + P.reg_s2.length + P.def_s2.length + P.hin.length + P.tpl.length;
 const pinsAnz = P.anf_s2.reduce((n, a) => n + a.pins.length, 0) + P.tpl.reduce((n, t) => n + t.pins.length, 0);
 const stufe1Anz = P.def_s1.length + P.reg_s1.length + P.anf_s1.length + P.aus_s1.length + P.glo_s1.length;
 
@@ -166,9 +166,10 @@ children.push(
   ...bullets([
     `Prioritäten – Leseanleitung: die sieben Punkte, an denen wir Ihre Einordnung zuerst brauchen (Session-Pflicht), danach Priorität 2 und 3.`,
     `Teil A – Sammelfreigabe: ${stufe1Anz} Datensätze ohne offenen Punkt, als Tabellen zum Querlesen (Zeitbedarf etwa 60 bis 90 Minuten).`,
-    `Teil B – Einzelprüfung: ${stufe2Anz} Datensätze mit konkreter Frage an die Kanzlei, je eine Karte mit drei Kästchen, darunter ${P.aus_neu.length} neue Praxisfragen zur Rechtsentwicklung seit Juli 2026.`,
+    `Teil B – Einzelprüfung: ${stufe2Anz} Datensätze mit konkreter Frage an die Kanzlei, je eine Karte mit drei Kästchen (Antworten im Volltext), darunter ${P.aus_neu.length} Praxisfragen zur Rechtsentwicklung seit Juli 2026, die vier Dokumentvorlagen im Volltext, der Onboarding-Fragebogen, die Disclaimer-Texte und die Regeln des KI-Assistenten.`,
     `Teil C – Fundstellen-Bestätigungen: ${pinsAnz} markierte Stellen (!) in Anforderungen und Dokumentvorlagen, als Tabelle zum Abhaken.`,
     `Teil D – Gesamtfreigabe und Rückgabe.`,
+    `Anhang (eigene Datei): Volltexte aller Datensätze der Wissensbasis zum Nachschlagen – Teil A zeigt je Datensatz nur die Kernaussage.`,
   ]),
   para("", { after: 200 }),
   small("Vertraulich. Dieses Paket ist aus der Datenbank von PPWR Radar generiert (Stand " + RECHTSSTAND + "). Jeder Datensatz trägt seinen Code, mit dem die Entscheidung der Kanzlei direkt in das System übernommen wird."),
@@ -183,7 +184,7 @@ children.push(
   para("Vor Teil A finden Sie eine Prioritätenliste: sieben Punkte, an denen die Rechtslage, die Behördenpraxis oder unsere Daten so auseinanderliegen, dass wir Ihre Einordnung in der Session brauchen. Wer wenig Zeit hat, liest diese Liste und Teil B.1; der Rest kann folgen."),
   h2("Drei Stufen, drei Aufwände"),
   ...bullets([
-    "Teil A ist zum Querlesen gedacht: eine Zeile je Datensatz, Kernaussage und Fundstelle. Was Ihnen auffällt, markieren Sie mit „Anm.“ und notieren den Hinweis am Rand. Alles andere geben Sie je Block mit einem Haken frei.",
+    "Teil A ist zum Querlesen gedacht: eine Zeile je Datensatz, Kernaussage und Fundstelle. Der vollständige Text jedes Datensatzes steht im Anhang „Volltexte“ (eigene Datei, gleiche Codes). Was Ihnen auffällt, markieren Sie mit „Anm.“ und notieren den Hinweis am Rand. Alles andere geben Sie je Block mit einem Haken frei.",
     "Teil B enthält die Stellen, an denen wir Ihre Einordnung wirklich brauchen: Grenzfälle, Divergenzen zwischen Kommission und ZSVR, Regeln der Rollen-Engine, Neues seit Juli. Je Karte drei Kästchen: freigeben, ändern, streichen.",
     "Teil C sind reine Fundstellen-Bestätigungen: Stellen, an denen wir im Text eine Norm oder einen Absatz als unsicher (!) markiert haben. Bestätigen oder korrigieren.",
   ]),
@@ -212,6 +213,8 @@ function mdToParas(md) {
     if (line.startsWith("## ")) { out.push(h2(line.slice(3).trim())); continue; }
     if (line.startsWith("### ")) { out.push(h3(line.slice(4).trim())); continue; }
     if (line.trim() === "---") continue;
+    if (/^\s*>/.test(line)) { out.push(para(line.replace(/^\s*>\s?/, ""), { size: 18, italics: true, color: GREY, after: 40 })); continue; }
+    if (/^\s*\|/.test(line)) { if (/^\s*\|[\s:-]+\|/.test(line) && !/[A-Za-z]/.test(line)) continue; out.push(para(line.replace(/^\s*\||\|\s*$/g, "").split("|").map((c) => c.trim()).join("  ·  "), { size: 17, after: 20 })); continue; }
     if (/^\s*[-*] /.test(line)) {
       const t = line.replace(/^\s*[-*] /, "");
       const m = t.match(/^\*\*([^*]+)\*\*:?\s*(.*)$/);
@@ -272,6 +275,46 @@ P.hin.forEach((h) => children.push(...karteHinweis(h)));
 
 children.push(h2(`B.4 Praxisfragen mit offenem Punkt aus früheren Paketen (${P.aus_pins.length})`));
 P.aus_pins.forEach((u, i) => children.push(...karteAuslegung(u, i)));
+
+children.push(h2(`B.5 Dokumentvorlagen im Volltext (${P.tpl.length})`));
+children.push(para("Aus diesen Vorlagen erzeugt der Dokumenten-Generator die Entwürfe für den Nutzer (vorbefüllt aus Profil und Portfolio, Nutzer-Pflichtfelder markiert). Die Ziffern der Konformitätserklärung folgen wörtlich Anhang VIII PPWR. Die (!)-Stellen sind zusätzlich in Teil C als Einzelpunkte aufgeführt; hier bitte die Vorlage als Ganzes freigeben, ändern oder streichen. Marker: [VORBEFÜLLT] = automatisch aus dem Profil; [NUTZER-PFLICHT] = vom Nutzer zu ergänzen und zu verantworten; [SYSTEM] = fester Text aus der Wissensbasis.", { size: 19, after: 120 }));
+for (const t of P.tpl) {
+  children.push(para([run(`${t.titel}  `, { bold: true, size: 22, color: BLUE }), run(`(${t.key}, Version ${t.version})`, { size: 20 })], { before: 240, after: 80, keepNext: true, topBorder: true }));
+  children.push(...mdToParas(t.inhalt.replace(/<!--[\s\S]*?-->/g, "")));
+  children.push(new Paragraph({ spacing: { before: 60, after: 60 }, shading: { type: ShadingType.CLEAR, fill: "FFF7E0", color: "auto" }, children: [run("Offener Punkt für die Kanzlei: ", { bold: true, size: 19 }), run(`Vorlage als Ganzes: Struktur, feste Texte und Hinweise an den Nutzer. ${t.pins.length} markierte Stellen (!) siehe Teil C.`, { size: 19 })] }));
+  children.push(entscheidung(), ...anmerkung());
+}
+
+children.push(h2(`B.6 Onboarding-Fragebogen (${P.wiz.length} Fragen)`));
+children.push(para("Aus den Antworten auf diese Fragen leitet die Rollen-Engine die Rollen je Produktlinie ab (Spalte „speist Regeln“). Bitte prüfen: Sind die Fragen so gestellt, dass die Antworten die Tatbestandsmerkmale der Rollen tragen? Fehlt eine Frage, die für die Zuordnung nötig wäre?", { size: 19, after: 120 }));
+{
+  const w = [700, 3300, 3238, 1200, 1200];
+  const rows = [[headCell("Nr.", w[0]), headCell("Frage (Ebene)", w[1]), headCell("Antwortoptionen / Hinweis", w[2]), headCell("speist Regeln", w[3]), headCell("Prüfung", w[4])]];
+  for (const q of P.wiz) rows.push([
+    cell(txt(q.code, { bold: true }), w[0]),
+    cell([txt(q.frage), txt(q.ebene + " · " + q.typ + (q.bedingung && q.bedingung !== "immer" ? " · nur wenn: " + q.bedingung : ""), { size: 15, color: GREY })], w[1]),
+    cell([txt(q.optionen.split("|").map((o) => o.trim()).filter(Boolean).join(" · "), { size: 16 }), ...(q.hinweis ? [txt("Hinweis: " + q.hinweis, { size: 15, color: GREY })] : [])], w[2]),
+    cell(txt(q.regeln, { size: 16 }), w[3]),
+    cell([check("ok"), check("Anm.")], w[4]),
+  ]);
+  children.push(table(w, rows));
+}
+children.push(...anmerkung());
+
+children.push(h2("B.7 Disclaimer, Prüfstatus-Hinweise und Nennung der Kanzlei im Produkt"));
+children.push(para("Diese Texte stehen im Produkt an den Stellen, an denen die Grenze zur Rechtsberatung gezogen und Cattwyk als Rechtspartner genannt wird. Bitte Wortlaut prüfen – insbesondere die Nennung der Kanzlei und die Formel „juristisch plausibilisiert“.", { size: 19, after: 120 }));
+{
+  const w = [2600, 5838, 1200];
+  const rows = [[headCell("Stelle im Produkt", w[0]), headCell("Text", w[1]), headCell("Prüfung", w[2])]];
+  for (const t of P.texte) rows.push([cell(txt(t.key, { size: 15, color: GREY }), w[0]), cell(txt(t.text), w[1]), cell([check("ok"), check("Anm.")], w[2])]);
+  children.push(table(w, rows));
+}
+children.push(...anmerkung());
+
+children.push(h2("B.8 Regeln des KI-Assistenten"));
+children.push(para("Der Assistent im Produkt beantwortet Nutzerfragen ausschließlich aus den freigegebenen Datensätzen der Wissensbasis. Die folgenden Regeln sind seine verbindliche Anweisung (System-Prompt, Platzhalter in eckigen Klammern). Bitte prüfen, ob die Grenzziehung (keine Konformitätszusagen, Eskalation bei Einzelfallfragen, Kennzeichnung unverbindlicher Auslegungen) aus Ihrer Sicht ausreicht.", { size: 19, after: 120 }));
+for (const line of P.assistant.split("\n")) { if (line.trim()) children.push(para(line, { size: 18, after: 60 })); }
+children.push(entscheidung(), ...anmerkung());
 
 // Teil C
 children.push(h1("Teil C – Fundstellen-Bestätigungen"));
