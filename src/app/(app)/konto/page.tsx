@@ -6,6 +6,7 @@ import { Badge } from "@/components/badge";
 import { PageHeader } from "@/components/page-header";
 import { LegalCard, LegalCardFooter } from "@/components/ui";
 import { formatDate } from "@/lib/labels";
+import { GROESSEN_2024 } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
 import { zahlungVerwalten } from "../dashboard/actions";
 import { kontoLoeschen, stammdatenSpeichern } from "./actions";
@@ -74,6 +75,8 @@ export default async function KontoPage({
   const t = await getTranslations("Konto");
   const tFelder = await getTranslations("Onboarding.felder");
   const tOnboarding = await getTranslations("Onboarding");
+  const tEudr = await getTranslations("Eudr");
+  const tLabels = await getTranslations("Labels");
 
   const fehlerKey = FEHLER_KEYS.find((key) => key === params.fehler);
   const aboAktiv = abo?.status === "active";
@@ -187,6 +190,29 @@ export default async function KontoPage({
               label={tFelder("lucidNummer")}
               wert={profil?.lucid_nummer}
             />
+          </div>
+
+          <div className="mt-6">
+            <label
+              htmlFor="groesse_2024"
+              className="block text-label uppercase text-ink-muted"
+            >
+              {tEudr("konto.groesseLabel")}
+            </label>
+            <select
+              id="groesse_2024"
+              name="groesse_2024"
+              defaultValue={profil?.groesse_2024 ?? ""}
+              className="mt-2 w-full rounded border border-line-strong bg-canvas px-4 py-3 text-body text-ink focus:border-ink focus:outline-none"
+            >
+              <option value="">{tEudr("konto.ohneAngabe")}</option>
+              {GROESSEN_2024.map((g) => (
+                <option key={g} value={g}>
+                  {tLabels(`eudr.groesse.${g}`)}
+                </option>
+              ))}
+            </select>
+            <p className="mt-2 text-body-sm text-ink-muted">{tEudr("konto.groesseHilfe")}</p>
           </div>
 
           <button

@@ -30,7 +30,12 @@
     "status": "Status analysis",
     "verpackungen": "Meine Verpackungen – PPWR Radar",
     "verpackungDetail": "Verpackungen – PPWR Radar",
-    "updates": "Updates – PPWR Radar"
+    "updates": "Updates – PPWR Radar",
+    "checkEudr": {
+      "title": "EUDR check for packaging – PPWR Radar",
+      "description": "Up to five questions, a first assessment: does the EU Deforestation Regulation (EUDR) apply to your paper, paperboard or wood packaging? Free, no registration."
+    },
+    "checkEudrErgebnis": "Your EUDR initial assessment – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -777,6 +782,7 @@
       "kennzeichnung": "Kennzeichnung",
       "rollen_epr": "Rollen & EPR",
       "verbote": "Verbote",
+      "eudr": "EUDR",
       "sonstiges": "Sonstiges"
     },
     "giltStatus": {
@@ -811,7 +817,10 @@
       "vertreiber": "Vertreiber",
       "endvertreiber": "Endvertreiber",
       "fulfillment_dienstleister": "Fulfillment-Dienstleister",
-      "lieferant": "Lieferant"
+      "lieferant": "Lieferant",
+      "eudr_marktteilnehmer": "Operator (EUDR)",
+      "eudr_nachgelagert": "Downstream operator (EUDR)",
+      "eudr_haendler": "Trader (EUDR)"
     },
     "pflichten": {
       "bevollmaechtigter_ehv": "Bevollmächtigter für die erweiterte Herstellerverantwortung erforderlich",
@@ -880,7 +889,7 @@
         "keine": "Keine Marke"
       },
       "markeHilfe": "Trägt die Verpackung selbst (nicht das Produkt) Ihren Namen oder Ihr Logo?",
-      "materialHilfe": "Freitext, z. B. Papier/Karton, PE-Folie, Glas. Erscheint in Dokumenten als Materialangabe.",
+      "materialHilfe": "Free text, e.g. paper/carton, PE film, glass. Appears in documents as the material and determines whether the EUDR check applies (paper, paperboard, wood, natural rubber).",
       "lebensmittelkontakt": "Lebensmittelkontakt",
       "mehrweg": "Mehrwegverpackung"
     },
@@ -905,6 +914,45 @@
       "ja": "Gilt",
       "nein": "Gilt nicht",
       "unklar": "Offen"
+    },
+    "eudr": {
+      "material": {
+        "holz": "Wood",
+        "papier_pappe": "Paper/paperboard",
+        "naturkautschuk": "Natural rubber",
+        "nicht_relevant": "no EUDR material",
+        "verbund": "Composite (paper content unclear)",
+        "unbekannt": "not specified"
+      },
+      "verwendung": {
+        "nur_genutzt": "Only used (packs own goods)",
+        "leer_verkauft": "Sold empty as a product"
+      },
+      "verwendungErklaerung": {
+        "nur_genutzt": "The packaging protects, supports or carries your own products and is supplied with them.",
+        "leer_verkauft": "You manufacture, import or trade the packaging and sell it empty to customers."
+      },
+      "bezug": {
+        "import_drittland": "Imported by us from a third country",
+        "selbst_hergestellt_aus_eu_vormaterial": "Made in-house from EU input material",
+        "fertig_gekauft_eu": "Bought ready-made from an EU supplier and resold unchanged"
+      },
+      "rezyklat": {
+        "keins": "No recycled content",
+        "teilweise": "Partly recycled",
+        "vollstaendig": "Fully recycled",
+        "unbekannt": "Unknown"
+      },
+      "erzeugnis": {
+        "neu": "New",
+        "gebraucht_oder_mehrweg_nach_erstnutzung": "Used or reusable after first use"
+      },
+      "groesse": {
+        "kleinst": "Micro enterprise",
+        "klein": "Small enterprise",
+        "mittel": "Medium-sized enterprise",
+        "gross": "Large enterprise"
+      }
     }
   },
   "Vorzimmer": {
@@ -978,6 +1026,7 @@
       "kennzeichnung": "Labelling",
       "konformitaet": "Conformity",
       "verbote": "Bans",
+      "eudr": "EUDR (deforestation)",
       "sonstiges": "Other"
     },
     "fundstellen": "References",
@@ -1170,5 +1219,161 @@
       "verbandsmeinung": "Association view",
       "stand": "Monitoring status"
     }
+  },
+  "Eudr": {
+    "titel": "EUDR – Deforestation Regulation",
+    "untertitel": "Scope under Regulation (EU) 2023/1115",
+    "status": {
+      "nicht_betroffen": "Not in scope",
+      "betroffen": "In scope as {rolle}",
+      "unklar": "Unclear",
+      "unklarRolle": "Unclear, provisionally {rolle}"
+    },
+    "grund": {
+      "material_nicht_relevant": "The material of this packaging is not a relevant product under the EUDR. Only wood, paper, paperboard and natural rubber are covered.",
+      "nur_genutzt": "You use this packaging to pack your own goods. Packaging used exclusively to support, protect or carry another product and supplied with it is excluded from Annex I. Your supplier of the empty packaging may be in scope.",
+      "rezyklat_vollstaendig": "The packaging consists entirely of recycled material. Recovered products and products derived from them are excluded from Annex I.",
+      "gebraucht_mehrweg": "Used products and reusable packaging from its first use are excluded from Annex I.",
+      "marktteilnehmer": "You place the empty packaging or its input material on the EU market yourself, imported from a third country. That makes you an operator: due diligence and a due diligence statement before placing on the market.",
+      "nachgelagert": "You manufacture the packaging from input material already covered by your EU supplier's due diligence statement. That makes you a downstream operator: no statement of your own, but information obligations under Art. 5.",
+      "haendler": "You resell packaging bought ready-made without changing it. That makes you a trader: information obligations under Art. 5.",
+      "rezyklat_teilweise": "The packaging contains some recycled material. Whether the recycling exemption in the new Annex I also covers mixed fibres is open (!). Until clarified, assume you are in scope as {rolle}.",
+      "material_offen": "The material entry does not show whether the packaging contains paper, paperboard, wood or natural rubber.",
+      "verwendung_offen": "Under the EUDR it matters whether you only use the packaging for your own goods or sell it empty as a product.",
+      "bezug_offen": "Your role depends on where the product or its input material comes from."
+    },
+    "frage": {
+      "material": "Specify the material: does the packaging contain paper, paperboard, wood or natural rubber?",
+      "verwendung": "State whether the packaging is only used or sold empty as a product.",
+      "bezug": "State the origin: imported from a third country, made in-house from EU input material, or resold unchanged.",
+      "rezyklat": "State the recycled content – fully recycled packaging is not in scope.",
+      "erzeugnis": "State whether the packaging is new or used.",
+      "groesse_2024": "Enter your company size as of 31 Dec 2024 in your account."
+    },
+    "offeneFragenTitel": "Still open",
+    "abgeleitet": "Derived from your PPWR entries: {felder}. Please correct in the form if this does not apply.",
+    "feldnamen": {
+      "material": "Material",
+      "verwendung": "Use",
+      "bezug": "Origin",
+      "rezyklat": "Recycled content",
+      "erzeugnis": "New or used",
+      "groesse_2024": "Company size 2024"
+    },
+    "materialErkannt": "Material recognised as: {material}",
+    "fristLabel": "Obligations apply from",
+    "fristAlternativ": "for micro and small enterprises (as of 31 Dec 2024) from {datum}",
+    "fundstelleLabel": "Legal basis",
+    "anforderungenTitel": "Obligations in the knowledge base",
+    "praxisfragenTitel": "Practice questions",
+    "inPruefung": "under review",
+    "herleitungTitel": "Derivation",
+    "regel": "Rule {id}",
+    "vorbehalt": "Provisional",
+    "vorbehaltText": "The EUDR module is under legal review. The result is a provisional classification.",
+    "cattwykTitel": "Your individual case",
+    "cattwykFallback": "PPWR Radar determines whether the EUDR applies. Due diligence statements, geolocation and risk assessment are advisory or software services provided by third parties. For your individual case we offer an initial consultation with Cattwyk Rechtsanwaltsgesellschaft.",
+    "abgrenzung": "PPWR Radar determines whether the EUDR applies. Due diligence statements, geolocation and risk assessment are advisory or software services provided by third parties.",
+    "keinErgebnis": "No EUDR result for this packaging yet. It will be calculated the next time you save.",
+    "fussZeile": "Reg. (EU) 2023/1115 as amended by Reg. (EU) 2025/2650 and Del. Reg. (EU) 2026/2102 · Engine {version} · Legal status {datum}",
+    "formularTitel": "EUDR details (Deforestation Regulation)",
+    "formularIntro": "Only relevant if the packaging contains paper, paperboard, wood or natural rubber. Without entries, PPWR Radar derives the values from your PPWR details or asks.",
+    "formularVerwendung": "Use",
+    "formularBezug": "Origin (only for packaging sold empty)",
+    "formularRezyklat": "Recycled content",
+    "formularErzeugnis": "New or used",
+    "ohneAngabe": "No entry (derive)",
+    "dashTitel": "EUDR scope",
+    "dashZeile": "{betroffen} in scope · {unklar} unclear · {nicht} not in scope",
+    "dashKeineVerpackungen": "Once you have added packaging, this card shows which items fall under the Deforestation Regulation.",
+    "dashAlleNichtBetroffen": "Based on your entries, none of your packaging falls under the EUDR.",
+    "dashOhneErgebnis": "{anzahl, plural, one {# packaging item} other {# packaging items}} without EUDR result yet – calculated the next time you save.",
+    "dashAnsehen": "View →",
+    "dashFooter": "Reg. (EU) 2023/1115 · applies from 30 Dec 2026",
+    "konto": {
+      "groesseLabel": "Company size as of 31 Dec 2024 (EUDR)",
+      "groesseHilfe": "Determines the EUDR small-enterprise deadline (Art. 38(3)). Thresholds of Accounting Directive 2013/34/EU: micro enterprise not exceeding two of EUR 450,000 balance sheet total, EUR 900,000 turnover, 10 employees; small enterprise EUR 5m, EUR 10m, 50 employees. For paper, paperboard and wood, 30 Dec 2026 applies regardless.",
+      "ohneAngabe": "Not specified"
+    }
+  },
+  "CheckEudr": {
+    "titel": "The EUDR applies from 30 Dec 2026.<br></br>Does it affect your packaging?",
+    "untertitel": "Up to five questions, one minute – your free initial assessment under the EU Deforestation Regulation.",
+    "fortschritt": "Question {aktuell} of {gesamt}",
+    "fehlerAntwort": "Please select an answer.",
+    "zurueck": "← Back",
+    "zurStartseiteKurz": "← Home",
+    "weiter": "Next →",
+    "footer": "Free · No registration · Initial assessment, not legal advice",
+    "fragen": {
+      "material": {
+        "text": "What is the packaging made of?",
+        "hilfe": "For several packaging items, run the check once per item.",
+        "optionen": {
+          "papier_pappe": "Paper, paperboard, carton or corrugated board",
+          "holz": "Wood (e.g. pallets, crates, cable drums)",
+          "naturkautschuk": "Natural rubber",
+          "verbund_papier": "Composite containing paper or paperboard",
+          "nicht_relevant": "Plastic, glass, metal, textile, bamboo or other"
+        }
+      },
+      "verwendung": {
+        "text": "What do you do with the packaging?",
+        "hilfe": "What matters is whether the packaging protects your goods or is itself your product.",
+        "optionen": {
+          "nur_genutzt": "We pack our own products in it",
+          "leer_verkauft": "We sell the packaging empty as a product (manufacturer, trader, importer)"
+        }
+      },
+      "bezug": {
+        "text": "Where does the packaging or its input material come from?",
+        "hilfe": "Input material is, for example, the base paper from which you make folding cartons.",
+        "optionen": {
+          "import_drittland": "We import it (or the input material) ourselves from outside the EU",
+          "selbst_hergestellt_aus_eu_vormaterial": "We make it ourselves from input material supplied by EU suppliers",
+          "fertig_gekauft_eu": "We buy it ready-made from EU suppliers and resell it unchanged"
+        }
+      },
+      "rezyklat": {
+        "text": "What is the recycled content?",
+        "hilfe": "Recycled content means fibres or wood from recovered paper, waste wood or production scrap.",
+        "optionen": {
+          "vollstaendig": "Fully recycled",
+          "teilweise": "Partly recycled, partly virgin fibre or new wood",
+          "keins": "No recycled content",
+          "unbekannt": "I don't know"
+        }
+      },
+      "erzeugnis": {
+        "text": "Is the packaging new or used?",
+        "hilfe": "Used means: already used as packaging once, such as exchange pallets or refurbished reusable containers.",
+        "optionen": {
+          "neu": "New",
+          "gebraucht_oder_mehrweg_nach_erstnutzung": "Used, or reusable after its first use"
+        }
+      }
+    }
+  },
+  "CheckEudrErgebnis": {
+    "titel": "Your EUDR initial assessment",
+    "untertitel": "Based on your answers for one packaging item.",
+    "inKuerzeTitel": "Result available soon",
+    "inKuerzeText": "The Deforestation Regulation rules behind your assessment are currently under legal review. As soon as the review is complete, the result will be available here.",
+    "nichtVerfuegbar": "The assessment is currently unavailable. Please try again later.",
+    "zurueckZumCheck": "Back to the check",
+    "pflichtenTitel": "What to expect",
+    "pflichten": {
+      "eudr_marktteilnehmer": "Due diligence with information gathering down to geolocation, risk assessment and a due diligence statement in the EU information system before placing on the market (Art. 4, 8 to 13).",
+      "eudr_nachgelagert": "Keep supplier and customer data and the reference numbers of due diligence statements for five years; companies above the SME thresholds register in the EU information system (Art. 5).",
+      "eudr_haendler": "Keep supplier and customer data and the reference numbers of due diligence statements for five years; companies above the SME thresholds register in the EU information system (Art. 5)."
+    },
+    "nichtBetroffenHinweis": "Your obligations under the Packaging Regulation (PPWR) for this packaging remain unaffected.",
+    "ppwrCheckLink": "Go to the PPWR scope check →",
+    "rechtsstandZeile": "Reg. (EU) 2023/1115 as amended by Reg. (EU) 2025/2650 and Del. Reg. (EU) 2026/2102 · as of {datum}",
+    "ctaTitel": "All your packaging at a glance",
+    "ctaText": "PPWR Radar classifies each of your packaging items under PPWR and EUDR – with role, deadlines, legal references and practice questions.",
+    "ctaRegistrieren": "Register for free",
+    "comingSoonCta": "Notify me at launch",
+    "neuStarten": "Check another packaging item"
   }
 }

@@ -5,8 +5,17 @@ import type { WizardState } from "@/lib/onboarding";
 import { isPreviewMode } from "@/lib/preview";
 import {
   ENGINE_VERSION,
+  evaluiereEudr,
   evaluiereVerpackung,
+  GROESSEN_2024,
+  leiteEudrKontextAb,
+  type EudrBezug,
+  type EudrErgebnis,
+  type EudrErzeugnis,
+  type EudrRezyklat,
+  type EudrVerwendung,
   type HerleitungsEintrag,
+  type UnternehmensGroesse2024,
   type PflichtEintrag,
   type VerpackungErgebnis,
   type VerpackungKontext,
@@ -42,6 +51,11 @@ export interface VerpackungZeile {
   lebensmittelkontakt: boolean;
   mehrweg: boolean;
   status: "aktiv" | "stillgelegt";
+  /** EUDR-Eingaben (Migration 021), null = nicht beantwortet. */
+  eudr_verwendung: EudrVerwendung | null;
+  eudr_bezug: EudrBezug | null;
+  eudr_rezyklat: EudrRezyklat | null;
+  eudr_erzeugnis: EudrErzeugnis | null;
 }
 
 export interface VerpackungErgebnisZeile {
@@ -53,6 +67,8 @@ export interface VerpackungErgebnisZeile {
   vorbehalt: boolean;
   engine_version: string;
   rechtsstand: string;
+  /** EUDR-Strang (Migration 021); null bei Ergebnissen vor v0.93. */
+  eudr: EudrErgebnis | null;
 }
 
 export interface EntlastungsHinweis {
@@ -133,7 +149,24 @@ function privilegierterClient(): SupabaseClient {
 // ---------------------------------------------------------------------------
 
 const VERPACKUNG_SPALTEN =
-  "id, profil_id, produktlinie_id, bezeichnung, art, form, bezug, lieferant_sitz, marke, material, lebensmittelkontakt, mehrweg, status";
+  "id, profil_id, produktlinie_id, bezeichnung, art, form, bezug, lieferant_sitz, marke, material, lebensmittelkontakt, mehrweg, status, eudr_verwendung, eudr_bezug, eudr_rezyklat, eudr_erzeugnis";
+
+/** EUDR-Eingaben einer Zeile → Engine-Eingaben. */
+export function eudrEingabenAus(zeile: VerpackungZeile) {
+  return {
+    material: zeile.material,
+    verwendung: zeile.eudr_verwendung,
+    bezug: zeile.eudr_bezug,
+    rezyklat: zeile.eudr_rezyklat,
+    erzeugnis: zeile.eudr_erzeugnis,
+  };
+}
+
+export function alsGroesse2024(wert: unknown): UnternehmensGroesse2024 | null {
+  return typeof wert === "string" && (GROESSEN_2024 as string[]).includes(wert)
+    ? (wert as UnternehmensGroesse2024)
+    : null;
+}
 
 export async function ladeVerpackungen(
   produktlinieId: string
@@ -239,7 +272,7 @@ export async function ladeVerpackungsErgebnisse(
   const { data, error } = await supabase
     .from("verpackung_ergebnisse")
     .select(
-      "verpackung_id, rollen, pflichten, hinweise, herleitung, vorbehalt, engine_version, rechtsstand"
+      "verpackung_id, rollen, pflichten, hinweise, herleitung, vorbehalt, engine_version, rechtsstand, eudr"
     )
     .in("verpackung_id", verpackungIds)
     .eq("aktuell", true);
@@ -315,6 +348,13 @@ export async function berechneUndSpeichereVerpackungsErgebnisse(
     regeln.map((r) => r.rechtsstand).filter(Boolean).sort().at(-1) ??
     new Date().toISOString().slice(0, 10);
 
+  const { data: profilZeile } = await schreibClient
+    .from("profile")
+    .select("groesse_2024")
+    .eq("id", profilId)
+    .maybeSingle();
+  const groesse2024 = alsGroesse2024(profilZeile?.groesse_2024);
+
   const unternehmen = unternehmenAusState(state);
   const linienKontexte = linienAusState(state);
   const nameNachLinieId = new Map(
@@ -325,18 +365,27 @@ export async function berechneUndSpeichereVerpackungsErgebnisse(
     anzahlJeLinie.set(z.produktlinie_id, (anzahlJeLinie.get(z.produktlinie_id) ?? 0) + 1);
   }
 
-  const ergebnisse: { zeile: VerpackungZeile; ergebnis: VerpackungErgebnis }[] = [];
+  const ergebnisse: {
+    zeile: VerpackungZeile;
+    ergebnis: VerpackungErgebnis;
+    eudr: EudrErgebnis;
+  }[] = [];
   for (const zeile of zeilen) {
     const name = nameNachLinieId.get(zeile.produktlinie_id);
     const linie = linienKontexte.find((l) => l.name === name);
     if (!linie) continue; // Linie ohne Wizard-Zustand: kein Kontext, kein Ergebnis
+    const kontext = zuKontext(zeile);
     ergebnisse.push({
       zeile,
+      eudr: evaluiereEudr(
+        regeln,
+        leiteEudrKontextAb(eudrEingabenAus(zeile), kontext, linie.taetigkeit, groesse2024)
+      ),
       ergebnis: evaluiereVerpackung(
         regeln,
         unternehmen,
         linie,
-        zuKontext(zeile),
+        kontext,
         anzahlJeLinie.get(zeile.produktlinie_id) ?? 1
       ),
     });
@@ -344,7 +393,7 @@ export async function berechneUndSpeichereVerpackungsErgebnisse(
   if (ergebnisse.length === 0) return [];
 
   const { error: insFehler } = await schreibClient.from("verpackung_ergebnisse").insert(
-    ergebnisse.map(({ zeile, ergebnis }) => ({
+    ergebnisse.map(({ zeile, ergebnis, eudr }) => ({
       verpackung_id: zeile.id,
       profil_id: profilId,
       rollen: ergebnis.rollen_set.rollen,
@@ -354,6 +403,7 @@ export async function berechneUndSpeichereVerpackungsErgebnisse(
       vorbehalt: ergebnis.rollen_set.vorbehalt,
       engine_version: ENGINE_VERSION,
       rechtsstand,
+      eudr,
     }))
   );
   if (insFehler) {
@@ -400,6 +450,8 @@ export interface VerpackungsUebersicht {
   anzahl: number;
   mitKonformitaetserklaerung: number;
   mitLucid: number;
+  eudrBetroffen: number;
+  eudrUnklar: number;
 }
 
 /** Zählung je Produktlinie (nur aktive Verpackungen, aktuelle Ergebnisse). */
@@ -416,6 +468,8 @@ export async function ladeVerpackungsUebersicht(
       anzahl: 0,
       mitKonformitaetserklaerung: 0,
       mitLucid: 0,
+      eudrBetroffen: 0,
+      eudrUnklar: 0,
     };
     eintrag.anzahl += 1;
     const e = ergebnisse.get(z.id);
@@ -425,6 +479,8 @@ export async function ladeVerpackungsUebersicht(
     if (e?.pflichten.some((p) => p.key === "lucid_registrierung" && p.gilt === "ja")) {
       eintrag.mitLucid += 1;
     }
+    if (e?.eudr?.status === "betroffen") eintrag.eudrBetroffen += 1;
+    if (e?.eudr?.status === "unklar") eintrag.eudrUnklar += 1;
     map.set(z.produktlinie_id, eintrag);
   }
   return map;

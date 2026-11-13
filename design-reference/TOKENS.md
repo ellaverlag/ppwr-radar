@@ -148,6 +148,7 @@ Icons darüber hinaus.** Große Leerzustands-Icons: 56 px (`h-14 w-14`),
 | Kategorie | `konformitaet` | `ShieldCheck` (Schild mit Haken) |
 | Kategorie | `rollen_epr` | `Users` (Personen) |
 | Kategorie | `verbote` | `Ban` |
+| Kategorie | `eudr` | `TreePine` (Nadelbaum) |
 | Kategorie | `sonstiges` | `Info` |
 | Gilt-Status | `in_kraft` | `Check` (Haken) |
 | Gilt-Status | `kuenftig` | `Clock` (Uhr) |

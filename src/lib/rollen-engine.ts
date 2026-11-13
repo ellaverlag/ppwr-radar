@@ -8,8 +8,11 @@
  * Ergebnisse übernimmt lib/rollen-service.ts.
  */
 
-/** v0.91 (Rollen-Engine A–C, Z1) + Verpackungsregeln D1–D5 (Verpackungs-Ebene). */
-export const ENGINE_VERSION = "v0.92";
+/**
+ * v0.91 (Rollen-Engine A–C, Z1) + Verpackungsregeln D1–D5 (Verpackungs-Ebene,
+ * v0.92) + EUDR-Strang E1–E9 (v0.93, eigener Strang evaluiereEudr).
+ */
+export const ENGINE_VERSION = "v0.93";
 
 // ---------------------------------------------------------------------------
 // Eingaben
@@ -920,4 +923,336 @@ export function evaluiereAlle(
   linien: LinienKontext[]
 ): LinienErgebnis[] {
   return linien.map((linie) => evaluiereLinie(regeln, unternehmen, linie));
+}
+
+// ===========================================================================
+// EUDR-Strang (v0.93): Betroffenheits-Check zur EU-Entwaldungsverordnung
+// (VO (EU) 2023/1115 i. d. F. VO (EU) 2025/2650 und Del. VO (EU) 2026/2102)
+// je Verpackung. Eigener Strang neben A–D: andere Rollen (eudr_*), andere
+// Pflichten (Anforderungen 41–44), keine Wechselwirkung mit den PPWR-Rollen.
+// Regeln E1–E9 (Block „eudr“) aus rollen_regeln liefern Texte, Fundstellen
+// und Prüfstatus; hier stehen die typisierten WENN-Bedingungen.
+// Das Ergebnis stellt nur die Betroffenheit fest – Sorgfaltserklärung,
+// Geolokalisierung und Risikobewertung sind Beratungs- bzw. Software-
+// leistung Dritter.
+// ===========================================================================
+
+export type EudrMaterial =
+  | "holz"
+  | "papier_pappe"
+  | "naturkautschuk"
+  | "nicht_relevant"
+  | "verbund"
+  | "unbekannt";
+export type EudrVerwendung = "nur_genutzt" | "leer_verkauft";
+export type EudrBezug =
+  | "import_drittland"
+  | "selbst_hergestellt_aus_eu_vormaterial"
+  | "fertig_gekauft_eu";
+export type EudrRezyklat = "keins" | "teilweise" | "vollstaendig" | "unbekannt";
+export type EudrErzeugnis = "neu" | "gebraucht_oder_mehrweg_nach_erstnutzung";
+export type UnternehmensGroesse2024 = "kleinst" | "klein" | "mittel" | "gross";
+export type EudrRolle = "eudr_marktteilnehmer" | "eudr_nachgelagert" | "eudr_haendler";
+export type EudrStatus = "nicht_betroffen" | "betroffen" | "unklar";
+export type EudrFrage =
+  | "material"
+  | "verwendung"
+  | "bezug"
+  | "rezyklat"
+  | "erzeugnis"
+  | "groesse_2024";
+/** Schlüssel des tragenden Grundes (UI: Labels.eudr.grund.*). */
+export type EudrGrund =
+  | "material_nicht_relevant"
+  | "nur_genutzt"
+  | "rezyklat_vollstaendig"
+  | "gebraucht_mehrweg"
+  | "marktteilnehmer"
+  | "nachgelagert"
+  | "haendler"
+  | "rezyklat_teilweise"
+  | "material_offen"
+  | "verwendung_offen"
+  | "bezug_offen";
+
+export const EUDR_VERWENDUNGEN: EudrVerwendung[] = ["nur_genutzt", "leer_verkauft"];
+export const EUDR_BEZUEGE: EudrBezug[] = [
+  "import_drittland",
+  "selbst_hergestellt_aus_eu_vormaterial",
+  "fertig_gekauft_eu",
+];
+export const EUDR_REZYKLATE: EudrRezyklat[] = ["keins", "teilweise", "vollstaendig", "unbekannt"];
+export const EUDR_ERZEUGNISSE: EudrErzeugnis[] = ["neu", "gebraucht_oder_mehrweg_nach_erstnutzung"];
+export const GROESSEN_2024: UnternehmensGroesse2024[] = ["kleinst", "klein", "mittel", "gross"];
+
+/** Geltungsbeginn Art. 38 Abs. 2 und Abs. 3 i. d. F. VO (EU) 2025/2650. */
+export const EUDR_FRIST_ALLGEMEIN = "2026-12-30";
+export const EUDR_FRIST_KLEIN = "2027-06-30";
+
+export interface EudrKontext {
+  material: EudrMaterial;
+  /** null = nicht beantwortet → Rückfrage */
+  verwendung: EudrVerwendung | null;
+  bezug: EudrBezug | null;
+  rezyklat: EudrRezyklat | null;
+  erzeugnis: EudrErzeugnis | null;
+  groesse2024: UnternehmensGroesse2024 | null;
+  /** Felder, deren Wert die Engine aus PPWR-Angaben abgeleitet hat (Anzeige). */
+  abgeleitet?: EudrFrage[];
+}
+
+export interface EudrErgebnis {
+  status: EudrStatus;
+  /** Bei „unklar“ (E8) die vorläufige Rolle, von der bis zur Klärung auszugehen ist. */
+  rolle: EudrRolle | null;
+  grund: EudrGrund;
+  material: EudrMaterial;
+  /** Geltungsbeginn der Pflichten für diese Rolle (ISO), nur bei Rolle. */
+  frist: string | null;
+  /** Abweichende Frist, falls die Unternehmensgröße 2024 noch fehlt. */
+  fristAlternativ: string | null;
+  fundstelle: string | null;
+  anforderungen: number[];
+  praxisfragen: string[];
+  offeneFragen: EudrFrage[];
+  abgeleitet: EudrFrage[];
+  herleitung: HerleitungsEintrag[];
+  vorbehalt: boolean;
+}
+
+const RELEVANT: EudrMaterial[] = ["holz", "papier_pappe", "naturkautschuk"];
+
+/**
+ * Material-Mapping aus dem Freitextfeld `verpackungen.material`
+ * (EUDR-Strang-Doc, Abschnitt „Für die Engine“): Papier/Karton, Holz →
+ * relevant; Kunststoff, Glas, Metall, Textil → nicht relevant; Verbund oder
+ * gemischte Angaben → Rückfrage „enthält Papier/Pappe?“; leer → unbekannt.
+ * Bambus, Rattan u. a. gelten nicht als Holz (Del. VO 2026/2102, Fußnote).
+ */
+export function eudrMaterialAusText(text: string | null | undefined): EudrMaterial {
+  const t = (text ?? "").toLowerCase().trim();
+  if (!t) return "unbekannt";
+  if (/verbund|tetra|getränkekarton|getraenkekarton|kaschiert|beschichtet|composite|laminat/.test(t)) {
+    return "verbund";
+  }
+  const papier = /papier|pappe|karton|kraft|zellstoff|faltschachtel|paper|cardboard|carton|paperboard|pulp/.test(t);
+  const holz = /holz|palette|kiste|wood|pallet|crate|furnier|spankorb/.test(t);
+  const kautschuk = /naturkautschuk|kautschuk|naturlatex|latex|natural rubber/.test(t);
+  const anderes =
+    /kunststoff|plastik|plastic|folie|film|\bpe\b|\bpp\b|\bpet\b|\bps\b|\beps\b|\bpvc\b|\bhdpe\b|\bldpe\b|styropor|glas|glass|metall|metal|alu|weißblech|weissblech|stahl|steel|blech|\btin\b|textil|textile|jute|baumwolle|cotton|bambus|bamboo|rattan/.test(
+      t
+    );
+  const relevante = [papier, holz, kautschuk].filter(Boolean).length;
+  if (relevante > 0 && anderes) return "verbund";
+  if (papier) return "papier_pappe";
+  if (holz) return "holz";
+  if (kautschuk) return "naturkautschuk";
+  if (anderes) return "nicht_relevant";
+  return "unbekannt";
+}
+
+/** Rohe EUDR-Eingaben einer Verpackung (Spalten aus Migration 021). */
+export interface EudrEingaben {
+  material: string | null;
+  verwendung: EudrVerwendung | null;
+  bezug: EudrBezug | null;
+  rezyklat: EudrRezyklat | null;
+  erzeugnis: EudrErzeugnis | null;
+}
+
+/**
+ * EUDR-Kontext aus Verpackung, Linie und Profil ableiten. Defaults laut
+ * Strang-Doc: Verwendung aus `bezug` (fertig gekauft/Lohnfertigung →
+ * nur_genutzt; selbst hergestellt → Rückfrage) – zusätzlich Rückfrage, wenn
+ * die Linie leere Verpackung liefert (Tätigkeit liefert_verpackungen_oder_
+ * material). EUDR-Bezug aus Lieferantensitz + Bezug (nur fertig gekauft
+ * eindeutig ableitbar). Erzeugnis-Default „neu“.
+ */
+export function leiteEudrKontextAb(
+  eingaben: EudrEingaben,
+  v: Pick<VerpackungKontext, "bezug" | "lieferantSitz">,
+  linieTaetigkeit: string[],
+  groesse2024: UnternehmensGroesse2024 | null
+): EudrKontext {
+  const abgeleitet: EudrFrage[] = [];
+  const liefertLeer = linieTaetigkeit.includes("liefert_verpackungen_oder_material");
+
+  let verwendung = eingaben.verwendung;
+  if (!verwendung && !liefertLeer && v.bezug !== "selbst_hergestellt") {
+    verwendung = "nur_genutzt";
+    abgeleitet.push("verwendung");
+  }
+
+  let bezug = eingaben.bezug;
+  if (!bezug && verwendung === "leer_verkauft" && v.bezug === "fertig_gekauft" && v.lieferantSitz) {
+    bezug = v.lieferantSitz === "drittland" ? "import_drittland" : "fertig_gekauft_eu";
+    abgeleitet.push("bezug");
+  }
+
+  let erzeugnis = eingaben.erzeugnis;
+  if (!erzeugnis && verwendung === "leer_verkauft") {
+    erzeugnis = "neu";
+    abgeleitet.push("erzeugnis");
+  }
+
+  return {
+    material: eudrMaterialAusText(eingaben.material),
+    verwendung,
+    bezug,
+    rezyklat: eingaben.rezyklat,
+    erzeugnis,
+    groesse2024,
+    abgeleitet,
+  };
+}
+
+const EUDR_ROLLE_NACH_BEZUG: Record<EudrBezug, { regel: string; rolle: EudrRolle; grund: EudrGrund }> = {
+  import_drittland: { regel: "E4", rolle: "eudr_marktteilnehmer", grund: "marktteilnehmer" },
+  selbst_hergestellt_aus_eu_vormaterial: { regel: "E5", rolle: "eudr_nachgelagert", grund: "nachgelagert" },
+  fertig_gekauft_eu: { regel: "E6", rolle: "eudr_haendler", grund: "haendler" },
+};
+
+const PRAXISFRAGEN_NACH_ROLLE: Record<EudrRolle, string[]> = {
+  eudr_marktteilnehmer: ["E03", "E09", "E06", "E07"],
+  eudr_nachgelagert: ["E02", "E06", "E08", "E07"],
+  eudr_haendler: ["E06", "E08", "E07"],
+};
+
+/** Vorbehalt: jede nicht von Cattwyk freigegebene EUDR-Regel oder ein (!) im Text. */
+function istEudrVorbehalt(regel: RegelRow): boolean {
+  return (
+    regel.review_status !== "cattwyk_freigegeben" ||
+    (regel.erlaeuterung ?? "").includes("(!)") ||
+    regel.flag === "!"
+  );
+}
+
+export function evaluiereEudr(regeln: RegelRow[], k: EudrKontext): EudrErgebnis {
+  const eRegeln = new Map(
+    regeln.filter((r) => r.aktiv && r.block === "eudr").map((r) => [r.regel_id, r])
+  );
+  const herleitung: HerleitungsEintrag[] = [];
+  const feuern = (regelId: string, ergebnis: string[]) => {
+    const r = eRegeln.get(regelId);
+    herleitung.push({
+      regel_id: regelId,
+      ergebnis,
+      erlaeuterung: r?.erlaeuterung ?? null,
+      fundstelle_primaer: r?.fundstelle_primaer ?? "",
+      fundstelle_sekundaer: r?.fundstelle_sekundaer ?? null,
+      // Fehlt die Regel in der DB, gilt das Ergebnis stets unter Vorbehalt.
+      vorbehalt: r ? istEudrVorbehalt(r) : true,
+    });
+  };
+  const offeneFragen: EudrFrage[] = [];
+  const abgeleitet = k.abgeleitet ?? [];
+  const praxisfragen = new Set<string>();
+
+  const fertig = (
+    status: EudrStatus,
+    grund: EudrGrund,
+    extra: Partial<Pick<EudrErgebnis, "rolle" | "frist" | "fristAlternativ" | "anforderungen">> = {}
+  ): EudrErgebnis => ({
+    status,
+    rolle: extra.rolle ?? null,
+    grund,
+    material: k.material,
+    frist: extra.frist ?? null,
+    fristAlternativ: extra.fristAlternativ ?? null,
+    fundstelle: herleitung.find((h) => h.regel_id !== "E9")?.fundstelle_primaer || null,
+    anforderungen: extra.anforderungen ?? [41],
+    praxisfragen: [...praxisfragen],
+    offeneFragen,
+    abgeleitet,
+    herleitung,
+    vorbehalt: herleitung.some((h) => h.vorbehalt) || status === "unklar",
+  });
+
+  // E1: kein relevantes Material
+  if (k.material === "nicht_relevant") {
+    feuern("E1", ["eudr_nicht_betroffen"]);
+    praxisfragen.add("E14");
+    return fertig("nicht_betroffen", "material_nicht_relevant");
+  }
+
+  // E2: Verpackung nur genutzt (gilt unabhängig vom Material)
+  if (k.verwendung === "nur_genutzt") {
+    feuern("E2", ["eudr_nicht_betroffen"]);
+    praxisfragen.add("E01");
+    if (k.material === "holz") praxisfragen.add("E04");
+    praxisfragen.add("E14");
+    return fertig("nicht_betroffen", "nur_genutzt");
+  }
+
+  if (k.verwendung === null) {
+    offeneFragen.push("verwendung");
+    if (!RELEVANT.includes(k.material)) offeneFragen.push("material");
+    praxisfragen.add("E01");
+    praxisfragen.add("E06");
+    return fertig("unklar", "verwendung_offen");
+  }
+
+  // Ab hier: leer verkauft
+  if (!RELEVANT.includes(k.material)) {
+    offeneFragen.push("material");
+    praxisfragen.add("E01");
+    return fertig("unklar", "material_offen");
+  }
+
+  // E7 (Vorrang vor E4–E6): gebraucht oder Mehrweg nach Erstnutzung
+  if (k.erzeugnis === "gebraucht_oder_mehrweg_nach_erstnutzung") {
+    feuern("E7", ["eudr_nicht_betroffen"]);
+    praxisfragen.add("E12");
+    if (k.material === "holz") praxisfragen.add("E04");
+    return fertig("nicht_betroffen", "gebraucht_mehrweg");
+  }
+
+  // E3: vollständig Rezyklat
+  if (k.rezyklat === "vollstaendig") {
+    feuern("E3", ["eudr_nicht_betroffen"]);
+    praxisfragen.add("E05");
+    return fertig("nicht_betroffen", "rezyklat_vollstaendig");
+  }
+  if (k.rezyklat === null) offeneFragen.push("rezyklat");
+
+  // E4–E6: Rolle nach Bezug
+  if (k.bezug === null) {
+    offeneFragen.push("bezug");
+    praxisfragen.add("E06");
+    return fertig("unklar", "bezug_offen");
+  }
+  const zuordnung = EUDR_ROLLE_NACH_BEZUG[k.bezug];
+  feuern(zuordnung.regel, [zuordnung.rolle]);
+  PRAXISFRAGEN_NACH_ROLLE[zuordnung.rolle].forEach((c) => praxisfragen.add(c));
+  const anforderungen =
+    zuordnung.rolle === "eudr_marktteilnehmer" ? [41, 42, 44] : [41, 43, 44];
+
+  // E8: teilweise Rezyklat → unklar, vorläufig von Betroffenheit ausgehen
+  const teilweise = k.rezyklat === "teilweise";
+  if (teilweise) {
+    feuern("E8", ["eudr_unklar"]);
+    praxisfragen.add("E05");
+  }
+
+  // E9: Fristbestimmung
+  let frist = EUDR_FRIST_ALLGEMEIN;
+  let fristAlternativ: string | null = null;
+  if (k.material === "naturkautschuk") {
+    // Kein EUTR-Anhang-Erzeugnis: Kleinst-/Kleinunternehmen ab 30.06.2027
+    if (k.groesse2024 === "kleinst" || k.groesse2024 === "klein") {
+      frist = EUDR_FRIST_KLEIN;
+    } else if (k.groesse2024 === null) {
+      fristAlternativ = EUDR_FRIST_KLEIN;
+      offeneFragen.push("groesse_2024");
+    }
+  }
+  feuern("E9", [`frist:${frist}`]);
+  praxisfragen.add("E13");
+
+  return fertig(teilweise ? "unklar" : "betroffen", teilweise ? "rezyklat_teilweise" : zuordnung.grund, {
+    rolle: zuordnung.rolle,
+    frist,
+    fristAlternativ,
+    anforderungen,
+  });
 }

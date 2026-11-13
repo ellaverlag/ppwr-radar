@@ -6,12 +6,13 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/check", "/status", "/api/health"],
+        allow: ["/", "/check", "/check-eudr", "/status", "/api/health"],
         disallow: [
           "/api/",
           "/auth/",
           "/login",
           "/check/ergebnis",
+          "/check-eudr/ergebnis",
           "/onboarding",
           "/dashboard",
           "/updates",

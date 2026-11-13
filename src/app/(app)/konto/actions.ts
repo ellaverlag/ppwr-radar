@@ -2,7 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { createClient as createBareClient } from "@supabase/supabase-js";
+import { parseState } from "@/lib/onboarding";
 import { getStripe } from "@/lib/stripe";
+import { alsGroesse2024, berechneUndSpeichereVerpackungsErgebnisse } from "@/lib/verpackungen-service";
 import { createClient } from "@/lib/supabase/server";
 
 /** Stammdaten aus dem Konto-Formular speichern (gleiche Felder wie der Wizard). */
@@ -32,11 +34,12 @@ export async function stammdatenSpeichern(formData: FormData) {
     zeichnungsberechtigter_funktion: feld("zeichnungsberechtigter_funktion"),
     lucid_nummer: feld("lucid_nummer"),
     war_verpackg_registriert: formData.get("war_verpackg_registriert") === "ja",
+    groesse_2024: alsGroesse2024(formData.get("groesse_2024")),
   };
 
   const { data: profil } = await supabase
     .from("profile")
-    .select("id")
+    .select("id, taetigkeiten, groesse_2024")
     .eq("user_id", user.id)
     .maybeSingle();
 
@@ -44,6 +47,15 @@ export async function stammdatenSpeichern(formData: FormData) {
     ? await supabase.from("profile").update(werte).eq("id", profil.id)
     : await supabase.from("profile").insert({ user_id: user.id, ...werte });
   if (error) throw new Error(`Stammdaten nicht speicherbar: ${error.message}`);
+
+  // Unternehmensgröße 2024 bestimmt die EUDR-Frist (Regel E9) – Ergebnisse neu berechnen
+  if (profil && (profil.groesse_2024 ?? null) !== werte.groesse_2024) {
+    try {
+      await berechneUndSpeichereVerpackungsErgebnisse(profil.id, parseState(profil.taetigkeiten));
+    } catch (e) {
+      console.error("Neuberechnung nach Größenänderung fehlgeschlagen:", e instanceof Error ? e.message : e);
+    }
+  }
 
   redirect("/konto?gespeichert=1");
 }

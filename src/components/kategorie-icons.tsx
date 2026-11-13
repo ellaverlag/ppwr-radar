@@ -13,6 +13,7 @@ import {
   ScrollText,
   ShieldCheck,
   Tag,
+  TreePine,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -31,6 +32,7 @@ export const KATEGORIE_ICON: Record<Kategorie, LucideIcon> = {
   konformitaet: ShieldCheck,
   rollen_epr: Users,
   verbote: Ban,
+  eudr: TreePine,
   sonstiges: Info,
 };
 

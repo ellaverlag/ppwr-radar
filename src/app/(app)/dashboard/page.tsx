@@ -22,8 +22,14 @@ import {
 import { ladeStatusAnalyse } from "@/lib/status-analyse";
 import { anforderungUrl } from "@/lib/wissen-links";
 import { DokumentErstellenLink } from "@/components/dokument-erstellen-link";
+import { EUDR_AMPEL, eudrStatusText } from "@/components/eudr-ergebnis-karte";
+import { KategorieIcon } from "@/components/kategorie-icons";
+import { ergebnisseMitEudr, ladeEudrAnzeigeDaten } from "@/lib/eudr-service";
+import type { EudrErgebnis } from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
 import {
+  ladeAlleVerpackungen,
+  ladeVerpackungsErgebnisse,
   ladeVerpackungsUebersicht,
   type VerpackungsUebersicht,
 } from "@/lib/verpackungen-service";
@@ -76,7 +82,7 @@ export default async function DashboardPage({
   const { data: profil } = user
     ? await supabase
         .from("profile")
-        .select("id, onboarding_abgeschlossen")
+        .select("id, onboarding_abgeschlossen, taetigkeiten")
         .eq("user_id", user.id)
         .maybeSingle()
     : { data: null };
@@ -91,6 +97,14 @@ export default async function DashboardPage({
     id: string;
     bezeichnung: string;
     uebersicht: VerpackungsUebersicht | null;
+  }[] = [];
+  // EUDR-Strang: Status je aktiver Verpackung (aktive Linien)
+  let eudrZeilen: {
+    id: string;
+    produktlinieId: string;
+    bezeichnung: string;
+    eudr: EudrErgebnis | null;
+    statusText: string | null;
   }[] = [];
   if (profil?.onboarding_abgeschlossen) {
     // Rollen-Karte zeigt alle AKTIVEN Linien (aktuelle Ergebnisse);
@@ -115,6 +129,32 @@ export default async function DashboardPage({
     ergebnisse = ((data ?? []) as ErgebnisZeile[]).filter((zeile) =>
       aktiveNamen.has(zeile.produktlinie)
     );
+    try {
+      const aktiveLinienIds = new Set(aktive.map((zeile) => zeile.id as string));
+      const alleVerpackungen = (await ladeAlleVerpackungen(profil.id)).filter(
+        (v) => v.status === "aktiv" && aktiveLinienIds.has(v.produktlinie_id)
+      );
+      const vErgebnisse = await ergebnisseMitEudr(
+        profil.id,
+        profil.taetigkeiten,
+        alleVerpackungen,
+        await ladeVerpackungsErgebnisse(alleVerpackungen.map((v) => v.id))
+      );
+      eudrZeilen = await Promise.all(
+        alleVerpackungen.map(async (v) => {
+          const eudr = vErgebnisse.get(v.id)?.eudr ?? null;
+          return {
+            id: v.id,
+            produktlinieId: v.produktlinie_id,
+            bezeichnung: v.bezeichnung,
+            eudr,
+            statusText: eudr ? await eudrStatusText(eudr) : null,
+          };
+        })
+      );
+    } catch (e) {
+      console.error("EUDR-Übersicht nicht ladbar:", e instanceof Error ? e.message : e);
+    }
     const uebersicht = await ladeVerpackungsUebersicht(profil.id).catch(
       () => new Map<string, VerpackungsUebersicht>()
     );
@@ -129,6 +169,18 @@ export default async function DashboardPage({
 
   const rollenLabel = (rolle: string) =>
     tLabels.has(`rollen.${rolle}`) ? tLabels(`rollen.${rolle}`) : rolle;
+
+  const tEudr = await getTranslations("Eudr");
+  const eudrAnzeige = onboardingFertig ? await ladeEudrAnzeigeDaten() : null;
+  const eudrZaehlung = {
+    betroffen: eudrZeilen.filter((z) => z.eudr?.status === "betroffen").length,
+    unklar: eudrZeilen.filter((z) => z.eudr?.status === "unklar").length,
+    nicht: eudrZeilen.filter((z) => z.eudr?.status === "nicht_betroffen").length,
+    ohne: eudrZeilen.filter((z) => !z.eudr).length,
+  };
+  const eudrRelevant = eudrZeilen.filter(
+    (z) => z.eudr && z.eudr.status !== "nicht_betroffen"
+  );
 
   const schritteTexte = t.raw("schritte") as { titel: string; text: string }[];
   const schritte = schritteTexte.map((schritt, i) => ({
@@ -397,6 +449,84 @@ export default async function DashboardPage({
           <LegalCardFooter>{t("fristenFooter")}</LegalCardFooter>
         </LegalCard>
       </div>
+
+      {/* EUDR-Betroffenheit je Verpackung (EUDR-Strang, Regeln E1–E9) */}
+      {onboardingFertig && eudrAnzeige && (
+        <div className="mt-6">
+          <LegalCard>
+            <div className="flex-1 p-6">
+              <h2 className="mb-2 flex items-center gap-2 text-headline text-ink">
+                <KategorieIcon kategorie="eudr" className="h-5 w-5 shrink-0" />
+                {tEudr("dashTitel")}
+              </h2>
+              {eudrZeilen.length === 0 ? (
+                <p className="text-body-sm text-ink-muted">{tEudr("dashKeineVerpackungen")}</p>
+              ) : (
+                <>
+                  <p className="text-body text-ink-muted">
+                    {tEudr("dashZeile", {
+                      betroffen: eudrZaehlung.betroffen,
+                      unklar: eudrZaehlung.unklar,
+                      nicht: eudrZaehlung.nicht,
+                    })}
+                  </p>
+                  {eudrRelevant.length === 0 ? (
+                    eudrZaehlung.ohne === 0 && (
+                      <p className="mt-4 flex items-center gap-2 text-body-sm text-ink">
+                        <TrafficDot color="green" />
+                        {tEudr("dashAlleNichtBetroffen")}
+                      </p>
+                    )
+                  ) : (
+                    <ul className="mt-4 divide-y divide-line border-y border-line">
+                      {eudrRelevant.map((z) => (
+                        <li
+                          key={z.id}
+                          className="flex flex-col gap-1 py-3 md:flex-row md:items-center md:justify-between"
+                        >
+                          <span className="flex items-center gap-3">
+                            <TrafficDot color={EUDR_AMPEL[z.eudr!.status]} />
+                            <span className="text-body font-bold text-ink">{z.bezeichnung}</span>
+                            <span className="text-body-sm text-ink-muted">{z.statusText}</span>
+                          </span>
+                          <span className="flex items-center gap-4 text-body-sm">
+                            {z.eudr!.frist && (
+                              <span className="font-mono text-mono-sm text-ink-muted">
+                                {tEudr("fristLabel")} {formatDate(z.eudr!.frist)}
+                              </span>
+                            )}
+                            <Link
+                              href={`/verpackungen/${z.produktlinieId}#eudr-${z.id}`}
+                              className="font-medium text-legal hover:underline"
+                            >
+                              {tEudr("dashAnsehen")}
+                            </Link>
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {eudrZaehlung.ohne > 0 && (
+                    <p className="mt-3 text-body-sm text-ink-muted">
+                      {tEudr("dashOhneErgebnis", { anzahl: eudrZaehlung.ohne })}
+                    </p>
+                  )}
+                  {eudrRelevant.length > 0 && (
+                    <div className="mt-5 border-l-4 border-legal bg-surface p-4">
+                      <h3 className="text-label uppercase text-legal">{tEudr("cattwykTitel")}</h3>
+                      <p className="mt-1 text-body-sm text-ink">{eudrAnzeige.cattwykText}</p>
+                    </div>
+                  )}
+                  {eudrZeilen.some((z) => z.eudr?.vorbehalt) && (
+                    <p className="mt-3 text-body-sm text-ink-muted">{tEudr("vorbehaltText")}</p>
+                  )}
+                </>
+              )}
+            </div>
+            <LegalCardFooter>{tEudr("dashFooter")}</LegalCardFooter>
+          </LegalCard>
+        </div>
+      )}
 
       {/* Ihre dringendsten Schritte – bewusste Auswahl aus den offenen
           „gilt bereits“-Anforderungen, mit Link auf den Rest */}

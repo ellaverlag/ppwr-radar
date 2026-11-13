@@ -60,6 +60,7 @@ const KATEGORIE_REIHENFOLGE: Kategorie[] = [
   "kennzeichnung",
   "konformitaet",
   "verbote",
+  "eudr",
   "sonstiges",
 ];
 

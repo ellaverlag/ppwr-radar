@@ -30,7 +30,12 @@
     "status": "Status-Analyse",
     "verpackungen": "Meine Verpackungen – PPWR Radar",
     "verpackungDetail": "Verpackungen – PPWR Radar",
-    "updates": "Updates – PPWR Radar"
+    "updates": "Updates – PPWR Radar",
+    "checkEudr": {
+      "title": "EUDR-Check für Verpackungen – PPWR Radar",
+      "description": "Bis zu fünf Fragen, eine erste Einschätzung: Betrifft die EU-Entwaldungsverordnung (EUDR) Ihre Verpackung aus Papier, Pappe oder Holz? Kostenlos und ohne Anmeldung."
+    },
+    "checkEudrErgebnis": "Ihre EUDR-Ersteinschätzung – PPWR Radar"
   },
   "Common": {
     "previewBanner": "Vorschau-Modus – ungeprüfte Inhalte",
@@ -777,6 +782,7 @@
       "kennzeichnung": "Kennzeichnung",
       "rollen_epr": "Rollen & EPR",
       "verbote": "Verbote",
+      "eudr": "EUDR",
       "sonstiges": "Sonstiges"
     },
     "giltStatus": {
@@ -811,7 +817,10 @@
       "vertreiber": "Vertreiber",
       "endvertreiber": "Endvertreiber",
       "fulfillment_dienstleister": "Fulfillment-Dienstleister",
-      "lieferant": "Lieferant"
+      "lieferant": "Lieferant",
+      "eudr_marktteilnehmer": "Marktteilnehmer (EUDR)",
+      "eudr_nachgelagert": "Nachgelagerter Marktteilnehmer (EUDR)",
+      "eudr_haendler": "Händler (EUDR)"
     },
     "pflichten": {
       "bevollmaechtigter_ehv": "Bevollmächtigter für die erweiterte Herstellerverantwortung erforderlich",
@@ -880,7 +889,7 @@
         "keine": "Keine Marke"
       },
       "markeHilfe": "Trägt die Verpackung selbst (nicht das Produkt) Ihren Namen oder Ihr Logo?",
-      "materialHilfe": "Freitext, z. B. Papier/Karton, PE-Folie, Glas. Erscheint in Dokumenten als Materialangabe.",
+      "materialHilfe": "Freitext, z. B. Papier/Karton, PE-Folie, Glas. Erscheint in Dokumenten als Materialangabe und bestimmt, ob die EUDR-Prüfung greift (Papier, Pappe, Holz, Naturkautschuk).",
       "lebensmittelkontakt": "Lebensmittelkontakt",
       "mehrweg": "Mehrwegverpackung"
     },
@@ -905,6 +914,45 @@
       "ja": "Gilt",
       "nein": "Gilt nicht",
       "unklar": "Offen"
+    },
+    "eudr": {
+      "material": {
+        "holz": "Holz",
+        "papier_pappe": "Papier/Pappe",
+        "naturkautschuk": "Naturkautschuk",
+        "nicht_relevant": "kein EUDR-Material",
+        "verbund": "Verbund (Papieranteil unklar)",
+        "unbekannt": "nicht angegeben"
+      },
+      "verwendung": {
+        "nur_genutzt": "Nur genutzt (verpackt eigene Ware)",
+        "leer_verkauft": "Leer als Produkt verkauft"
+      },
+      "verwendungErklaerung": {
+        "nur_genutzt": "Die Verpackung schützt, stützt oder trägt Ihre eigenen Produkte und wird mit ihnen abgegeben.",
+        "leer_verkauft": "Sie stellen die Verpackung her, importieren oder handeln sie und verkaufen sie leer an Kunden."
+      },
+      "bezug": {
+        "import_drittland": "Selbst aus einem Drittland importiert",
+        "selbst_hergestellt_aus_eu_vormaterial": "Selbst hergestellt aus EU-Vormaterial",
+        "fertig_gekauft_eu": "Fertig von EU-Lieferant gekauft und unverändert weiterverkauft"
+      },
+      "rezyklat": {
+        "keins": "Kein Rezyklat",
+        "teilweise": "Teilweise Rezyklat",
+        "vollstaendig": "Vollständig Rezyklat",
+        "unbekannt": "Unbekannt"
+      },
+      "erzeugnis": {
+        "neu": "Neu",
+        "gebraucht_oder_mehrweg_nach_erstnutzung": "Gebraucht oder Mehrweg nach erster Nutzung"
+      },
+      "groesse": {
+        "kleinst": "Kleinstunternehmen",
+        "klein": "Kleines Unternehmen",
+        "mittel": "Mittleres Unternehmen",
+        "gross": "Großes Unternehmen"
+      }
     }
   },
   "Vorzimmer": {
@@ -978,6 +1026,7 @@
       "kennzeichnung": "Kennzeichnung",
       "konformitaet": "Konformität",
       "verbote": "Verbote",
+      "eudr": "EUDR (Entwaldung)",
       "sonstiges": "Sonstiges"
     },
     "fundstellen": "Fundstellen",
@@ -1170,5 +1219,161 @@
       "verbandsmeinung": "Verbandsmeinung",
       "stand": "Monitoring-Stand"
     }
+  },
+  "Eudr": {
+    "titel": "EUDR – Entwaldungsverordnung",
+    "untertitel": "Betroffenheit nach VO (EU) 2023/1115",
+    "status": {
+      "nicht_betroffen": "Nicht betroffen",
+      "betroffen": "Betroffen als {rolle}",
+      "unklar": "Unklar",
+      "unklarRolle": "Unklar, vorläufig {rolle}"
+    },
+    "grund": {
+      "material_nicht_relevant": "Das Material dieser Verpackung ist kein relevantes Erzeugnis der EUDR. Erfasst sind nur Holz, Papier, Pappe und Naturkautschuk.",
+      "nur_genutzt": "Sie nutzen diese Verpackung zum Verpacken Ihrer eigenen Ware. Verpackung, die ein anderes Erzeugnis stützt, schützt oder trägt und mit ihm angeboten wird, ist von Anhang I ausgenommen. Betroffen sein kann Ihr Lieferant der leeren Verpackung.",
+      "rezyklat_vollstaendig": "Die Verpackung besteht vollständig aus Rezyklat. Wiedergewinnungsprodukte und daraus gewonnene Erzeugnisse sind von Anhang I ausgenommen.",
+      "gebraucht_mehrweg": "Gebrauchte Erzeugnisse und wiederverwendbare Verpackung ab ihrer ersten Verwendung sind von Anhang I ausgenommen.",
+      "marktteilnehmer": "Sie bringen die leere Verpackung oder ihr Vormaterial selbst aus einem Drittland erstmals in der EU in Verkehr. Damit sind Sie Marktteilnehmer: Sorgfaltspflicht und Sorgfaltserklärung vor dem Inverkehrbringen.",
+      "nachgelagert": "Sie stellen die Verpackung aus Vormaterial her, für das Ihr EU-Lieferant bereits eine Sorgfaltserklärung abgegeben hat. Damit sind Sie nachgelagerter Marktteilnehmer: keine eigene Sorgfaltserklärung, aber Informationspflichten nach Art. 5.",
+      "haendler": "Sie verkaufen die fertig bezogene Verpackung unverändert weiter. Damit sind Sie Händler: Informationspflichten nach Art. 5.",
+      "rezyklat_teilweise": "Die Verpackung enthält teilweise Rezyklat. Ob die Rezyklat-Ausnahme des neuen Anhangs I auch Mischfasern erfasst, ist offen (!). Bis zur Klärung gehen Sie von Betroffenheit als {rolle} aus.",
+      "material_offen": "Aus der Materialangabe lässt sich nicht erkennen, ob die Verpackung Papier, Pappe, Holz oder Naturkautschuk enthält.",
+      "verwendung_offen": "Für die EUDR entscheidet, ob Sie die Verpackung nur zum Verpacken eigener Ware nutzen oder leer als eigenes Produkt verkaufen.",
+      "bezug_offen": "Ihre Rolle hängt davon ab, woher das Erzeugnis oder sein Vormaterial stammt."
+    },
+    "frage": {
+      "material": "Material genauer angeben: enthält die Verpackung Papier, Pappe, Holz oder Naturkautschuk?",
+      "verwendung": "Angeben, ob die Verpackung nur genutzt oder leer als Produkt verkauft wird.",
+      "bezug": "Herkunft angeben: Import aus einem Drittland, eigene Herstellung aus EU-Vormaterial oder unveränderter Weiterverkauf.",
+      "rezyklat": "Rezyklatanteil angeben – bei vollständigem Rezyklat besteht keine Betroffenheit.",
+      "erzeugnis": "Angeben, ob die Verpackung neu oder gebraucht ist.",
+      "groesse_2024": "Unternehmensgröße zum 31.12.2024 im Konto angeben."
+    },
+    "offeneFragenTitel": "Noch offen",
+    "abgeleitet": "Aus Ihren PPWR-Angaben abgeleitet: {felder}. Bitte im Formular präzisieren, falls das nicht zutrifft.",
+    "feldnamen": {
+      "material": "Material",
+      "verwendung": "Verwendung",
+      "bezug": "Herkunft",
+      "rezyklat": "Rezyklat",
+      "erzeugnis": "Erzeugnis",
+      "groesse_2024": "Unternehmensgröße 2024"
+    },
+    "materialErkannt": "Material erkannt als: {material}",
+    "fristLabel": "Pflichten gelten ab",
+    "fristAlternativ": "für Kleinst- und Kleinunternehmen (Stand 31.12.2024) ab {datum}",
+    "fundstelleLabel": "Fundstelle",
+    "anforderungenTitel": "Pflichten im Wissen",
+    "praxisfragenTitel": "Praxisfragen",
+    "inPruefung": "in Prüfung",
+    "herleitungTitel": "Herleitung",
+    "regel": "Regel {id}",
+    "vorbehalt": "Vorbehalt",
+    "vorbehaltText": "Der EUDR-Strang befindet sich in der juristischen Prüfung. Das Ergebnis ist eine vorläufige Einordnung.",
+    "cattwykTitel": "Einordnung im Einzelfall",
+    "cattwykFallback": "PPWR Radar stellt die EUDR-Betroffenheit fest. Sorgfaltserklärung, Geolokalisierung und Risikobewertung sind Beratungs- bzw. Softwareleistungen Dritter. Für die Einordnung Ihres Einzelfalls bieten wir ein Erstgespräch mit der Cattwyk Rechtsanwaltsgesellschaft an.",
+    "abgrenzung": "PPWR Radar stellt die EUDR-Betroffenheit fest. Sorgfaltserklärung, Geolokalisierung und Risikobewertung sind Beratungs- bzw. Softwareleistungen Dritter.",
+    "keinErgebnis": "Für diese Verpackung liegt noch kein EUDR-Ergebnis vor. Es wird beim nächsten Speichern berechnet.",
+    "fussZeile": "VO (EU) 2023/1115 i. d. F. VO (EU) 2025/2650 und Del. VO (EU) 2026/2102 · Engine {version} · Rechtsstand {datum}",
+    "formularTitel": "EUDR-Angaben (Entwaldungsverordnung)",
+    "formularIntro": "Nur relevant, wenn die Verpackung Papier, Pappe, Holz oder Naturkautschuk enthält. Ohne Angabe leitet PPWR Radar die Werte aus Ihren PPWR-Angaben ab oder fragt nach.",
+    "formularVerwendung": "Verwendung",
+    "formularBezug": "Herkunft (nur bei leer verkaufter Verpackung)",
+    "formularRezyklat": "Rezyklatanteil",
+    "formularErzeugnis": "Neu oder gebraucht",
+    "ohneAngabe": "Ohne Angabe (ableiten)",
+    "dashTitel": "EUDR-Betroffenheit",
+    "dashZeile": "{betroffen} betroffen · {unklar} unklar · {nicht} nicht betroffen",
+    "dashKeineVerpackungen": "Sobald Sie Verpackungen angelegt haben, zeigt diese Karte, welche davon unter die Entwaldungsverordnung fallen.",
+    "dashAlleNichtBetroffen": "Nach Ihren Angaben fällt keine Ihrer Verpackungen unter die EUDR.",
+    "dashOhneErgebnis": "{anzahl, plural, one {# Verpackung} other {# Verpackungen}} noch ohne EUDR-Ergebnis – wird beim nächsten Speichern berechnet.",
+    "dashAnsehen": "Ansehen →",
+    "dashFooter": "VO (EU) 2023/1115 · Geltung ab 30.12.2026",
+    "konto": {
+      "groesseLabel": "Unternehmensgröße zum 31.12.2024 (EUDR)",
+      "groesseHilfe": "Maßgeblich für die Kleinunternehmer-Frist der EUDR (Art. 38 Abs. 3). Schwellen der Bilanzrichtlinie 2013/34/EU: Kleinstunternehmen höchstens zwei von 450.000 Euro Bilanzsumme, 900.000 Euro Umsatz, 10 Beschäftigten; kleines Unternehmen 5 Mio. Euro, 10 Mio. Euro, 50 Beschäftigte. Für Papier, Pappe und Holz gilt unabhängig davon der 30.12.2026.",
+      "ohneAngabe": "Keine Angabe"
+    }
+  },
+  "CheckEudr": {
+    "titel": "Ab 30.12.2026 gilt die EUDR.<br></br>Betrifft sie Ihre Verpackungen?",
+    "untertitel": "Bis zu fünf Fragen, eine Minute – Ihre kostenlose Ersteinschätzung zur EU-Entwaldungsverordnung.",
+    "fortschritt": "Frage {aktuell} von {gesamt}",
+    "fehlerAntwort": "Bitte wählen Sie eine Antwort aus.",
+    "zurueck": "← Zurück",
+    "zurStartseiteKurz": "← Zur Startseite",
+    "weiter": "Weiter →",
+    "footer": "Kostenlos · Keine Registrierung · Ersteinschätzung, keine Rechtsberatung",
+    "fragen": {
+      "material": {
+        "text": "Woraus besteht die Verpackung?",
+        "hilfe": "Bei mehreren Verpackungen den Check je Verpackung durchlaufen.",
+        "optionen": {
+          "papier_pappe": "Papier, Pappe, Karton oder Wellpappe",
+          "holz": "Holz (z. B. Paletten, Kisten, Kabeltrommeln)",
+          "naturkautschuk": "Naturkautschuk",
+          "verbund_papier": "Verbund mit Papier- oder Pappeanteil",
+          "nicht_relevant": "Kunststoff, Glas, Metall, Textil, Bambus oder Anderes"
+        }
+      },
+      "verwendung": {
+        "text": "Was tun Sie mit der Verpackung?",
+        "hilfe": "Entscheidend ist, ob die Verpackung Ihre Ware schützt oder selbst Ihr Produkt ist.",
+        "optionen": {
+          "nur_genutzt": "Wir verpacken damit unsere eigenen Produkte",
+          "leer_verkauft": "Wir verkaufen die Verpackung leer als Produkt (Hersteller, Händler, Importeur)"
+        }
+      },
+      "bezug": {
+        "text": "Woher stammt die Verpackung oder ihr Vormaterial?",
+        "hilfe": "Vormaterial ist z. B. das Rohpapier, aus dem Sie Faltschachteln fertigen.",
+        "optionen": {
+          "import_drittland": "Wir importieren sie (oder das Vormaterial) selbst aus einem Land außerhalb der EU",
+          "selbst_hergestellt_aus_eu_vormaterial": "Wir stellen sie selbst her, aus Vormaterial von EU-Lieferanten",
+          "fertig_gekauft_eu": "Wir kaufen sie fertig bei EU-Lieferanten und verkaufen sie unverändert weiter"
+        }
+      },
+      "rezyklat": {
+        "text": "Wie hoch ist der Rezyklatanteil?",
+        "hilfe": "Rezyklat sind Fasern bzw. Holz aus Altpapier, Altholz oder Produktionsabfällen.",
+        "optionen": {
+          "vollstaendig": "Vollständig Rezyklat",
+          "teilweise": "Teilweise Rezyklat, teilweise Frischfaser bzw. Neuholz",
+          "keins": "Kein Rezyklat",
+          "unbekannt": "Weiß ich nicht"
+        }
+      },
+      "erzeugnis": {
+        "text": "Ist die Verpackung neu oder gebraucht?",
+        "hilfe": "Gebraucht heißt: bereits einmal als Verpackung verwendet, etwa Tauschpaletten oder aufbereitete Mehrwegbehälter.",
+        "optionen": {
+          "neu": "Neu",
+          "gebraucht_oder_mehrweg_nach_erstnutzung": "Gebraucht oder Mehrweg nach der ersten Nutzung"
+        }
+      }
+    }
+  },
+  "CheckEudrErgebnis": {
+    "titel": "Ihre EUDR-Ersteinschätzung",
+    "untertitel": "Basierend auf Ihren Angaben zu einer Verpackung.",
+    "inKuerzeTitel": "Ergebnis in Kürze verfügbar",
+    "inKuerzeText": "Die Regeln zur Entwaldungsverordnung, auf denen Ihre Einschätzung beruht, werden derzeit juristisch geprüft. Sobald die Prüfung abgeschlossen ist, steht das Ergebnis hier bereit.",
+    "nichtVerfuegbar": "Die Auswertung ist gerade nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "zurueckZumCheck": "Zurück zum Check",
+    "pflichtenTitel": "Was auf Sie zukommt",
+    "pflichten": {
+      "eudr_marktteilnehmer": "Sorgfaltspflicht mit Informationssammlung bis zur Geolokalisierung, Risikobewertung und Sorgfaltserklärung im EU-Informationssystem vor dem Inverkehrbringen (Art. 4, 8 bis 13).",
+      "eudr_nachgelagert": "Lieferanten- und Abnehmerdaten sowie Referenznummern der Sorgfaltserklärungen fünf Jahre aufbewahren; Unternehmen über den KMU-Schwellen registrieren sich im EU-Informationssystem (Art. 5).",
+      "eudr_haendler": "Lieferanten- und Abnehmerdaten sowie Referenznummern der Sorgfaltserklärungen fünf Jahre aufbewahren; Unternehmen über den KMU-Schwellen registrieren sich im EU-Informationssystem (Art. 5)."
+    },
+    "nichtBetroffenHinweis": "Ihre Pflichten aus der Verpackungsverordnung (PPWR) für diese Verpackung bleiben davon unberührt.",
+    "ppwrCheckLink": "Zum PPWR-Betroffenheits-Check →",
+    "rechtsstandZeile": "VO (EU) 2023/1115 i. d. F. VO (EU) 2025/2650 und Del. VO (EU) 2026/2102 · Stand {datum}",
+    "ctaTitel": "Alle Verpackungen auf einen Blick",
+    "ctaText": "PPWR Radar ordnet jede Ihrer Verpackungen nach PPWR und EUDR ein – mit Rolle, Fristen, Fundstellen und Praxisfragen.",
+    "ctaRegistrieren": "Kostenlos registrieren",
+    "comingSoonCta": "Zum Start benachrichtigen lassen",
+    "neuStarten": "Weitere Verpackung prüfen"
   }
 }

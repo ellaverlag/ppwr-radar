@@ -10,6 +10,7 @@ const PUBLIC_PATHS = [
   "/status",
   "/api/stripe",
   "/check",
+  "/check-eudr",
   "/robots.txt",
   "/sitemap.xml",
 ];

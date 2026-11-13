@@ -30,6 +30,7 @@ const KATEGORIEN: Kategorie[] = [
   "kennzeichnung",
   "rollen_epr",
   "verbote",
+  "eudr",
   "sonstiges",
 ];
 const GILT_STATUS: GiltStatus[] = [

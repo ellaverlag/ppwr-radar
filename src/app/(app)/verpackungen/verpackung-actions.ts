@@ -3,6 +3,12 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { parseState } from "@/lib/onboarding";
+import {
+  EUDR_BEZUEGE,
+  EUDR_ERZEUGNISSE,
+  EUDR_REZYKLATE,
+  EUDR_VERWENDUNGEN,
+} from "@/lib/rollen-engine";
 import { createClient } from "@/lib/supabase/server";
 import {
   berechneUndSpeichereVerpackungsErgebnisse,
@@ -50,6 +56,12 @@ async function kontext(produktlinieId: string) {
 
 function enthaelt<T extends string>(liste: readonly T[], wert: string): wert is T {
   return (liste as readonly string[]).includes(wert);
+}
+
+/** Optionale Auswahl: leer oder unbekannter Wert → null („nicht beantwortet“). */
+function optional<T extends string>(liste: readonly T[], formData: FormData, name: string): T | null {
+  const wert = String(formData.get(name) ?? "");
+  return enthaelt(liste, wert) ? wert : null;
 }
 
 export async function verpackungSpeichern(formData: FormData) {
@@ -106,6 +118,10 @@ export async function verpackungSpeichern(formData: FormData) {
     material: String(formData.get("material") ?? "").trim().slice(0, 120) || null,
     lebensmittelkontakt: formData.get("lebensmittelkontakt") === "ja",
     mehrweg: formData.get("mehrweg") === "ja",
+    eudr_verwendung: optional(EUDR_VERWENDUNGEN, formData, "eudr_verwendung"),
+    eudr_bezug: optional(EUDR_BEZUEGE, formData, "eudr_bezug"),
+    eudr_rezyklat: optional(EUDR_REZYKLATE, formData, "eudr_rezyklat"),
+    eudr_erzeugnis: optional(EUDR_ERZEUGNISSE, formData, "eudr_erzeugnis"),
   };
 
   let gespeicherteId: string;

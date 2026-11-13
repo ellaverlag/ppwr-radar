@@ -10,7 +10,12 @@
 import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { evaluiereVerpackung } from "../src/lib/rollen-engine.ts";
+import {
+  eudrMaterialAusText,
+  evaluiereEudr,
+  evaluiereVerpackung,
+  leiteEudrKontextAb,
+} from "../src/lib/rollen-engine.ts";
 
 const hier = dirname(fileURLToPath(import.meta.url));
 const regeln = JSON.parse(
@@ -161,6 +166,131 @@ console.log(
   erwarte(pflicht(glas, "konformitaetserklaerung") === "ja", "Glas: KE ja");
   erwarte(pflicht(glas, "lucid_registrierung") === "ja", "Glas: LUCID ja");
   erwarte(!glas.herleitung.some((h) => h.regel_id === "D1"), "Glas: D1 feuert nicht");
+}
+
+// ---------------------------------------------------------------------------
+// EUDR-Strang (E1–E9)
+// ---------------------------------------------------------------------------
+console.log("\nEUDR-Strang");
+const eudrFaelle = [
+  {
+    name: "Versandumschlag Papier, nur genutzt (Default aus fertig_gekauft)",
+    eingaben: { material: "Papier", verwendung: null, bezug: null, rezyklat: null, erzeugnis: null },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "DE" },
+    taetigkeit: [],
+    groesse: null,
+    erwartet: { status: "nicht_betroffen", rolle: null, regel: "E2", abgeleitet: "verwendung" },
+  },
+  {
+    name: "Schrumpffolie PE",
+    eingaben: { material: "PE-Folie", verwendung: "leer_verkauft", bezug: null, rezyklat: null, erzeugnis: null },
+    v: { bezug: "selbst_hergestellt", lieferantSitz: null },
+    taetigkeit: [],
+    groesse: null,
+    erwartet: { status: "nicht_betroffen", rolle: null, regel: "E1" },
+  },
+  {
+    name: "Rezyklat-Karton leer verkauft",
+    eingaben: { material: "Wellpappe", verwendung: "leer_verkauft", bezug: "fertig_gekauft_eu", rezyklat: "vollstaendig", erzeugnis: "neu" },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "DE" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "mittel",
+    erwartet: { status: "nicht_betroffen", rolle: null, regel: "E3" },
+  },
+  {
+    name: "Kartons aus der Türkei, weiterverkauft (Bezug abgeleitet)",
+    eingaben: { material: "Karton", verwendung: "leer_verkauft", bezug: null, rezyklat: "keins", erzeugnis: null },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "drittland" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "klein",
+    erwartet: { status: "betroffen", rolle: "eudr_marktteilnehmer", regel: "E4", frist: "2026-12-30", abgeleitet: "bezug" },
+  },
+  {
+    name: "Faltschachtel aus EU-Papier (Kartonagenhersteller)",
+    eingaben: { material: "Faltschachtel Karton", verwendung: "leer_verkauft", bezug: "selbst_hergestellt_aus_eu_vormaterial", rezyklat: "keins", erzeugnis: "neu" },
+    v: { bezug: "selbst_hergestellt", lieferantSitz: null },
+    taetigkeit: ["stellt_verpackung_physisch_her", "liefert_verpackungen_oder_material"],
+    groesse: "kleinst",
+    erwartet: { status: "betroffen", rolle: "eudr_nachgelagert", regel: "E5", frist: "2026-12-30" },
+  },
+  {
+    name: "Großhandel leere Kartons aus Polen",
+    eingaben: { material: "Karton", verwendung: "leer_verkauft", bezug: "fertig_gekauft_eu", rezyklat: "keins", erzeugnis: "neu" },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "EU" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "gross",
+    erwartet: { status: "betroffen", rolle: "eudr_haendler", regel: "E6", frist: "2026-12-30" },
+  },
+  {
+    name: "Gebrauchte Europaletten verkauft",
+    eingaben: { material: "Holzpalette", verwendung: "leer_verkauft", bezug: "fertig_gekauft_eu", rezyklat: "keins", erzeugnis: "gebraucht_oder_mehrweg_nach_erstnutzung" },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "DE" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "mittel",
+    erwartet: { status: "nicht_betroffen", rolle: null, regel: "E7" },
+  },
+  {
+    name: "Teilrezyklierte Wellpappe, selbst hergestellt",
+    eingaben: { material: "Wellpappe", verwendung: "leer_verkauft", bezug: "selbst_hergestellt_aus_eu_vormaterial", rezyklat: "teilweise", erzeugnis: "neu" },
+    v: { bezug: "selbst_hergestellt", lieferantSitz: null },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "gross",
+    erwartet: { status: "unklar", rolle: "eudr_nachgelagert", regel: "E8", frist: "2026-12-30" },
+  },
+  {
+    name: "Naturkautschuk-Erzeugnis, Kleinunternehmen (Frist 30.06.2027)",
+    eingaben: { material: "Naturkautschuk", verwendung: "leer_verkauft", bezug: "import_drittland", rezyklat: "keins", erzeugnis: "neu" },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "drittland" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: "klein",
+    erwartet: { status: "betroffen", rolle: "eudr_marktteilnehmer", regel: "E4", frist: "2027-06-30" },
+  },
+  {
+    name: "Selbst hergestellt, Verwendung offen (Rückfrage)",
+    eingaben: { material: "Karton", verwendung: null, bezug: null, rezyklat: null, erzeugnis: null },
+    v: { bezug: "selbst_hergestellt", lieferantSitz: null },
+    taetigkeit: [],
+    groesse: null,
+    erwartet: { status: "unklar", rolle: null, frage: "verwendung" },
+  },
+  {
+    name: "Verbund leer verkauft (Rückfrage Material)",
+    eingaben: { material: "Getränkekarton (Verbund)", verwendung: "leer_verkauft", bezug: "fertig_gekauft_eu", rezyklat: "keins", erzeugnis: "neu" },
+    v: { bezug: "fertig_gekauft", lieferantSitz: "DE" },
+    taetigkeit: ["liefert_verpackungen_oder_material"],
+    groesse: null,
+    erwartet: { status: "unklar", rolle: null, frage: "material" },
+  },
+];
+
+for (const f of eudrFaelle) {
+  const k = leiteEudrKontextAb(f.eingaben, f.v, f.taetigkeit, f.groesse);
+  const e = evaluiereEudr(regeln, k);
+  console.log(`\n${f.name}`);
+  console.log(`   Material:    ${e.material}; Status: ${e.status}${e.rolle ? ` (${e.rolle})` : ""}${e.vorbehalt ? "  [Vorbehalt]" : ""}`);
+  console.log(`   Regeln:      ${e.herleitung.map((h) => h.regel_id).join(" → ") || "–"}; Frist: ${e.frist ?? "–"}`);
+  console.log(`   Offen:       ${e.offeneFragen.join(", ") || "–"}; abgeleitet: ${e.abgeleitet.join(", ") || "–"}; Praxisfragen: ${e.praxisfragen.join(", ")}`);
+  erwarte(e.status === f.erwartet.status, `${f.name}: Status ${f.erwartet.status}`);
+  erwarte(e.rolle === f.erwartet.rolle, `${f.name}: Rolle ${f.erwartet.rolle}`);
+  if (f.erwartet.regel) erwarte(e.herleitung.some((h) => h.regel_id === f.erwartet.regel), `${f.name}: Regel ${f.erwartet.regel}`);
+  if (f.erwartet.frist) erwarte(e.frist === f.erwartet.frist, `${f.name}: Frist ${f.erwartet.frist}`);
+  if (f.erwartet.frage) erwarte(e.offeneFragen.includes(f.erwartet.frage), `${f.name}: Rückfrage ${f.erwartet.frage}`);
+  if (f.erwartet.abgeleitet) erwarte(e.abgeleitet.includes(f.erwartet.abgeleitet), `${f.name}: ${f.erwartet.abgeleitet} abgeleitet`);
+  erwarte(e.vorbehalt, `${f.name}: Vorbehalt (Regeln im Entwurf)`);
+}
+
+// Material-Mapping
+const mapping = [
+  ["Papier/Karton", "papier_pappe"],
+  ["Holz", "holz"],
+  ["Kunststoff (PP)", "nicht_relevant"],
+  ["Glas", "nicht_relevant"],
+  ["Bambus", "nicht_relevant"],
+  ["Papier mit PE-Beschichtung", "verbund"],
+  ["", "unbekannt"],
+];
+for (const [text, soll] of mapping) {
+  erwarte(eudrMaterialAusText(text) === soll, `Material „${text}“ → ${soll}`);
 }
 
 console.log(fehler === 0 ? "\nEngine-Check bestanden." : `\nEngine-Check: ${fehler} Abweichung(en).`);

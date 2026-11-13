@@ -38,6 +38,7 @@ export type Kategorie =
   | "kennzeichnung"
   | "rollen_epr"
   | "verbote"
+  | "eudr"
   | "sonstiges";
 
 export type GiltStatus =

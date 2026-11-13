@@ -4,9 +4,17 @@ import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Badge } from "@/components/badge";
 import { BestaetigenButton } from "@/components/bestaetigen-button";
+import { EUDR_AMPEL, EudrErgebnisKarte, eudrStatusText } from "@/components/eudr-ergebnis-karte";
 import { PageHeader } from "@/components/page-header";
-import { LegalCard, LegalCardFooter } from "@/components/ui";
+import { LegalCard, LegalCardFooter, TrafficDot } from "@/components/ui";
 import { VerpackungErgebnisKarte } from "@/components/verpackung-ergebnis-karte";
+import { ergebnisseMitEudr, ladeEudrAnzeigeDaten } from "@/lib/eudr-service";
+import {
+  EUDR_BEZUEGE,
+  EUDR_ERZEUGNISSE,
+  EUDR_REZYKLATE,
+  EUDR_VERWENDUNGEN,
+} from "@/lib/rollen-engine";
 import { ladeRollenBegriffe } from "@/lib/rollen-service";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -60,11 +68,12 @@ export default async function ProduktlinieDetailPage({
   const query = await searchParams;
   const t = await getTranslations("Verpackungen");
   const tLabels = await getTranslations("Labels");
+  const tEudr = await getTranslations("Eudr");
 
   const supabase = await createClient();
   const { data: profil } = await supabase
     .from("profile")
-    .select("id, onboarding_abgeschlossen")
+    .select("id, onboarding_abgeschlossen, taetigkeiten")
     .eq("user_id", zugang.user.id)
     .maybeSingle();
   if (!profil?.onboarding_abgeschlossen) redirect("/verpackungen");
@@ -77,12 +86,22 @@ export default async function ProduktlinieDetailPage({
     .maybeSingle();
   if (!linie) notFound();
 
-  const [verpackungen, begriffe, anforderungen] = await Promise.all([
+  const [verpackungen, begriffe, anforderungen, eudrAnzeige] = await Promise.all([
     ladeVerpackungen(produktlinieId),
     ladeRollenBegriffe(),
     getAnforderungen().catch(() => []),
+    ladeEudrAnzeigeDaten(),
   ]);
-  const ergebnisse = await ladeVerpackungsErgebnisse(verpackungen.map((v) => v.id));
+  const ergebnisse = await ergebnisseMitEudr(
+    profil.id,
+    profil.taetigkeiten,
+    verpackungen,
+    await ladeVerpackungsErgebnisse(verpackungen.map((v) => v.id))
+  );
+  const eudrStatusJeVerpackung = new Map<string, string>();
+  for (const [id, e] of ergebnisse) {
+    if (e.eudr) eudrStatusJeVerpackung.set(id, await eudrStatusText(e.eudr));
+  }
   const alleHinweisKeys = [
     ...new Set([...ergebnisse.values()].flatMap((e) => e.hinweise)),
   ];
@@ -193,6 +212,15 @@ export default async function ProduktlinieDetailPage({
                             <Badge variant="neutral">{t("einheitVorbehalt")}</Badge>
                           )}
                         </>
+                      )}
+                      {!stillgelegt && e?.eudr && (
+                        <a
+                          href={`#eudr-${v.id}`}
+                          className="mt-1 flex w-full items-center gap-2 text-body-sm text-ink-muted hover:text-ink"
+                        >
+                          <TrafficDot color={EUDR_AMPEL[e.eudr.status]} />
+                          <span>EUDR: {eudrStatusJeVerpackung.get(v.id)}</span>
+                        </a>
                       )}
                     </div>
                     <div className="flex flex-wrap items-center gap-2 md:col-span-3">
@@ -368,6 +396,41 @@ export default async function ProduktlinieDetailPage({
               <p className={HILFE}>{tLabels("verpackung.materialHilfe")}</p>
             </div>
 
+            <fieldset className="rounded border border-line bg-surface p-5">
+              <legend className={`${LABEL} px-1`}>{tEudr("formularTitel")}</legend>
+              <p className="text-body-sm text-ink-muted">{tEudr("formularIntro")}</p>
+              <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+                <EudrAuswahl
+                  name="eudr_verwendung"
+                  label={tEudr("formularVerwendung")}
+                  ohneAngabe={tEudr("ohneAngabe")}
+                  optionen={EUDR_VERWENDUNGEN.map((w) => [w, tLabels(`eudr.verwendung.${w}`)])}
+                  wert={bearbeitete?.eudr_verwendung ?? null}
+                />
+                <EudrAuswahl
+                  name="eudr_bezug"
+                  label={tEudr("formularBezug")}
+                  ohneAngabe={tEudr("ohneAngabe")}
+                  optionen={EUDR_BEZUEGE.map((w) => [w, tLabels(`eudr.bezug.${w}`)])}
+                  wert={bearbeitete?.eudr_bezug ?? null}
+                />
+                <EudrAuswahl
+                  name="eudr_rezyklat"
+                  label={tEudr("formularRezyklat")}
+                  ohneAngabe={tEudr("ohneAngabe")}
+                  optionen={EUDR_REZYKLATE.map((w) => [w, tLabels(`eudr.rezyklat.${w}`)])}
+                  wert={bearbeitete?.eudr_rezyklat ?? null}
+                />
+                <EudrAuswahl
+                  name="eudr_erzeugnis"
+                  label={tEudr("formularErzeugnis")}
+                  ohneAngabe={tEudr("ohneAngabe")}
+                  optionen={EUDR_ERZEUGNISSE.map((w) => [w, tLabels(`eudr.erzeugnis.${w}`)])}
+                  wert={bearbeitete?.eudr_erzeugnis ?? null}
+                />
+              </div>
+            </fieldset>
+
             <div className="flex flex-wrap gap-6">
               <label className="flex items-center gap-3 text-body text-ink">
                 <input
@@ -424,9 +487,10 @@ export default async function ProduktlinieDetailPage({
                 const e = ergebnisse.get(v.id)!;
                 const unklar =
                   e.rollen.length === 0 && e.herleitung.some((h) => h.regel_id === "D5");
+                const offen = verpackungen.length === 1 || query.gespeichert === v.bezeichnung;
                 return (
+                  <div key={v.id} className="space-y-3">
                   <VerpackungErgebnisKarte
-                    key={v.id}
                     verpackung={v}
                     rollen={e.rollen}
                     pflichten={e.pflichten}
@@ -438,14 +502,58 @@ export default async function ProduktlinieDetailPage({
                     begriffe={begriffe}
                     engineVersion={e.engine_version}
                     rechtsstand={e.rechtsstand}
-                    offen={verpackungen.length === 1 || query.gespeichert === v.bezeichnung}
+                    offen={offen}
                   />
+                  <EudrErgebnisKarte
+                    ankerId={`eudr-${v.id}`}
+                    bezeichnung={v.bezeichnung}
+                    materialText={v.material}
+                    ergebnis={e.eudr}
+                    verfuegbarePraxisfragen={eudrAnzeige.verfuegbarePraxisfragen}
+                    anforderungIdNachNr={anforderungIdNachNr}
+                    cattwykText={eudrAnzeige.cattwykText}
+                    engineVersion={e.engine_version}
+                    rechtsstand={e.rechtsstand}
+                    offen={offen}
+                  />
+                  </div>
                 );
               })}
           </div>
         </section>
       )}
     </>
+  );
+}
+
+/** Optionale EUDR-Auswahl (leer = ohne Angabe, die Engine leitet ab). */
+function EudrAuswahl({
+  name,
+  label,
+  ohneAngabe,
+  optionen,
+  wert,
+}: {
+  name: string;
+  label: string;
+  ohneAngabe: string;
+  optionen: [string, string][];
+  wert: string | null;
+}) {
+  return (
+    <div>
+      <label htmlFor={name} className={LABEL}>
+        {label}
+      </label>
+      <select id={name} name={name} defaultValue={wert ?? ""} className={EINGABE}>
+        <option value="">{ohneAngabe}</option>
+        {optionen.map(([w, l]) => (
+          <option key={w} value={w}>
+            {l}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }
 
