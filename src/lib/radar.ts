@@ -129,6 +129,51 @@ export async function ladeLetztenMonitoringStand(): Promise<string | null> {
 }
 
 // ---------------------------------------------------------------------------
+// Radar-Wochenberichte (Langfassung des wöchentlichen Rechtsmonitorings)
+// ---------------------------------------------------------------------------
+
+export interface RadarWochenbericht {
+  id: string;
+  datum: string;
+  zeitraum_von: string;
+  zeitraum_bis: string;
+  titel: string;
+  teaser: string;
+  body_markdown: string;
+  rechtsstand: string;
+  zeichen: number | null;
+  review_status: string;
+}
+
+const WOCHENBERICHT_FELDER =
+  "id, datum, zeitraum_von, zeitraum_bis, titel, teaser, body_markdown, rechtsstand, zeichen, review_status";
+
+/** Wochenberichte, neueste zuerst (RLS: nur ausgespielte). */
+export async function ladeWochenberichte(limit = 12): Promise<RadarWochenbericht[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("radar_wochenberichte")
+    .select(WOCHENBERICHT_FELDER)
+    .order("datum", { ascending: false })
+    .limit(limit);
+  if (error || !data) return [];
+  return data as RadarWochenbericht[];
+}
+
+/** Ein Wochenbericht nach Laufdatum (ISO, JJJJ-MM-TT); null, wenn es keinen gibt. */
+export async function ladeWochenbericht(datum: string): Promise<RadarWochenbericht | null> {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(datum)) return null;
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("radar_wochenberichte")
+    .select(WOCHENBERICHT_FELDER)
+    .eq("datum", datum)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data as RadarWochenbericht;
+}
+
+// ---------------------------------------------------------------------------
 // packaging-journal.de – News & Videos
 // ---------------------------------------------------------------------------
 

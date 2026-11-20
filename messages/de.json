@@ -31,6 +31,7 @@
     "verpackungen": "Meine Verpackungen – PPWR Radar",
     "verpackungDetail": "Verpackungen – PPWR Radar",
     "updates": "Updates – PPWR Radar",
+    "wochenbericht": "Wochenbericht – PPWR Radar",
     "checkEudr": {
       "title": "EUDR-Check für Verpackungen – PPWR Radar",
       "description": "Bis zu fünf Fragen, eine erste Einschätzung: Betrifft die EU-Entwaldungsverordnung (EUDR) Ihre Verpackung aus Papier, Pappe oder Holz? Kostenlos und ohne Anmeldung."
@@ -1218,6 +1219,16 @@
       "gericht": "Gerichtsentscheidung",
       "verbandsmeinung": "Verbandsmeinung",
       "stand": "Monitoring-Stand"
+    },
+    "wochenbericht": {
+      "kicker": "Wochenbericht",
+      "zeitraum": "Zeitraum {von} bis {bis}",
+      "lesen": "Wochenbericht lesen",
+      "frueherer": "Bericht vom {datum}",
+      "zurueck": "Zurück zu den Updates",
+      "weitere": "Frühere Wochenberichte",
+      "listeFooter": "Ausführliche Fassung des wöchentlichen Rechtsmonitorings · je Fund Einordnung und „Was gilt weiterhin“ · Information, keine Rechtsberatung",
+      "footer": "Rechtsstand {rechtsstand} · Quellen im Text verlinkt · Information, keine Rechtsberatung"
     }
   },
   "Eudr": {

@@ -31,6 +31,7 @@
     "verpackungen": "Meine Verpackungen – PPWR Radar",
     "verpackungDetail": "Verpackungen – PPWR Radar",
     "updates": "Updates – PPWR Radar",
+    "wochenbericht": "Weekly report – PPWR Radar",
     "checkEudr": {
       "title": "EUDR check for packaging – PPWR Radar",
       "description": "Up to five questions, a first assessment: does the EU Deforestation Regulation (EUDR) apply to your paper, paperboard or wood packaging? Free, no registration."
@@ -1218,6 +1219,16 @@
       "gericht": "Court decision",
       "verbandsmeinung": "Association view",
       "stand": "Monitoring status"
+    },
+    "wochenbericht": {
+      "kicker": "Weekly report",
+      "zeitraum": "Period {von} to {bis}",
+      "lesen": "Read the weekly report",
+      "frueherer": "Report of {datum}",
+      "zurueck": "Back to updates",
+      "weitere": "Earlier weekly reports",
+      "listeFooter": "Full version of the weekly legal monitoring · classification and “what still applies” per finding · information, not legal advice",
+      "footer": "Legal position as of {rechtsstand} · sources linked in the text · information, not legal advice"
     }
   },
   "Eudr": {
